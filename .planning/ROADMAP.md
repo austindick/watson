@@ -24,7 +24,7 @@ Full details: `milestones/v1.0-ROADMAP.md`
 
 **Milestone Goal:** Replace watson-lite and standalone Loupe with a unified Watson skill — master orchestrator, library system, blueprint system, ported pipeline agents, and discuss and loupe subskills all wired through a thin-router SKILL.md.
 
-- [ ] **Phase 1: Foundation Scaffold** - Directory structure, artifact schemas, agent contract spec, blueprint file templates
+- [x] **Phase 1: Foundation Scaffold** - Directory structure, artifact schemas, agent contract spec, blueprint file templates (completed 2026-03-29)
 - [ ] **Phase 2: Library System** - Librarian agent, design system book, playground conventions book, LIBRARY.md index
 - [ ] **Phase 3: Pipeline Agents** - All 7 Loupe agents ported to Watson contract, source-agnostic, schema-verified
 - [ ] **Phase 4: Discuss Subskill** - Design thinking conversation, blueprint reads/writes, library book grounding, loupe handoff
@@ -36,7 +36,7 @@ Full details: `milestones/v1.0-ROADMAP.md`
 **Goal**: The watson/ directory exists with locked schemas and a complete agent contract spec — every subsequent phase has a known target structure to build into
 **Depends on**: Nothing (first Watson 1.0 phase)
 **Requirements**: ARCH-01, ARCH-02, ARCH-03, ARCH-04, ARCH-05, BLUE-01, BLUE-02, BLUE-03, BLUE-04
-**Plans:** 1/3 plans executed
+**Plans:** 3/3 plans complete
 **Success Criteria** (what must be TRUE):
   1. Watson agent contract spec exists and enumerates every input parameter, output path convention, and flag name any agent will use
   2. Canonical artifact schema examples exist for LAYOUT.md, DESIGN.md, INTERACTION.md, and CONTEXT.md — each is a filled-in example, not a prose description
@@ -121,7 +121,7 @@ Plans:
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 1. Foundation Scaffold | 1/3 | In Progress|  | - |
+| 1. Foundation Scaffold | 3/3 | Complete   | 2026-03-29 | - |
 | 2. Library System | Watson 1.0 | 0/4 | Not started | - |
 | 3. Pipeline Agents | Watson 1.0 | 0/4 | Not started | - |
 | 4. Discuss Subskill | Watson 1.0 | 0/2 | Not started | - |

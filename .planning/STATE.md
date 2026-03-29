@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-foundation-scaffold/01-02-PLAN.md
-last_updated: "2026-03-29T04:50:37.358Z"
+stopped_at: Completed 01-foundation-scaffold/01-03-PLAN.md
+last_updated: "2026-03-29T04:55:07.602Z"
 last_activity: "2026-03-29 — Completed 01-01: watson/ skill directory skeleton created"
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
+  completed_plans: 3
   percent: 33
 ---
 
@@ -47,6 +47,7 @@ Progress: [███░░░░░░░] 33%
 
 *Updated after each plan completion*
 | Phase 01-foundation-scaffold P02 | 2 | 2 tasks | 4 files |
+| Phase 01-foundation-scaffold P03 | 3 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -61,6 +62,9 @@ Progress: [███░░░░░░░] 33%
 - [Phase 01-foundation-scaffold]: Watson skill files committed to home git repo (~/.git) since they live at ~/.claude/skills/watson/ outside project repo
 - [Phase 01-foundation-scaffold]: Used 'Product Quick View' as the single hypothetical prototype across all four artifact schema examples for internal coherence
 - [Phase 01-foundation-scaffold]: LAYOUT and DESIGN examples show two sections each to explicitly distinguish consolidated blueprint format from section-level staging files
+- [Phase 01-foundation-scaffold]: Interaction agent is foreground* with footnote — foreground when watsonMode=false AND no interactionContext provided; background otherwise
+- [Phase 01-foundation-scaffold]: LAYOUT.md and DESIGN.md templates initialized minimal in watson-init (single placeholder line) because section structure is built incrementally per-section by agents
+- [Phase 01-foundation-scaffold]: FauxDS references excluded from all schema files to maintain source-agnosticism (ARCH-05)
 
 ### Pending Todos
 
@@ -73,6 +77,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-29T04:50:37.356Z
-Stopped at: Completed 01-foundation-scaffold/01-02-PLAN.md
+Last session: 2026-03-29T04:55:07.600Z
+Stopped at: Completed 01-foundation-scaffold/01-03-PLAN.md
 Resume file: None
