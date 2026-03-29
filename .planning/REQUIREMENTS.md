@@ -27,8 +27,8 @@
 ### Blueprint System
 
 - [x] **BLUE-01**: Each prototype has a `/blueprint` directory with CONTEXT.md, LAYOUT.md, DESIGN.md, INTERACTION.md
-- [ ] **BLUE-02**: Blueprint files are source-agnostic (no reference to where data originated — Figma, conversation, or future clone-from-prod)
-- [ ] **BLUE-03**: Blueprint files persist across sessions as living references that any agent or subskill can read
+- [x] **BLUE-02**: Blueprint files are source-agnostic (no reference to where data originated — Figma, conversation, or future clone-from-prod)
+- [x] **BLUE-03**: Blueprint files persist across sessions as living references that any agent or subskill can read
 - [ ] **BLUE-04**: Blueprint files can be generated from Figma (via loupe pipeline) or conversation (via discuss + library books)
 
 ### Discuss Subskill
@@ -53,8 +53,8 @@
 - [ ] **ARCH-01**: Watson agent contract spec defined before any agent is ported (input parameters, output schema, dispatch mode)
 - [x] **ARCH-02**: Each agent is a self-contained `.md` file in `agents/` with no cross-references to other agents or SKILL.md
 - [ ] **ARCH-03**: Foreground/background classification is binary and permanent per agent (documented in contract spec)
-- [ ] **ARCH-04**: Schema-first artifact contracts — no agent written before its input/output schema is locked in a canonical example
-- [ ] **ARCH-05**: Source-agnosticism verified (agents produce correct output when design system book is swapped from FauxDS to a different source)
+- [x] **ARCH-04**: Schema-first artifact contracts — no agent written before its input/output schema is locked in a canonical example
+- [x] **ARCH-05**: Source-agnosticism verified (agents produce correct output when design system book is swapped from FauxDS to a different source)
 
 ## Future Requirements
 
@@ -103,11 +103,11 @@
 | ARCH-01 | Phase 1 | Pending |
 | ARCH-02 | Phase 1 | Complete |
 | ARCH-03 | Phase 1 | Pending |
-| ARCH-04 | Phase 1 | Pending |
-| ARCH-05 | Phase 1 | Pending |
+| ARCH-04 | Phase 1 | Complete |
+| ARCH-05 | Phase 1 | Complete |
 | BLUE-01 | Phase 1 | Complete |
-| BLUE-02 | Phase 1 | Pending |
-| BLUE-03 | Phase 1 | Pending |
+| BLUE-02 | Phase 1 | Complete |
+| BLUE-03 | Phase 1 | Complete |
 | BLUE-04 | Phase 1 | Pending |
 | LIB-01 | Phase 2 | Pending |
 | LIB-02 | Phase 2 | Pending |
