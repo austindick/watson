@@ -33,11 +33,11 @@
 
 ### Discuss Subskill
 
-- [ ] **DISC-01**: User can invoke discuss anytime during prototyping for design thinking conversation
-- [ ] **DISC-02**: Discuss reads any blueprint file to understand current prototype state before conversation
+- [x] **DISC-01**: User can invoke discuss anytime during prototyping for design thinking conversation
+- [x] **DISC-02**: Discuss reads any blueprint file to understand current prototype state before conversation
 - [ ] **DISC-03**: Discuss writes surgical amendments to any blueprint file based on decisions made in conversation
-- [ ] **DISC-04**: Discuss references library books (design system, playground conventions) to ground recommendations in real components and tokens
-- [ ] **DISC-05**: Discuss scales depth based on prototype complexity (fewer questions for simple changes, deeper exploration for complex flows)
+- [x] **DISC-04**: Discuss references library books (design system, playground conventions) to ground recommendations in real components and tokens
+- [x] **DISC-05**: Discuss scales depth based on prototype complexity (fewer questions for simple changes, deeper exploration for complex flows)
 
 ### Loupe Subskill
 
@@ -123,11 +123,11 @@
 | LOUP-04 | Phase 3 | Deferred to Watson 1.1 (INTR-01) |
 | LOUP-05 | Phase 3 | Complete (2-agent parallel validated) |
 | LOUP-06 | Phase 3 | Complete |
-| DISC-01 | Phase 4 | Pending |
-| DISC-02 | Phase 4 | Pending |
+| DISC-01 | Phase 4 | Complete |
+| DISC-02 | Phase 4 | Complete |
 | DISC-03 | Phase 4 | Pending |
-| DISC-04 | Phase 4 | Pending |
-| DISC-05 | Phase 4 | Pending |
+| DISC-04 | Phase 4 | Complete |
+| DISC-05 | Phase 4 | Complete |
 | ORCH-01 | Phase 5 | Pending |
 | ORCH-02 | Phase 5 | Pending |
 | ORCH-03 | Phase 5 | Pending |
