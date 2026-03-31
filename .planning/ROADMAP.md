@@ -45,14 +45,15 @@ Full details: `milestones/v1.0-ROADMAP.md`
   5. Source-agnosticism constraint is documented and verifiable — swapping the design system book requires zero agent file edits
 
 Plans:
-- [ ] 01-01-PLAN.md — watson/ directory skeleton and file structure
-- [ ] 01-02-PLAN.md — Artifact schemas (CONTEXT, LAYOUT, DESIGN, INTERACTION examples)
-- [ ] 01-03-PLAN.md — Agent contract spec, book schema, and watson-init utility
+- [x] 01-01-PLAN.md — watson/ directory skeleton and file structure
+- [x] 01-02-PLAN.md — Artifact schemas (CONTEXT, LAYOUT, DESIGN, INTERACTION examples)
+- [x] 01-03-PLAN.md — Agent contract spec, book schema, and watson-init utility
 
 ### Phase 2: Library System
 **Goal**: The Librarian agent can generate and update structured library books, and at least two books (design system, playground conventions) are populated and indexed in LIBRARY.md
 **Depends on**: Phase 1
 **Requirements**: LIB-01, LIB-02, LIB-03, LIB-04, LIB-05, LIB-06, LIB-07, LIB-08
+**Plans:** 4 plans
 **Success Criteria** (what must be TRUE):
   1. Running Librarian in generate mode against FauxDS source files produces a structured design system book that agents can read instead of raw source material
   2. Running Librarian in update mode patches only changed entries without overwriting the rest of the existing book
@@ -61,10 +62,10 @@ Plans:
   5. An agent given a libraryPath parameter reads a book file and produces correct output — it never touches a source file directly
 
 Plans:
-- [ ] 02-01: Librarian agent (generate mode)
-- [ ] 02-02: Librarian agent (update mode) and LIBRARY.md auto-update
-- [ ] 02-03: Design system book generation from FauxDS source
-- [ ] 02-04: Playground conventions book
+- [ ] 02-01-PLAN.md — Librarian agent (generate mode), agent contract libraryPaths update, LIBRARY.md schema
+- [ ] 02-02-PLAN.md — Design system book generation from FauxDS source
+- [ ] 02-03-PLAN.md — Librarian agent (update mode) and LIBRARY.md auto-update
+- [ ] 02-04-PLAN.md — Playground conventions book and plugin manifest
 
 ### Phase 3: Pipeline Agents
 **Goal**: All seven pipeline agents exist in watson/agents/, conform to the Watson agent contract, produce schema-valid artifacts, and contain zero FauxDS-specific hardcoding

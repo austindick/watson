@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 2 context gathered
-last_updated: "2026-03-31T02:31:16.470Z"
+stopped_at: "Completed 02-01-PLAN.md: Librarian agent created"
+last_updated: "2026-03-31T02:50:44.413Z"
 last_activity: "2026-03-29 — Completed 01-01: watson/ skill directory skeleton created"
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 6
-  completed_plans: 3
+  total_plans: 7
+  completed_plans: 4
   percent: 33
 ---
 
@@ -48,6 +48,7 @@ Progress: [███░░░░░░░] 33%
 *Updated after each plan completion*
 | Phase 01-foundation-scaffold P02 | 2 | 2 tasks | 4 files |
 | Phase 01-foundation-scaffold P03 | 3 | 2 tasks | 3 files |
+| Phase 02-library-system P01 | 2 | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -65,6 +66,9 @@ Progress: [███░░░░░░░] 33%
 - [Phase 01-foundation-scaffold]: Interaction agent is foreground* with footnote — foreground when watsonMode=false AND no interactionContext provided; background otherwise
 - [Phase 01-foundation-scaffold]: LAYOUT.md and DESIGN.md templates initialized minimal in watson-init (single placeholder line) because section structure is built incrementally per-section by agents
 - [Phase 01-foundation-scaffold]: FauxDS references excluded from all schema files to maintain source-agnosticism (ARCH-05)
+- [Phase 02-library-system]: Update mode placeholder only in 02-01 — full update mode instructions deferred to Plan 02-03
+- [Phase 02-library-system]: libraryPath (string) renamed to libraryPaths (string[]) across agent contract; routing responsibility moves to subskills
+- [Phase 02-library-system]: Librarian LIBRARY.md updates are upsert-based (read-then-patch) to support parallel plan runs in 02-03 and 02-04
 
 ### Pending Todos
 
@@ -77,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T02:31:16.460Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-library-system/02-CONTEXT.md
+Last session: 2026-03-31T02:50:44.411Z
+Stopped at: Completed 02-01-PLAN.md: Librarian agent created
+Resume file: None
