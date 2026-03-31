@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-03-31T15:38:50.461Z"
+stopped_at: Completed 04-02-PLAN.md
+last_updated: "2026-03-31T15:44:16.914Z"
 last_activity: "2026-03-29 — Completed 01-01: watson/ skill directory skeleton created"
 progress:
   total_phases: 5
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 13
-  completed_plans: 12
+  completed_plans: 13
   percent: 33
 ---
 
@@ -55,6 +55,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 03-research-agents P01 | 5min | 2 tasks | 7 files |
 | Phase 03-research-agents P03 | 8min | 1 tasks | 3 files |
 | Phase 04-discuss-subskill P04-01 | 15min | 2 tasks | 1 files |
+| Phase 04-discuss-subskill P02 | 2min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,10 @@ Progress: [███░░░░░░░] 33%
 - [Phase 04-discuss-subskill]: Library loading is two-tier: playground-conventions upfront, design-system on-demand
 - [Phase 04-discuss-subskill]: No separate mid-build mode — same adaptive conversation engine, blueprint state reduces question count
 - [Phase 04-discuss-subskill]: Blueprint write logic and return status deferred to Plan 04-02, marked via HTML comment placeholder
+- [Phase 04-discuss-subskill]: Write timing is Claude's discretion: natural write point after summary confirmation; incremental writes allowed if rhythm permits
+- [Phase 04-discuss-subskill]: ## Discuss Amendments is strictly additive: original agent-generated content never modified; amendments appended across sessions
+- [Phase 04-discuss-subskill]: Dedup contract is explicit: discuss locks decisions in CONTEXT.md; loupe agents required to skip already-answered questions
+- [Phase 04-discuss-subskill]: Discuss never dispatches agents: return status JSON goes to orchestrator only; orchestrator is responsible for routing
 
 ### Pending Todos
 
@@ -100,6 +105,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T15:38:50.458Z
-Stopped at: Completed 04-01-PLAN.md
+Last session: 2026-03-31T15:44:16.912Z
+Stopped at: Completed 04-02-PLAN.md
 Resume file: None
