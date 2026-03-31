@@ -8,17 +8,17 @@
 ### Orchestration
 
 - [ ] **ORCH-01**: User can invoke Watson via single `/watson` entry point with intent routing to subskills
-- [ ] **ORCH-02**: Watson chains discuss -> loupe automatically (CONTEXT.md handoff, suppresses duplicate prompts)
+- [ ] **ORCH-02**: Watson chains discuss → loupe automatically (CONTEXT.md handoff, suppresses duplicate prompts)
 - [ ] **ORCH-03**: All user-facing messages use non-technical language (no agent names, file paths, or artifact names exposed to user)
 - [ ] **ORCH-04**: Watson recognizes PDP stage context (Understand/Explore/Build/Ship) and adapts behavior accordingly
 - [ ] **ORCH-05**: SKILL.md stays under 200 lines — execution logic lives in subskills and agents, not the orchestrator
 
 ### Library System
 
-- [x] **LIB-01**: LIBRARY.md index exists as table of contents for all books with metadata (last updated, source, chapter count)
-- [x] **LIB-02**: Book/Chapter/Page hierarchy supports both flat files and deep trees (design system has chapters; conventions is flat)
-- [x] **LIB-03**: Design system book is source-agnostic (works with FauxDS now, flips to real Slate via Librarian regeneration with zero agent edits)
-- [x] **LIB-04**: Playground conventions book documents scaffolding checklist, component conventions, design tokens, dev workflow, multi-variant patterns, and contributor registration
+- [ ] **LIB-01**: LIBRARY.md index exists as table of contents for all books with metadata (last updated, source, chapter count)
+- [ ] **LIB-02**: Book/Chapter/Page hierarchy supports both flat files and deep trees (design system has chapters; conventions is flat)
+- [ ] **LIB-03**: Design system book is source-agnostic (works with FauxDS now, flips to real Slate via Librarian regeneration with zero agent edits)
+- [ ] **LIB-04**: Playground conventions book documents scaffolding checklist, component conventions, design tokens, dev workflow, multi-variant patterns, and contributor registration
 - [x] **LIB-05**: Librarian agent can generate a book from source files (full scan mode)
 - [x] **LIB-06**: Librarian agent can update a book surgically (diff source against existing book, patch only changed entries)
 - [x] **LIB-07**: Librarian auto-updates LIBRARY.md index when books are created or modified
@@ -44,7 +44,8 @@
 - [ ] **LOUP-01**: Figma-to-code pipeline with ported agents (decomposer, layout, design, builder, reviewer, consolidator)
 - [ ] **LOUP-02**: All agents accept parameterized book paths (injected at dispatch time, never hardcoded)
 - [ ] **LOUP-03**: Pipeline outputs write to prototype's `/blueprint` directory (LAYOUT.md, DESIGN.md, INTERACTION.md)
-- [ ] **LOUP-05**: 2-agent parallel dispatch per section (layout + design simultaneously); expands to 3-agent when LOUP-04 is implemented
+- [ ] **LOUP-04**: Agent 3 (interactions) infers states from Figma with optional interactive interview, produces INTERACTION.md
+- [ ] **LOUP-05**: 3-agent parallel dispatch per section (layout + design + interactions simultaneously)
 - [ ] **LOUP-06**: Section staging (`.watson/sections/`) cleaned up after consolidation to blueprint files
 
 ### Agent Architecture
@@ -61,7 +62,6 @@
 
 - **EXPL-01**: User can invoke explore for structured solution-space research (competitive analysis, pattern mining, multi-approach generation)
 - **UNDR-01**: User can invoke understand to build or ingest a PRD, producing enriched CONTEXT.md
-- **LOUP-04**: Agent 3 (interactions) infers states from Figma with optional interactive interview, produces INTERACTION.md (deferred from Phase 3 per CONTEXT.md locked decision; placeholder agent created in Phase 3 Plan 02)
 - **INTR-01**: Agent 3 accepts pre-gathered interaction context from Watson (skips interview when discuss has already gathered context)
 - **PARA-01**: Full 3-agent parallel dispatch verified with interaction context passthrough
 
@@ -109,10 +109,10 @@
 | BLUE-02 | Phase 1 | Complete |
 | BLUE-03 | Phase 1 | Complete |
 | BLUE-04 | Phase 1 | Complete |
-| LIB-01 | Phase 2 | Complete |
-| LIB-02 | Phase 2 | Complete |
-| LIB-03 | Phase 2 | Complete |
-| LIB-04 | Phase 2 | Complete |
+| LIB-01 | Phase 2 | Pending |
+| LIB-02 | Phase 2 | Pending |
+| LIB-03 | Phase 2 | Pending |
+| LIB-04 | Phase 2 | Pending |
 | LIB-05 | Phase 2 | Complete |
 | LIB-06 | Phase 2 | Complete |
 | LIB-07 | Phase 2 | Complete |
@@ -120,7 +120,7 @@
 | LOUP-01 | Phase 3 | Pending |
 | LOUP-02 | Phase 3 | Pending |
 | LOUP-03 | Phase 3 | Pending |
-| LOUP-04 | Future (1.1) | Deferred — placeholder in Phase 3 Plan 02 |
+| LOUP-04 | Phase 3 | Pending |
 | LOUP-05 | Phase 3 | Pending |
 | LOUP-06 | Phase 3 | Pending |
 | DISC-01 | Phase 4 | Pending |
@@ -135,10 +135,10 @@
 | ORCH-05 | Phase 5 | Pending |
 
 **Coverage:**
-- v1 requirements: 32 total (LOUP-04 moved to Future 1.1)
-- Mapped to phases: 32
-- Unmapped: 0
+- v1 requirements: 33 total
+- Mapped to phases: 33
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-28*
-*Last updated: 2026-03-31 — LOUP-04 deferred to Future/1.1 per Phase 3 CONTEXT.md locked decision; LOUP-05 updated to reflect 2-agent parallel dispatch*
+*Last updated: 2026-03-28 — traceability populated after roadmap creation*
