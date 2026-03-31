@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Completed 02-03-PLAN.md: Librarian update mode added"
-last_updated: "2026-03-31T02:53:56.457Z"
+stopped_at: "Completed 02-04-PLAN.md: Playground conventions book authored and Watson plugin manifest created"
+last_updated: "2026-03-31T02:57:44.879Z"
 last_activity: "2026-03-29 — Completed 01-01: watson/ skill directory skeleton created"
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 7
-  completed_plans: 5
+  completed_plans: 6
   percent: 33
 ---
 
@@ -50,6 +50,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 01-foundation-scaffold P03 | 3 | 2 tasks | 3 files |
 | Phase 02-library-system P01 | 2 | 1 tasks | 3 files |
 | Phase 02-library-system P03 | 1 | 1 tasks | 1 files |
+| Phase 02-library-system P04 | 4min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,8 @@ Progress: [███░░░░░░░] 33%
 - [Phase 02-library-system]: Librarian LIBRARY.md updates are upsert-based (read-then-patch) to support parallel plan runs in 02-03 and 02-04
 - [Phase 02-library-system]: Update mode scoped to single-book per invocation for Watson 1.0 — multi-book batch deferred to 1.1
 - [Phase 02-library-system]: Removed chapters in update mode are hard-deleted (not deprecated) — chapter directories differ from Loupe's flat section model
+- [Phase 02-library-system]: entity_db workflow in scaffolding chapter — agents need complete CLI procedure for correct data layer setup
+- [Phase 02-library-system]: SlateTable full reference in components chapter — not a separate book per 02-CONTEXT.md decision
 
 ### Pending Todos
 
@@ -84,6 +87,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T02:53:56.455Z
-Stopped at: Completed 02-03-PLAN.md: Librarian update mode added
+Last session: 2026-03-31T02:57:44.877Z
+Stopped at: Completed 02-04-PLAN.md: Playground conventions book authored and Watson plugin manifest created
 Resume file: None

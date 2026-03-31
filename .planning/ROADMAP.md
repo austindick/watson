@@ -53,7 +53,7 @@ Plans:
 **Goal**: The Librarian agent can generate and update structured library books, and at least two books (design system, playground conventions) are populated and indexed in LIBRARY.md
 **Depends on**: Phase 1
 **Requirements**: LIB-01, LIB-02, LIB-03, LIB-04, LIB-05, LIB-06, LIB-07, LIB-08
-**Plans:** 4 plans
+**Plans:** 3/4 plans executed
 **Success Criteria** (what must be TRUE):
   1. Running Librarian in generate mode against FauxDS source files produces a structured design system book that agents can read instead of raw source material
   2. Running Librarian in update mode patches only changed entries without overwriting the rest of the existing book
@@ -123,7 +123,7 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1. Foundation Scaffold | 3/3 | Complete   | 2026-03-29 | - |
-| 2. Library System | Watson 1.0 | 0/4 | Not started | - |
+| 2. Library System | 3/4 | In Progress|  | - |
 | 3. Pipeline Agents | Watson 1.0 | 0/4 | Not started | - |
 | 4. Discuss Subskill | Watson 1.0 | 0/2 | Not started | - |
 | 5. Master Orchestrator | Watson 1.0 | 0/2 | Not started | - |
