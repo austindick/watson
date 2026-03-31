@@ -20,8 +20,8 @@
 - [ ] **LIB-03**: Design system book is source-agnostic (works with FauxDS now, flips to real Slate via Librarian regeneration with zero agent edits)
 - [ ] **LIB-04**: Playground conventions book documents scaffolding checklist, component conventions, design tokens, dev workflow, multi-variant patterns, and contributor registration
 - [x] **LIB-05**: Librarian agent can generate a book from source files (full scan mode)
-- [ ] **LIB-06**: Librarian agent can update a book surgically (diff source against existing book, patch only changed entries)
-- [ ] **LIB-07**: Librarian auto-updates LIBRARY.md index when books are created or modified
+- [x] **LIB-06**: Librarian agent can update a book surgically (diff source against existing book, patch only changed entries)
+- [x] **LIB-07**: Librarian auto-updates LIBRARY.md index when books are created or modified
 - [x] **LIB-08**: Agents read library books exclusively — never raw source material (Librarian is the sole interface to source)
 
 ### Blueprint System
@@ -114,8 +114,8 @@
 | LIB-03 | Phase 2 | Pending |
 | LIB-04 | Phase 2 | Pending |
 | LIB-05 | Phase 2 | Complete |
-| LIB-06 | Phase 2 | Pending |
-| LIB-07 | Phase 2 | Pending |
+| LIB-06 | Phase 2 | Complete |
+| LIB-07 | Phase 2 | Complete |
 | LIB-08 | Phase 2 | Complete |
 | LOUP-01 | Phase 3 | Pending |
 | LOUP-02 | Phase 3 | Pending |
