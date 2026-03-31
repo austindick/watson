@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Completed 03-01-PLAN.md: Loupe agents ported to Watson contract"
-last_updated: "2026-03-31T04:38:08.514Z"
+stopped_at: "Completed 03-03-PLAN.md: MCP tool name gap closure for Figma-facing agents"
+last_updated: "2026-03-31T14:01:33.885Z"
 last_activity: "2026-03-29 — Completed 01-01: watson/ skill directory skeleton created"
 progress:
   total_phases: 5
@@ -53,6 +53,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 02-library-system P04 | 4min | 2 tasks | 10 files |
 | Phase 02-library-system P02 | ~60 min | 2 tasks | 42 files |
 | Phase 03-research-agents P01 | 5min | 2 tasks | 7 files |
+| Phase 03-research-agents P03 | 8min | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,7 @@ Progress: [███░░░░░░░] 33%
 - [Phase 02-library-system]: LIBRARY.md upsert preserved playground-conventions when 02-04 ran before 02-02
 - [Phase 03-research-agents]: interaction agent is a documented placeholder — deferred to post-v1; discuss subskill handles interaction context for Watson 1.0
 - [Phase 03-research-agents]: all agents use libraryPaths[] array for source-agnostic library book reading — no design system hardcoding in any agent
+- [Phase 03-research-agents]: mcp__figma__get_figma_data is the sole Figma MCP tool — all agents use it exclusively; fallback is chunked calls to same tool, not a different tool
 
 ### Pending Todos
 
@@ -93,6 +95,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T04:38:08.512Z
-Stopped at: Completed 03-01-PLAN.md: Loupe agents ported to Watson contract
+Last session: 2026-03-31T14:01:33.882Z
+Stopped at: Completed 03-03-PLAN.md: MCP tool name gap closure for Figma-facing agents
 Resume file: None

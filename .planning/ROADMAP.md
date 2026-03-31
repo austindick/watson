@@ -71,7 +71,7 @@ Plans:
 **Goal**: All seven pipeline agents exist in watson/agents/, conform to the Watson agent contract, consume library books via pre-resolved libraryPaths[], and contain zero FauxDS-specific hardcoding
 **Depends on**: Phase 2
 **Requirements**: LOUP-01, LOUP-02, LOUP-03, LOUP-04, LOUP-05, LOUP-06
-**Plans:** 2 plans
+**Plans:** 3/4 plans executed
 **Success Criteria** (what must be TRUE):
   1. Each agent accepts Watson contract parameters (blueprintPath, libraryPaths[], sectionName) and writes output to .watson/sections/ staging paths
   2. Each agent reads pre-resolved chapter/page paths from libraryPaths[] — no agent navigates LIBRARY.md or BOOK.md
@@ -82,6 +82,8 @@ Plans:
 Plans:
 - [ ] 03-01-PLAN.md — Port all 7 agents to Watson contract (decomposer, layout, design, interaction placeholder, builder, reviewer, consolidator)
 - [ ] 03-02-PLAN.md — Integration smoke test with real Figma frame (library book consumption + parallel dispatch + human verification)
+- [ ] 03-03-PLAN.md — Fix MCP tool names in decomposer, layout, and design agents (gap closure)
+- [ ] 03-04-PLAN.md — Test MCP passthrough to subagents and update requirement statuses (gap closure)
 
 ### Phase 4: Discuss Subskill
 **Goal**: The discuss subskill gives users a design thinking conversation partner at any stage, writes decisions to blueprint files grounded in library books, and chains to loupe with a clean CONTEXT.md handoff
@@ -124,6 +126,6 @@ Phase 4 depends only on Phases 1 and 2, so it runs parallel with Phase 3. Both m
 |-------|-----------|-------|--------|-----------|
 | 1. Foundation Scaffold | Watson 1.0 | 3/3 | Complete | 2026-03-29 |
 | 2. Library System | Watson 1.0 | 4/4 | Complete | 2026-03-31 |
-| 3. Pipeline Agents | Watson 1.0 | 0/2 | Not started | - |
+| 3. Pipeline Agents | 3/4 | In Progress|  | - |
 | 4. Discuss Subskill | Watson 1.0 | 0/2 | Not started | - |
 | 5. Master Orchestrator | Watson 1.0 | 0/2 | Not started | - |
