@@ -106,6 +106,7 @@ Plans:
 **Goal**: Watson is a single entry point that routes to the right subskill based on user intent, stays under ~200 lines, and works end-to-end from a fresh invocation through discuss and loupe to a built prototype
 **Depends on**: Phase 3, Phase 4
 **Requirements**: ORCH-01, ORCH-02, ORCH-03, ORCH-04, ORCH-05
+**Plans:** 1/2 plans executed
 **Success Criteria** (what must be TRUE):
   1. Typing /watson with any design intent routes to the correct subskill — the user never needs to know subskill names or internal architecture
   2. Watson automatically chains discuss to loupe (CONTEXT.md handoff) and suppresses duplicate prompts — the user is never asked the same question twice
@@ -114,8 +115,8 @@ Plans:
   5. An end-to-end run on a real Figma frame completes without errors: /watson → discuss → loupe → built prototype code in the Playground
 
 Plans:
-- [ ] 05-01: SKILL.md intent classification and routing (subskill dispatch for discuss, loupe, librarian)
-- [ ] 05-02: End-to-end integration test and design language audit — verify full pipeline with real Figma frame
+- [ ] 05-01-PLAN.md — SKILL.md intent router + loupe.md pipeline orchestrator (setup detection, three-tier classification, discuss-to-loupe chain, agent wiring)
+- [ ] 05-02-PLAN.md — End-to-end integration test and designer-language audit on real Figma frame
 
 ## Progress
 
@@ -129,4 +130,4 @@ Phase 4 depends only on Phases 1 and 2, so it runs parallel with Phase 3. Both m
 | 2. Library System | Watson 1.0 | 4/4 | Complete | 2026-03-31 |
 | 3. Pipeline Agents | 3/4 | In Progress|  | - |
 | 4. Discuss Subskill | 1/2 | In Progress|  | - |
-| 5. Master Orchestrator | Watson 1.0 | 0/2 | Not started | - |
+| 5. Master Orchestrator | 1/2 | In Progress|  | - |

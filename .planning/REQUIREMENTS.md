@@ -7,11 +7,11 @@
 
 ### Orchestration
 
-- [ ] **ORCH-01**: User can invoke Watson via single `/watson` entry point with intent routing to subskills
-- [ ] **ORCH-02**: Watson chains discuss → loupe automatically (CONTEXT.md handoff, suppresses duplicate prompts)
-- [ ] **ORCH-03**: All user-facing messages use non-technical language (no agent names, file paths, or artifact names exposed to user)
-- [ ] **ORCH-04**: Watson recognizes PDP stage context (Understand/Explore/Build/Ship) and adapts behavior accordingly
-- [ ] **ORCH-05**: SKILL.md stays under 200 lines — execution logic lives in subskills and agents, not the orchestrator
+- [x] **ORCH-01**: User can invoke Watson via single `/watson` entry point with intent routing to subskills
+- [x] **ORCH-02**: Watson chains discuss → loupe automatically (CONTEXT.md handoff, suppresses duplicate prompts)
+- [x] **ORCH-03**: All user-facing messages use non-technical language (no agent names, file paths, or artifact names exposed to user)
+- [x] **ORCH-04**: Watson recognizes PDP stage context (Understand/Explore/Build/Ship) and adapts behavior accordingly
+- [x] **ORCH-05**: SKILL.md stays under 200 lines — execution logic lives in subskills and agents, not the orchestrator
 
 ### Library System
 
@@ -128,11 +128,11 @@
 | DISC-03 | Phase 4 | Complete |
 | DISC-04 | Phase 4 | Complete |
 | DISC-05 | Phase 4 | Complete |
-| ORCH-01 | Phase 5 | Pending |
-| ORCH-02 | Phase 5 | Pending |
-| ORCH-03 | Phase 5 | Pending |
-| ORCH-04 | Phase 5 | Pending |
-| ORCH-05 | Phase 5 | Pending |
+| ORCH-01 | Phase 5 | Complete |
+| ORCH-02 | Phase 5 | Complete |
+| ORCH-03 | Phase 5 | Complete |
+| ORCH-04 | Phase 5 | Complete |
+| ORCH-05 | Phase 5 | Complete |
 
 **Coverage:**
 - v1 requirements: 33 total
