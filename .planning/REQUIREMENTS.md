@@ -41,12 +41,12 @@
 
 ### Loupe Subskill
 
-- [ ] **LOUP-01**: Figma-to-code pipeline with ported agents (decomposer, layout, design, builder, reviewer, consolidator)
-- [ ] **LOUP-02**: All agents accept parameterized book paths (injected at dispatch time, never hardcoded)
-- [ ] **LOUP-03**: Pipeline outputs write to prototype's `/blueprint` directory (LAYOUT.md, DESIGN.md, INTERACTION.md)
-- [ ] **LOUP-04**: Agent 3 (interactions) infers states from Figma with optional interactive interview, produces INTERACTION.md
-- [ ] **LOUP-05**: 3-agent parallel dispatch per section (layout + design + interactions simultaneously)
-- [ ] **LOUP-06**: Section staging (`.watson/sections/`) cleaned up after consolidation to blueprint files
+- [x] **LOUP-01**: Figma-to-code pipeline with ported agents (decomposer, layout, design, builder, reviewer, consolidator)
+- [x] **LOUP-02**: All agents accept parameterized book paths (injected at dispatch time, never hardcoded)
+- [x] **LOUP-03**: Pipeline outputs write to prototype's `/blueprint` directory (LAYOUT.md, DESIGN.md, INTERACTION.md)
+- [x] **LOUP-04**: Agent 3 (interactions) infers states from Figma with optional interactive interview, produces INTERACTION.md
+- [x] **LOUP-05**: 3-agent parallel dispatch per section (layout + design + interactions simultaneously)
+- [x] **LOUP-06**: Section staging (`.watson/sections/`) cleaned up after consolidation to blueprint files
 
 ### Agent Architecture
 
@@ -117,12 +117,12 @@
 | LIB-06 | Phase 2 | Complete |
 | LIB-07 | Phase 2 | Complete |
 | LIB-08 | Phase 2 | Complete |
-| LOUP-01 | Phase 3 | Pending |
-| LOUP-02 | Phase 3 | Pending |
-| LOUP-03 | Phase 3 | Pending |
-| LOUP-04 | Phase 3 | Pending |
-| LOUP-05 | Phase 3 | Pending |
-| LOUP-06 | Phase 3 | Pending |
+| LOUP-01 | Phase 3 | Complete |
+| LOUP-02 | Phase 3 | Complete |
+| LOUP-03 | Phase 3 | Complete |
+| LOUP-04 | Phase 3 | Complete |
+| LOUP-05 | Phase 3 | Complete |
+| LOUP-06 | Phase 3 | Complete |
 | DISC-01 | Phase 4 | Pending |
 | DISC-02 | Phase 4 | Pending |
 | DISC-03 | Phase 4 | Pending |
