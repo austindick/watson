@@ -44,8 +44,8 @@
 - [x] **LOUP-01**: Figma-to-code pipeline with ported agents (decomposer, layout, design, builder, reviewer, consolidator)
 - [x] **LOUP-02**: All agents accept parameterized book paths (injected at dispatch time, never hardcoded)
 - [x] **LOUP-03**: Pipeline outputs write to prototype's `/blueprint` directory (LAYOUT.md, DESIGN.md, INTERACTION.md)
-- [x] **LOUP-04**: Agent 3 (interactions) infers states from Figma with optional interactive interview, produces INTERACTION.md
-- [x] **LOUP-05**: 3-agent parallel dispatch per section (layout + design + interactions simultaneously)
+- [ ] **LOUP-04**: Agent 3 (interactions) infers states from Figma with optional interactive interview, produces INTERACTION.md (Deferred — interaction agent is documented placeholder, deferred to post-v1 per 03-CONTEXT.md)
+- [x] **LOUP-05**: 2-agent parallel dispatch per section (layout + design simultaneously; interaction deferred)
 - [x] **LOUP-06**: Section staging (`.watson/sections/`) cleaned up after consolidation to blueprint files
 
 ### Agent Architecture
@@ -120,8 +120,8 @@
 | LOUP-01 | Phase 3 | Complete |
 | LOUP-02 | Phase 3 | Complete |
 | LOUP-03 | Phase 3 | Complete |
-| LOUP-04 | Phase 3 | Complete |
-| LOUP-05 | Phase 3 | Complete |
+| LOUP-04 | Phase 3 | Deferred to Watson 1.1 (INTR-01) |
+| LOUP-05 | Phase 3 | Complete (2-agent parallel validated) |
 | LOUP-06 | Phase 3 | Complete |
 | DISC-01 | Phase 4 | Pending |
 | DISC-02 | Phase 4 | Pending |
