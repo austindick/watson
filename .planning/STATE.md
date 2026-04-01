@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-03-31T17:32:30.559Z"
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-04-01T02:46:49.292Z"
 last_activity: "2026-03-29 — Completed 01-01: watson/ skill directory skeleton created"
 progress:
   total_phases: 5
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 15
-  completed_plans: 14
+  completed_plans: 15
   percent: 33
 ---
 
@@ -57,6 +57,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 04-discuss-subskill P04-01 | 15min | 2 tasks | 1 files |
 | Phase 04-discuss-subskill P02 | 2min | 2 tasks | 1 files |
 | Phase 05-master-orchestrator P01 | 2 | 2 tasks | 2 files |
+| Phase 05-master-orchestrator P02 | 30min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -97,6 +98,10 @@ Progress: [███░░░░░░░] 33%
 - [Phase 05-master-orchestrator]: SKILL.md stays under 200 lines (136 lines): all execution logic delegated to subskills; no file reads or agent dispatch at orchestrator layer
 - [Phase 05-master-orchestrator]: Three discuss return statuses are explicit cases in SKILL.md — no fallthrough; dispatching loupe for discussion_only or cancelled is forbidden
 - [Phase 05-master-orchestrator]: loupe.md Phase 0 resolves libraryPaths[] from LIBRARY.md + BOOK.md before any agent dispatch; discuss-only sections skip layout+design research agents
+- [Phase 05-master-orchestrator]: Library-first rule enforced in all three skill files — check conventions book before codebase exploration
+- [Phase 05-master-orchestrator]: Figma pre-fetch is background-only during discuss — conversation never blocks on Figma data retrieval
+- [Phase 05-master-orchestrator]: Phase 2 research agents: dispatch all sections in parallel, wait globally for all before any Phase 3 dispatch begins
+- [Phase 05-master-orchestrator]: Missing research agent output (LAYOUT.md or DESIGN.md) is a logged warning + null path — builder accepts null paths
 
 ### Pending Todos
 
@@ -109,6 +114,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T17:32:30.556Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-04-01T02:46:49.289Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None

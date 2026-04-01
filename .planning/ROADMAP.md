@@ -28,7 +28,7 @@ Full details: `milestones/v1.0-ROADMAP.md`
 - [x] **Phase 2: Library System** - Librarian agent, design system book, playground conventions book, LIBRARY.md index (completed 2026-03-31)
 - [ ] **Phase 3: Pipeline Agents** - All 7 Loupe agents ported to Watson contract, source-agnostic, library-book-driven
 - [ ] **Phase 4: Discuss Subskill** - Design thinking conversation, blueprint reads/writes, library book grounding, loupe handoff
-- [ ] **Phase 5: Master Orchestrator** - SKILL.md thin router, intent classification, subskill dispatch, end-to-end wiring
+- [x] **Phase 5: Master Orchestrator** - SKILL.md thin router, intent classification, subskill dispatch, end-to-end wiring (completed 2026-04-01)
 
 ## Phase Details
 
@@ -106,7 +106,7 @@ Plans:
 **Goal**: Watson is a single entry point that routes to the right subskill based on user intent, stays under ~200 lines, and works end-to-end from a fresh invocation through discuss and loupe to a built prototype
 **Depends on**: Phase 3, Phase 4
 **Requirements**: ORCH-01, ORCH-02, ORCH-03, ORCH-04, ORCH-05
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 **Success Criteria** (what must be TRUE):
   1. Typing /watson with any design intent routes to the correct subskill — the user never needs to know subskill names or internal architecture
   2. Watson automatically chains discuss to loupe (CONTEXT.md handoff) and suppresses duplicate prompts — the user is never asked the same question twice
@@ -130,4 +130,4 @@ Phase 4 depends only on Phases 1 and 2, so it runs parallel with Phase 3. Both m
 | 2. Library System | Watson 1.0 | 4/4 | Complete | 2026-03-31 |
 | 3. Pipeline Agents | 3/4 | In Progress|  | - |
 | 4. Discuss Subskill | 1/2 | In Progress|  | - |
-| 5. Master Orchestrator | 1/2 | In Progress|  | - |
+| 5. Master Orchestrator | 2/2 | Complete   | 2026-04-01 | - |
