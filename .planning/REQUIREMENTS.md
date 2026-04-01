@@ -1,144 +1,104 @@
-# Requirements: Watson 1.0 Foundation
+# Requirements: Watson
 
-**Defined:** 2026-03-28
+**Defined:** 2026-04-01
 **Core Value:** Every prototype decision is grounded in real context and traceable from idea through prototype to production spec.
 
-## v1 Requirements
+## v1.1 Requirements
 
-### Orchestration
+Requirements for Watson 1.1: Ambient Mode & Iteration. Each maps to roadmap phases.
 
-- [x] **ORCH-01**: User can invoke Watson via single `/watson` entry point with intent routing to subskills
-- [x] **ORCH-02**: Watson chains discuss → loupe automatically (CONTEXT.md handoff, suppresses duplicate prompts)
-- [x] **ORCH-03**: All user-facing messages use non-technical language (no agent names, file paths, or artifact names exposed to user)
-- [x] **ORCH-04**: Watson recognizes PDP stage context (Understand/Explore/Build/Ship) and adapts behavior accordingly
-- [x] **ORCH-05**: SKILL.md stays under 200 lines — execution logic lives in subskills and agents, not the orchestrator
+### Ambient Activation
 
-### Library System
+- [x] **AMBI-01**: Watson activates automatically when user is in a prototype directory without requiring /watson prefix
+- [x] **AMBI-02**: Watson detects whether user is starting a new prototype or returning to an existing one without asking
+- [x] **AMBI-03**: On activation in an existing prototype, Watson displays a 2-3 line context summary (prototype name, built sections, pending decisions) before asking what to do
 
-- [ ] **LIB-01**: LIBRARY.md index exists as table of contents for all books with metadata (last updated, source, chapter count)
-- [ ] **LIB-02**: Book/Chapter/Page hierarchy supports both flat files and deep trees (design system has chapters; conventions is flat)
-- [ ] **LIB-03**: Design system book is source-agnostic (works with FauxDS now, flips to real Slate via Librarian regeneration with zero agent edits)
-- [ ] **LIB-04**: Playground conventions book documents scaffolding checklist, component conventions, design tokens, dev workflow, multi-variant patterns, and contributor registration
-- [x] **LIB-05**: Librarian agent can generate a book from source files (full scan mode)
-- [x] **LIB-06**: Librarian agent can update a book surgically (diff source against existing book, patch only changed entries)
-- [x] **LIB-07**: Librarian auto-updates LIBRARY.md index when books are created or modified
-- [x] **LIB-08**: Agents read library books exclusively — never raw source material (Librarian is the sole interface to source)
+### Draft/Commit Amendment Model
 
-### Blueprint System
+- [ ] **DRFT-01**: Blueprint amendments from discuss default to a pending state rather than immediately committed
+- [ ] **DRFT-02**: User can explicitly commit pending amendments via the existing "Ready?" confirmation gate
+- [ ] **DRFT-03**: At commit gate, Watson shows a diff-style summary of which decisions will be locked in
+- [ ] **DRFT-04**: On session start, Watson surfaces any pending amendments from previous sessions
 
-- [x] **BLUE-01**: Each prototype has a `/blueprint` directory with CONTEXT.md, LAYOUT.md, DESIGN.md, INTERACTION.md
-- [x] **BLUE-02**: Blueprint files are source-agnostic (no reference to where data originated — Figma, conversation, or future clone-from-prod)
-- [x] **BLUE-03**: Blueprint files persist across sessions as living references that any agent or subskill can read
-- [x] **BLUE-04**: Blueprint files can be generated from Figma (via loupe pipeline) or conversation (via discuss + library books)
+### Session Management
 
-### Discuss Subskill
+- [ ] **SESS-01**: Watson creates a new git branch for a new prototype session with user confirmation
+- [ ] **SESS-02**: Watson switches to an existing prototype branch when returning to a prototype, with user confirmation
+- [ ] **SESS-03**: Watson uses a consistent branch naming convention (`watson/{prototype-slug}`)
+- [ ] **SESS-04**: On new session start, Watson surfaces existing Watson branches and offers cleanup of inactive ones
 
-- [x] **DISC-01**: User can invoke discuss anytime during prototyping for design thinking conversation
-- [x] **DISC-02**: Discuss reads any blueprint file to understand current prototype state before conversation
-- [x] **DISC-03**: Discuss writes surgical amendments to any blueprint file based on decisions made in conversation
-- [x] **DISC-04**: Discuss references library books (design system, playground conventions) to ground recommendations in real components and tokens
-- [x] **DISC-05**: Discuss scales depth based on prototype complexity (fewer questions for simple changes, deeper exploration for complex flows)
+### Agent 3 (Interactions)
 
-### Loupe Subskill
+- [ ] **INTR-01**: Interaction agent reads library component built-in interaction states from design system book and applies them to the section
+- [ ] **INTR-02**: Interaction agent accepts pre-gathered interactionContext from discuss and structures user-described states and behaviors
+- [ ] **INTR-03**: Interaction agent produces a structured INTERACTION.md per section combining discuss context with library defaults
+- [ ] **INTR-04**: When no discuss context exists, agent applies library component defaults only and notes that no custom interactions were specified
+- [ ] **INTR-05**: discuss subskill emits interactionContext field in its return status JSON
 
-- [x] **LOUP-01**: Figma-to-code pipeline with ported agents (decomposer, layout, design, builder, reviewer, consolidator)
-- [x] **LOUP-02**: All agents accept parameterized book paths (injected at dispatch time, never hardcoded)
-- [x] **LOUP-03**: Pipeline outputs write to prototype's `/blueprint` directory (LAYOUT.md, DESIGN.md, INTERACTION.md)
-- [ ] **LOUP-04**: Agent 3 (interactions) infers states from Figma with optional interactive interview, produces INTERACTION.md (Deferred — interaction agent is documented placeholder, deferred to post-v1 per 03-CONTEXT.md)
-- [x] **LOUP-05**: 2-agent parallel dispatch per section (layout + design simultaneously; interaction deferred)
-- [x] **LOUP-06**: Section staging (`.watson/sections/`) cleaned up after consolidation to blueprint files
+### 3-Agent Parallel Dispatch
 
-### Agent Architecture
+- [ ] **PARA-01**: loupe.md dispatches layout, design, and interaction agents simultaneously per Figma section
+- [ ] **PARA-02**: loupe.md wait gate requires all three agent outputs before proceeding to builder
+- [ ] **PARA-03**: Interaction agent failure or empty output does not block the pipeline — falls back to interactionPath: null
+- [ ] **PARA-04**: Discuss-only sections skip the interaction agent (same skip rule as layout and design)
 
-- [x] **ARCH-01**: Watson agent contract spec defined before any agent is ported (input parameters, output schema, dispatch mode)
-- [x] **ARCH-02**: Each agent is a self-contained `.md` file in `agents/` with no cross-references to other agents or SKILL.md
-- [x] **ARCH-03**: Foreground/background classification is binary and permanent per agent (documented in contract spec)
-- [x] **ARCH-04**: Schema-first artifact contracts — no agent written before its input/output schema is locked in a canonical example
-- [x] **ARCH-05**: Source-agnosticism verified (agents produce correct output when design system book is swapped from FauxDS to a different source)
+## v1.2 Requirements
 
-## Future Requirements
+Deferred to future release. Tracked but not in current roadmap.
 
-### Watson 1.1 — Core Workflows
+### Extended Capabilities
 
-- **EXPL-01**: User can invoke explore for structured solution-space research (competitive analysis, pattern mining, multi-approach generation)
-- **UNDR-01**: User can invoke understand to build or ingest a PRD, producing enriched CONTEXT.md
-- **INTR-01**: Agent 3 accepts pre-gathered interaction context from Watson (skips interview when discuss has already gathered context)
-- **PARA-01**: Full 3-agent parallel dispatch verified with interaction context passthrough
-
-### Watson 1.2 — Extended Capabilities
-
-- **WRIT-01**: User can invoke write for copywriting and content design within prototypes
-- **DEDC-01**: User can invoke deduce for non-technical prototype debugging (Sherlock-themed, designer-friendly language)
-- **RSRCH-01**: User can invoke research for open-ended outward research at any point
-- **BOOK-01**: Additional library books (design principles, business context, users/archetypes, content guidelines, research, SDD overview)
-
-### Watson 1.3 — SDD Integration
-
-- **SDD-01**: User can invoke prep-sdd-specs to generate and polish prd.md and frd.md for engineer handoff
-- **SDD-02**: /sdd directory per prototype with prd.md and frd.md
-- **SDD-03**: /resources directory per prototype (mock data, feedback, archive)
-- **SDD-04**: Blueprint-to-SDD pipeline auto-updates specs as prototype evolves
-
-### Watson 2.0 — Advanced
-
-- **CLON-01**: User can clone an existing Faire prod experience into a prototype as design reference
-- **VDIF-01**: Visual verification feedback loop (screenshot comparison against Figma reference)
-- **ABST-01**: Abstracted design system support beyond FauxDS/Slate
+- **PREF-01**: Cross-session preference memory (persist "just build" mode across sessions)
+- **CONF-01**: Interaction agent confidence scoring (flag uncertain variant inference)
+- **UNDR-01**: `understand` subskill (PRD ingestion → CONTEXT.md enrichment)
+- **EXPL-01**: `explore` subskill (competitive analysis, pattern review before discuss)
 
 ## Out of Scope
 
+Explicitly excluded. Documented to prevent scope creep.
+
 | Feature | Reason |
 |---------|--------|
-| External tooling (scripts, CLIs, build tools) | Watson is purely Claude Code skill files |
-| Figma MCP server setup | Already connected, not part of Watson build |
-| Real Slate component migration | Playground team handles this; Watson adapts via Librarian |
-| Full monorepo build integration | Watson works within prototype-playground package only |
-| Engineer-facing workflows | Watson serves designers and PMs; SDD serves engineers |
-| Auto-deploying prototypes | Publishing is a manual git workflow |
+| Animation curve/duration specification | False precision — Figma labels don't map to exact values; engineers override anyway |
+| Ambient activation in non-prototype directories | False positives degrade trust; two-signal requirement scopes activation |
+| Auto-committing on conversational acknowledgment | "That sounds good" mid-discussion is not an explicit design decision; trust-killer |
+| Interaction agent as foreground (interactive) during pipeline | Blocks pipeline and interrupts "just build" expectation; all context gathered before build |
+| Draft state as separate files (DRAFT-DESIGN.md) | Inverts clean agent contract where output paths are deterministic |
+| 3-agent dispatch for discuss-only sections | No Figma node to inspect; discuss already wrote INTERACTION.md to blueprint |
+| Figma variant inference for interaction states | Redundant — standard states already in Slate library; complex interactions need discuss anyway |
 
 ## Traceability
 
+Which phases cover which requirements. Updated during roadmap creation.
+
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ARCH-01 | Phase 1 | Complete |
-| ARCH-02 | Phase 1 | Complete |
-| ARCH-03 | Phase 1 | Complete |
-| ARCH-04 | Phase 1 | Complete |
-| ARCH-05 | Phase 1 | Complete |
-| BLUE-01 | Phase 1 | Complete |
-| BLUE-02 | Phase 1 | Complete |
-| BLUE-03 | Phase 1 | Complete |
-| BLUE-04 | Phase 1 | Complete |
-| LIB-01 | Phase 2 | Pending |
-| LIB-02 | Phase 2 | Pending |
-| LIB-03 | Phase 2 | Pending |
-| LIB-04 | Phase 2 | Pending |
-| LIB-05 | Phase 2 | Complete |
-| LIB-06 | Phase 2 | Complete |
-| LIB-07 | Phase 2 | Complete |
-| LIB-08 | Phase 2 | Complete |
-| LOUP-01 | Phase 3 | Complete |
-| LOUP-02 | Phase 3 | Complete |
-| LOUP-03 | Phase 3 | Complete |
-| LOUP-04 | Phase 3 | Deferred to Watson 1.1 (INTR-01) |
-| LOUP-05 | Phase 3 | Complete (2-agent parallel validated) |
-| LOUP-06 | Phase 3 | Complete |
-| DISC-01 | Phase 4 | Complete |
-| DISC-02 | Phase 4 | Complete |
-| DISC-03 | Phase 4 | Complete |
-| DISC-04 | Phase 4 | Complete |
-| DISC-05 | Phase 4 | Complete |
-| ORCH-01 | Phase 5 | Complete |
-| ORCH-02 | Phase 5 | Complete |
-| ORCH-03 | Phase 5 | Complete |
-| ORCH-04 | Phase 5 | Complete |
-| ORCH-05 | Phase 5 | Complete |
+| AMBI-01 | Phase 6 | Complete |
+| AMBI-02 | Phase 6 | Complete |
+| AMBI-03 | Phase 6 | Complete |
+| DRFT-01 | Phase 7 | Pending |
+| DRFT-02 | Phase 7 | Pending |
+| DRFT-03 | Phase 7 | Pending |
+| DRFT-04 | Phase 7 | Pending |
+| SESS-01 | Phase 8 | Pending |
+| SESS-02 | Phase 8 | Pending |
+| SESS-03 | Phase 8 | Pending |
+| SESS-04 | Phase 8 | Pending |
+| INTR-01 | Phase 9 | Pending |
+| INTR-02 | Phase 9 | Pending |
+| INTR-03 | Phase 9 | Pending |
+| INTR-04 | Phase 9 | Pending |
+| INTR-05 | Phase 9 | Pending |
+| PARA-01 | Phase 10 | Pending |
+| PARA-02 | Phase 10 | Pending |
+| PARA-03 | Phase 10 | Pending |
+| PARA-04 | Phase 10 | Pending |
 
 **Coverage:**
-- v1 requirements: 33 total
-- Mapped to phases: 33
-- Unmapped: 0 ✓
+- v1.1 requirements: 20 total
+- Mapped to phases: 20
+- Unmapped: 0
 
 ---
-*Requirements defined: 2026-03-28*
-*Last updated: 2026-03-28 — traceability populated after roadmap creation*
+*Requirements defined: 2026-04-01*
+*Last updated: 2026-04-01 — traceability completed during roadmap creation*

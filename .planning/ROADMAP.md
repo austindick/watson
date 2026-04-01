@@ -3,7 +3,8 @@
 ## Milestones
 
 - ✅ **v1.0 Loupe Pipeline** — Phases 1-5 (shipped 2026-03-26)
-- 🚧 **Watson 1.0 Foundation** — Phases 1-5 (in progress)
+- ✅ **Watson 1.0 Foundation** — Phases 1-5 (shipped 2026-04-01)
+- 🚧 **Watson 1.1 Ambient Mode & Iteration** — Phases 6-10 (in progress)
 
 ## Phases
 
@@ -20,114 +21,110 @@ Full details: `milestones/v1.0-ROADMAP.md`
 
 </details>
 
-### 🚧 Watson 1.0 Foundation (In Progress)
+<details>
+<summary>✅ Watson 1.0 Foundation (Phases 1-5) — SHIPPED 2026-04-01</summary>
 
-**Milestone Goal:** Replace watson-lite and standalone Loupe with a unified Watson skill — master orchestrator, library system, blueprint system, ported pipeline agents, and discuss and loupe subskills all wired through a thin-router SKILL.md.
+- [x] Phase 1: Foundation Scaffold (3/3 plans) — completed 2026-03-29
+- [x] Phase 2: Library System (4/4 plans) — completed 2026-03-31
+- [x] Phase 3: Pipeline Agents (4/4 plans) — completed 2026-03-31
+- [x] Phase 4: Discuss Subskill (2/2 plans) — completed 2026-03-31
+- [x] Phase 5: Master Orchestrator (2/2 plans) — completed 2026-04-01
 
-- [x] **Phase 1: Foundation Scaffold** - Directory structure, artifact schemas, agent contract spec, blueprint file templates (completed 2026-03-29)
-- [x] **Phase 2: Library System** - Librarian agent, design system book, playground conventions book, LIBRARY.md index (completed 2026-03-31)
-- [ ] **Phase 3: Pipeline Agents** - All 7 Loupe agents ported to Watson contract, source-agnostic, library-book-driven
-- [ ] **Phase 4: Discuss Subskill** - Design thinking conversation, blueprint reads/writes, library book grounding, loupe handoff
-- [x] **Phase 5: Master Orchestrator** - SKILL.md thin router, intent classification, subskill dispatch, end-to-end wiring (completed 2026-04-01)
+Full details: `milestones/Watson 1.0-ROADMAP.md`
+
+</details>
+
+### 🚧 Watson 1.1 Ambient Mode & Iteration (In Progress)
+
+**Milestone Goal:** Make Watson feel native to the Prototype Playground — activate automatically, support iterative draft/commit workflows, manage sessions, and unlock interaction-aware prototyping with Agent 3 and 3-agent parallel dispatch.
+
+- [x] **Phase 6: Ambient Activation + STATUS.md Schema** - Watson activates automatically in prototype directories and initializes a per-prototype state file (completed 2026-04-01)
+- [ ] **Phase 7: Draft/Commit Amendment Model** - Blueprint amendments default to pending; explicit commit gate locks them in
+- [ ] **Phase 8: Session Management** - Watson creates and switches git branches for prototype sessions with user confirmation
+- [ ] **Phase 9: Agent 3 (Interactions)** - Interaction agent structures discuss context and library defaults into INTERACTION.md per section
+- [ ] **Phase 10: 3-Agent Parallel Dispatch** - loupe.md dispatches layout, design, and interaction agents simultaneously per section
 
 ## Phase Details
 
-### Phase 1: Foundation Scaffold
-**Goal**: The watson/ directory exists with locked schemas and a complete agent contract spec — every subsequent phase has a known target structure to build into
-**Depends on**: Nothing (first Watson 1.0 phase)
-**Requirements**: ARCH-01, ARCH-02, ARCH-03, ARCH-04, ARCH-05, BLUE-01, BLUE-02, BLUE-03, BLUE-04
-**Plans:** 3/3 plans complete
+### Phase 6: Ambient Activation + STATUS.md Schema
+**Goal**: Watson is always-on in prototype directories — no /watson prefix required, and every prototype has a per-prototype state file that downstream phases will read and write
+**Depends on**: Phase 5 (Watson 1.0 master orchestrator)
+**Requirements**: AMBI-01, AMBI-02, AMBI-03
 **Success Criteria** (what must be TRUE):
-  1. Watson agent contract spec exists and enumerates every input parameter, output path convention, and flag name any agent will use
-  2. Canonical artifact schema examples exist for LAYOUT.md, DESIGN.md, INTERACTION.md, and CONTEXT.md — each is a filled-in example, not a prose description
-  3. Blueprint directory structure is defined and a fresh prototype directory can be initialized with the correct four-file scaffold
-  4. Directory skeleton at ~/.claude/skills/watson/ is present with agents/, skills/, library/, utilities/, and references/artifact-schemas/ all in place
-  5. Source-agnosticism constraint is documented and verifiable — swapping the design system book requires zero agent file edits
+  1. Opening any prototype file in the Playground triggers Watson without the user typing /watson
+  2. Watson correctly identifies new vs. returning prototypes without asking the user
+  3. Returning to an existing prototype shows a 2-3 line summary (prototype name, built sections, pending decisions) before asking what to do
+  4. blueprint/STATUS.md is created on new prototype setup with a defined schema consumed by all downstream phases
+**Plans**: 1 plan
 
 Plans:
-- [x] 01-01-PLAN.md — watson/ directory skeleton and file structure
-- [x] 01-02-PLAN.md — Artifact schemas (CONTEXT, LAYOUT, DESIGN, INTERACTION examples)
-- [x] 01-03-PLAN.md — Agent contract spec, book schema, and watson-init utility
+- [ ] 06-01-PLAN.md — Ambient activation (paths glob + Activation section) and STATUS.md schema (watson-init + artifact schema)
 
-### Phase 2: Library System
-**Goal**: The Librarian agent can generate and update structured library books, and at least two books (design system, playground conventions) are populated and indexed in LIBRARY.md
-**Depends on**: Phase 1
-**Requirements**: LIB-01, LIB-02, LIB-03, LIB-04, LIB-05, LIB-06, LIB-07, LIB-08
-**Plans:** 3/4 plans executed
+### Phase 7: Draft/Commit Amendment Model
+**Goal**: Blueprint amendments are explicitly pending until the user confirms — no design decision is silently locked in, and every session start surfaces unfinished work
+**Depends on**: Phase 6 (STATUS.md schema must exist)
+**Requirements**: DRFT-01, DRFT-02, DRFT-03, DRFT-04
 **Success Criteria** (what must be TRUE):
-  1. Running Librarian in generate mode against FauxDS source files produces a structured design system book that agents can read instead of raw source material
-  2. Running Librarian in update mode patches only changed entries without overwriting the rest of the existing book
-  3. LIBRARY.md index is updated automatically at the end of every Librarian run, with accurate last-updated timestamps and chapter counts
-  4. The playground conventions book documents all scaffolding, component conventions, design tokens, dev workflow, multi-variant patterns, and contributor registration
-  5. An agent given a libraryPath parameter reads a book file and produces correct output — it never touches a source file directly
+  1. After a discuss session with design decisions, amendments appear as pending in blueprint/STATUS.md rather than committed
+  2. When the user reaches the "Ready?" confirmation gate, Watson shows a plain-language diff of which decisions will be locked in
+  3. Starting a new session after previous pending amendments surfaces those amendments before asking what to do next
+  4. A committed amendment cannot be re-staged as pending (one-way lock)
+**Plans**: TBD
 
 Plans:
-- [ ] 02-01-PLAN.md — Librarian agent (generate mode), agent contract libraryPaths update, LIBRARY.md schema
-- [ ] 02-02-PLAN.md — Design system book generation from FauxDS source
-- [ ] 02-03-PLAN.md — Librarian agent (update mode) and LIBRARY.md auto-update
-- [ ] 02-04-PLAN.md — Playground conventions book and plugin manifest
+- [ ] 07-01: TBD
 
-### Phase 3: Pipeline Agents
-**Goal**: All seven pipeline agents exist in watson/agents/, conform to the Watson agent contract, consume library books via pre-resolved libraryPaths[], and contain zero FauxDS-specific hardcoding
-**Depends on**: Phase 2
-**Requirements**: LOUP-01, LOUP-02, LOUP-03, LOUP-04, LOUP-05, LOUP-06
-**Plans:** 3/4 plans executed
+### Phase 8: Session Management
+**Goal**: Watson manages prototype git branches on behalf of the user — new prototypes get a dedicated branch, returning sessions switch to the right branch, and orphaned branches are surfaced for cleanup
+**Depends on**: Phase 7 (session start must surface pending amendments, which requires draft/commit model)
+**Requirements**: SESS-01, SESS-02, SESS-03, SESS-04
 **Success Criteria** (what must be TRUE):
-  1. Each agent accepts Watson contract parameters (blueprintPath, libraryPaths[], sectionName) and writes output to .watson/sections/ staging paths
-  2. Each agent reads pre-resolved chapter/page paths from libraryPaths[] — no agent navigates LIBRARY.md or BOOK.md
-  3. Agent 03 (Interactions) exists as a documented placeholder noting deferral to post-v1 (per Phase 3 CONTEXT.md locked decision)
-  4. Agent 06 (Consolidator) cleans up .watson/sections/ staging files after merging all section artifacts into blueprint files
-  5. Swapping the library book chapters produces different token and component output from every agent without any agent file edits
+  1. Starting a new prototype session presents the user with a confirmation step before creating a watson/{prototype-slug} git branch
+  2. Returning to an existing prototype presents the user with a confirmation step before switching to the matching branch
+  3. All Watson branches follow the watson/{prototype-slug} naming convention without exception
+  4. At new session start, Watson lists inactive Watson branches and offers to delete them (with user confirmation)
+**Plans**: TBD
 
 Plans:
-- [ ] 03-01-PLAN.md — Port all 7 agents to Watson contract (decomposer, layout, design, interaction placeholder, builder, reviewer, consolidator)
-- [ ] 03-02-PLAN.md — Integration smoke test with real Figma frame (library book consumption + parallel dispatch + human verification)
-- [ ] 03-03-PLAN.md — Fix MCP tool names in decomposer, layout, and design agents (gap closure)
-- [ ] 03-04-PLAN.md — Test MCP passthrough to subagents and update requirement statuses (gap closure)
+- [ ] 08-01: TBD
 
-### Phase 4: Discuss Subskill
-**Goal**: The discuss subskill gives users a design thinking conversation partner at any stage, writes decisions to blueprint files grounded in library books, and chains to loupe with a clean CONTEXT.md handoff
-**Depends on**: Phase 1 (blueprint schema), Phase 2 (library books)
-**Requirements**: DISC-01, DISC-02, DISC-03, DISC-04, DISC-05
-**Plans:** 1/2 plans executed
-**Note**: Can run in parallel with Phase 3 — no dependency on ported agents. Both must complete before Phase 5.
+### Phase 9: Agent 3 (Interactions)
+**Goal**: A fully implemented interaction agent structures discuss-provided context and augments with library component defaults, producing INTERACTION.md output per section that the builder can consume — no Figma variant inference
+**Depends on**: Phase 6 (STATUS.md schema), Phase 7 (discuss emits interactionContext)
+**Requirements**: INTR-01, INTR-02, INTR-03, INTR-04, INTR-05
 **Success Criteria** (what must be TRUE):
-  1. A user can invoke discuss at any point during prototyping and receive design thinking conversation grounded in library books, without needing to know any Watson internals
-  2. Discuss reads any existing blueprint file to understand the current prototype state before opening the conversation
-  3. Discuss writes decisions to CONTEXT.md (and amends LAYOUT.md/DESIGN.md/INTERACTION.md when relevant) — decisions persist beyond the conversation session
-  4. Complex prototype discussions ask more questions and explore more depth; simple change requests proceed quickly without extended exploration. Preserves watson-lite's proven UX: AskUserQuestion discipline, complexity scaling, gentle challenges, pattern research
-  5. After a discuss session the handoff to loupe works: CONTEXT.md is populated and loupe does not re-prompt for information already gathered. Library grounding means component/token suggestions reference real book data, not generic names
+  1. Running the pipeline on a section produces INTERACTION.md combining library component default states with any discuss-provided context
+  2. When discuss has already documented interaction context, the agent structures those user-described states and behaviors into INTERACTION.md
+  3. A section with no discuss context produces INTERACTION.md with library component defaults only, noting no custom interactions were specified
+  4. discuss.md emits an interactionContext field in its return status JSON that loupe.md can forward to the interaction agent
+**Plans**: TBD
 
 Plans:
-- [ ] 04-01: discuss subskill core — port watson-lite's proven patterns (AskUserQuestion rules, complexity scaling, gentle challenges, core/contextual questions, pattern research), add library grounding and blueprint reading
-- [ ] 04-02: Blueprint write logic (CONTEXT.md output, surgical amendments to existing blueprints) + loupe handoff (CONTEXT.md interface contract, duplicate-question suppression)
+- [ ] 09-01: TBD
 
-### Phase 5: Master Orchestrator
-**Goal**: Watson is a single entry point that routes to the right subskill based on user intent, stays under ~200 lines, and works end-to-end from a fresh invocation through discuss and loupe to a built prototype
-**Depends on**: Phase 3, Phase 4
-**Requirements**: ORCH-01, ORCH-02, ORCH-03, ORCH-04, ORCH-05
-**Plans:** 2/2 plans complete
+### Phase 10: 3-Agent Parallel Dispatch
+**Goal**: The Loupe pipeline dispatches layout, design, and interaction agents simultaneously per section, with a wait gate that requires all three outputs before the builder proceeds — no increase in total build time
+**Depends on**: Phase 9 (interaction agent must exist before loupe.md can dispatch it)
+**Requirements**: PARA-01, PARA-02, PARA-03, PARA-04
 **Success Criteria** (what must be TRUE):
-  1. Typing /watson with any design intent routes to the correct subskill — the user never needs to know subskill names or internal architecture
-  2. Watson automatically chains discuss to loupe (CONTEXT.md handoff) and suppresses duplicate prompts — the user is never asked the same question twice
-  3. All user-facing messages use designer/PM language — no agent names, file paths, artifact names, or technical error messages are ever visible to the user
-  4. SKILL.md is ~200 lines (target, not hard cap) and contains no file reads, MCP calls, or agent dispatch sequences — all execution logic lives in subskills. The constraint ensures architectural discipline, not a precise line count
-  5. An end-to-end run on a real Figma frame completes without errors: /watson → discuss → loupe → built prototype code in the Playground
+  1. Triggering a build dispatches layout, design, and interaction agents as background agents in the same step, not sequentially
+  2. The builder does not start until all three agent outputs are present (or interaction explicitly fell back to null)
+  3. A section where the interaction agent errors or produces empty output does not block the pipeline — interactionPath falls back to null and the build continues
+  4. Discuss-only sections skip the interaction agent dispatch using the same skip logic as layout and design agents
+**Plans**: TBD
 
 Plans:
-- [ ] 05-01-PLAN.md — SKILL.md intent router + loupe.md pipeline orchestrator (setup detection, three-tier classification, discuss-to-loupe chain, agent wiring)
-- [ ] 05-02-PLAN.md — End-to-end integration test and designer-language audit on real Figma frame
+- [ ] 10-01: TBD
 
 ## Progress
 
-**Execution Order:**
-1 → 2 → 3 + 4 (parallel) → 5
-Phase 4 depends only on Phases 1 and 2, so it runs parallel with Phase 3. Both must complete before Phase 5.
+**Execution Order:** 6 → 7 → 8 → 9 → 10
 
-| Phase | Milestone | Plans | Status | Completed |
-|-------|-----------|-------|--------|-----------|
-| 1. Foundation Scaffold | Watson 1.0 | 3/3 | Complete | 2026-03-29 |
-| 2. Library System | Watson 1.0 | 4/4 | Complete | 2026-03-31 |
-| 3. Pipeline Agents | 3/4 | In Progress|  | - |
-| 4. Discuss Subskill | 1/2 | In Progress|  | - |
-| 5. Master Orchestrator | 2/2 | Complete   | 2026-04-01 | - |
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|----------------|--------|-----------|
+| 1-5. Watson 1.0 Foundation | v1.0 | 15/15 | Complete | 2026-04-01 |
+| 6. Ambient Activation + STATUS.md Schema | 1/1 | Complete   | 2026-04-01 | - |
+| 7. Draft/Commit Amendment Model | v1.1 | 0/? | Not started | - |
+| 8. Session Management | v1.1 | 0/? | Not started | - |
+| 9. Agent 3 (Interactions) | v1.1 | 0/? | Not started | - |
+| 10. 3-Agent Parallel Dispatch | v1.1 | 0/? | Not started | - |
