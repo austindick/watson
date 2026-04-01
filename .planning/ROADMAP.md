@@ -38,7 +38,7 @@ Full details: `milestones/Watson 1.0-ROADMAP.md`
 
 **Milestone Goal:** Make Watson feel native to the Prototype Playground — activate automatically, support iterative draft/commit workflows, manage sessions, and unlock interaction-aware prototyping with Agent 3 and 3-agent parallel dispatch.
 
-- [x] **Phase 6: Ambient Activation + STATUS.md Schema** - Watson activates automatically in prototype directories and initializes a per-prototype state file (completed 2026-04-01)
+- [ ] **Phase 6: Ambient Activation + STATUS.md Schema** - Watson activates automatically in prototype directories and initializes a per-prototype state file (gap closure in progress)
 - [ ] **Phase 7: Draft/Commit Amendment Model** - Blueprint amendments default to pending; explicit commit gate locks them in
 - [ ] **Phase 8: Session Management** - Watson creates and switches git branches for prototype sessions with user confirmation
 - [ ] **Phase 9: Agent 3 (Interactions)** - Interaction agent structures discuss context and library defaults into INTERACTION.md per section
@@ -55,10 +55,11 @@ Full details: `milestones/Watson 1.0-ROADMAP.md`
   2. Watson correctly identifies new vs. returning prototypes without asking the user
   3. Returning to an existing prototype shows a 2-3 line summary (prototype name, built sections, pending decisions) before asking what to do
   4. blueprint/STATUS.md is created on new prototype setup with a defined schema consumed by all downstream phases
-**Plans**: 1 plan
+**Plans**: 2 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Ambient activation (paths glob + Activation section) and STATUS.md schema (watson-init + artifact schema)
+- [x] 06-01-PLAN.md — STATUS.md schema (watson-init + artifact schema) and Activation section (blueprint gate, Tier 0, STATUS.md routing)
+- [ ] 06-02-PLAN.md — Gap closure: ambient trigger via path-specific rule (decoupled from SKILL.md frontmatter to preserve /watson slash command)
 
 ### Phase 7: Draft/Commit Amendment Model
 **Goal**: Blueprint amendments are explicitly pending until the user confirms — no design decision is silently locked in, and every session start surfaces unfinished work
@@ -123,7 +124,7 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1-5. Watson 1.0 Foundation | v1.0 | 15/15 | Complete | 2026-04-01 |
-| 6. Ambient Activation + STATUS.md Schema | 1/1 | Complete   | 2026-04-01 | - |
+| 6. Ambient Activation + STATUS.md Schema | v1.1 | 1/2 | Gap closure | - |
 | 7. Draft/Commit Amendment Model | v1.1 | 0/? | Not started | - |
 | 8. Session Management | v1.1 | 0/? | Not started | - |
 | 9. Agent 3 (Interactions) | v1.1 | 0/? | Not started | - |
