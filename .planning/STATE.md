@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 07-01-PLAN.md — discuss.md [PENDING]/[COMMITTED] lifecycle
-last_updated: "2026-04-02T04:56:02.433Z"
+stopped_at: Completed 07-02-PLAN.md — SKILL.md pending surfacing + builder.md amendment filter
+last_updated: "2026-04-02T04:59:35.557Z"
 last_activity: 2026-04-01 — Roadmap created; 5 phases defined for Watson 1.1
 progress:
   total_phases: 5
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 4
-  completed_plans: 3
+  completed_plans: 4
   percent: 0
 ---
 
@@ -58,6 +58,9 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 06-ambient-activation-status-md-schema]: Path glob corrected from src/pages/** to packages/design/prototype-playground/** — actual Playground directory structure
 - [Phase 06-ambient-activation-status-md-schema]: Ambient rule upgraded from passive suggestion to AskUserQuestion gate — blocks all work until user responds to Watson activation prompt
 - [Phase 07-draft-commit-amendment-model]: Every new amendment prefixed [PENDING] — no bare amendments; commit-all at Ready gate is all-or-nothing; STATUS.md drafts: tracks pending slugs; builder skips [PENDING] lines
+- [Phase 07-draft-commit-amendment-model]: Soft build warning fires once per session via pendingWarningShown in /tmp/watson-active.json
+- [Phase 07-draft-commit-amendment-model]: Review pending amendments handler reuses commit-all sequence from discuss.md — one authoritative pattern
+- [Phase 07-draft-commit-amendment-model]: Pre-Phase-7 unmarked amendment lines treated as committed in builder — backwards compat, no migration needed
 
 ### Pending Todos
 
@@ -71,6 +74,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-02T04:56:02.431Z
-Stopped at: Completed 07-01-PLAN.md — discuss.md [PENDING]/[COMMITTED] lifecycle
+Last session: 2026-04-02T04:59:35.555Z
+Stopped at: Completed 07-02-PLAN.md — SKILL.md pending surfacing + builder.md amendment filter
 Resume file: None
