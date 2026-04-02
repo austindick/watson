@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: "Completed 06-02: Ambient Activation + Session Toggle — AMBI-01/02/03 closed"
-last_updated: "2026-04-02T03:02:36.371Z"
+stopped_at: Completed 07-01-PLAN.md — discuss.md [PENDING]/[COMMITTED] lifecycle
+last_updated: "2026-04-02T04:56:02.433Z"
 last_activity: 2026-04-01 — Roadmap created; 5 phases defined for Watson 1.1
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 4
+  completed_plans: 3
   percent: 0
 ---
 
@@ -57,6 +57,7 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 06-ambient-activation-status-md-schema]: State file /tmp/watson-active.json is the single source of truth for Watson ON/OFF; status line Watson indicator injected into existing share-proto-statusline.js
 - [Phase 06-ambient-activation-status-md-schema]: Path glob corrected from src/pages/** to packages/design/prototype-playground/** — actual Playground directory structure
 - [Phase 06-ambient-activation-status-md-schema]: Ambient rule upgraded from passive suggestion to AskUserQuestion gate — blocks all work until user responds to Watson activation prompt
+- [Phase 07-draft-commit-amendment-model]: Every new amendment prefixed [PENDING] — no bare amendments; commit-all at Ready gate is all-or-nothing; STATUS.md drafts: tracks pending slugs; builder skips [PENDING] lines
 
 ### Pending Todos
 
@@ -70,6 +71,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-02T03:02:36.368Z
-Stopped at: Completed 06-02: Ambient Activation + Session Toggle — AMBI-01/02/03 closed
+Last session: 2026-04-02T04:56:02.431Z
+Stopped at: Completed 07-01-PLAN.md — discuss.md [PENDING]/[COMMITTED] lifecycle
 Resume file: None
