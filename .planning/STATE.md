@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 06-02 Task 1 complete — awaiting human verification at Task 2 (session toggle lifecycle)
-last_updated: "2026-04-01T20:33:44.199Z"
+stopped_at: "Completed 06-02: Ambient Activation + Session Toggle — AMBI-01/02/03 closed"
+last_updated: "2026-04-02T03:02:36.371Z"
 last_activity: 2026-04-01 — Roadmap created; 5 phases defined for Watson 1.1
 progress:
   total_phases: 5
@@ -55,6 +55,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 06-ambient-activation-status-md-schema]: watson-init scaffolds five blueprint files; STATUS.md as fifth with YAML frontmatter + Phase 7/8 stubs
 - [Phase 06-ambient-activation-status-md-schema]: Use ~/.claude/rules/ path-specific rule (not SKILL.md paths:) for ambient suggestion — preserves /watson slash command autocomplete
 - [Phase 06-ambient-activation-status-md-schema]: State file /tmp/watson-active.json is the single source of truth for Watson ON/OFF; status line Watson indicator injected into existing share-proto-statusline.js
+- [Phase 06-ambient-activation-status-md-schema]: Path glob corrected from src/pages/** to packages/design/prototype-playground/** — actual Playground directory structure
+- [Phase 06-ambient-activation-status-md-schema]: Ambient rule upgraded from passive suggestion to AskUserQuestion gate — blocks all work until user responds to Watson activation prompt
 
 ### Pending Todos
 
@@ -68,6 +70,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-01T20:33:39.470Z
-Stopped at: Phase 06-02 Task 1 complete — awaiting human verification at Task 2 (session toggle lifecycle)
+Last session: 2026-04-02T03:02:36.368Z
+Stopped at: Completed 06-02: Ambient Activation + Session Toggle — AMBI-01/02/03 closed
 Resume file: None
