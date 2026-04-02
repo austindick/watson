@@ -70,10 +70,11 @@ Plans:
   2. When the user reaches the "Ready?" confirmation gate, Watson shows a plain-language diff of which decisions will be locked in
   3. Starting a new session after previous pending amendments surfaces those amendments before asking what to do next
   4. A committed amendment cannot be re-staged as pending (one-way lock)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 07-01: TBD
+- [ ] 07-01-PLAN.md — [PENDING] amendment writes in discuss.md + commit gate diff + commit-all sequence + STATUS.md drafts management
+- [ ] 07-02-PLAN.md — Session-start pending surfacing in SKILL.md + soft build warning + builder.md [COMMITTED]-only filter
 
 ### Phase 8: Session Management
 **Goal**: Watson manages prototype git branches on behalf of the user — new prototypes get a dedicated branch, returning sessions switch to the right branch, and orphaned branches are surfaced for cleanup
@@ -125,7 +126,7 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 1-5. Watson 1.0 Foundation | v1.0 | 15/15 | Complete | 2026-04-01 |
 | 6. Ambient Activation + STATUS.md Schema | 2/2 | Complete   | 2026-04-02 | - |
-| 7. Draft/Commit Amendment Model | v1.1 | 0/? | Not started | - |
+| 7. Draft/Commit Amendment Model | v1.1 | 0/2 | Not started | - |
 | 8. Session Management | v1.1 | 0/? | Not started | - |
 | 9. Agent 3 (Interactions) | v1.1 | 0/? | Not started | - |
 | 10. 3-Agent Parallel Dispatch | v1.1 | 0/? | Not started | - |
