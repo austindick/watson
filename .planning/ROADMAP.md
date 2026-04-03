@@ -44,7 +44,7 @@ Full details: `milestones/Watson 1.0-ROADMAP.md`
 - [x] **Phase 9: Agent 3 (Interactions)** - Interaction agent structures discuss context and library defaults into INTERACTION.md per section (completed 2026-04-03)
 - [x] **Phase 10: 3-Agent Parallel Dispatch** - loupe.md dispatches layout, design, and interaction agents simultaneously per section (completed 2026-04-03)
 - [x] **Phase 11: Restore DRFT-04 Review Gate + Doc Fixes** - Restore dropped amendment review gate in SKILL.md Path B and fix documentation mismatches (gap closure) (completed 2026-04-03)
-- [ ] **Phase 12: Integration Hardening + Milestone Cleanup** - Fix integration gaps (blueprintPath resolution, relative path robustness) and clean up stale milestone documentation
+- [x] **Phase 12: Integration Hardening + Milestone Cleanup** - Fix integration gaps (blueprintPath resolution, relative path robustness) and clean up stale milestone documentation (completed 2026-04-03)
 
 ## Phase Details
 
@@ -164,4 +164,4 @@ Plans:
 | 9. Agent 3 (Interactions) | 2/2 | Complete   | 2026-04-03 | - |
 | 10. 3-Agent Parallel Dispatch | 1/1 | Complete    | 2026-04-03 | - |
 | 11. Restore DRFT-04 Review Gate + Doc Fixes | 1/1 | Complete    | 2026-04-03 | - |
-| 12. Integration Hardening + Milestone Cleanup | 0/1 | Planned    | - | - |
+| 12. Integration Hardening + Milestone Cleanup | 1/1 | Complete   | 2026-04-03 | - |
