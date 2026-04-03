@@ -40,7 +40,7 @@ Full details: `milestones/Watson 1.0-ROADMAP.md`
 
 - [x] **Phase 6: Ambient Activation + STATUS.md Schema** - Watson activates automatically in prototype directories and initializes a per-prototype state file (gap closure in progress) (completed 2026-04-02)
 - [x] **Phase 7: Draft/Commit Amendment Model** - Blueprint amendments default to pending; explicit commit gate locks them in (completed 2026-04-02)
-- [ ] **Phase 8: Session Management** - Watson creates and switches git branches for prototype sessions with user confirmation
+- [x] **Phase 8: Session Management** - Watson creates and switches git branches for prototype sessions with user confirmation (completed 2026-04-03)
 - [ ] **Phase 9: Agent 3 (Interactions)** - Interaction agent structures discuss context and library defaults into INTERACTION.md per section
 - [ ] **Phase 10: 3-Agent Parallel Dispatch** - loupe.md dispatches layout, design, and interaction agents simultaneously per section
 
@@ -128,6 +128,6 @@ Plans:
 | 1-5. Watson 1.0 Foundation | v1.0 | 15/15 | Complete | 2026-04-01 |
 | 6. Ambient Activation + STATUS.md Schema | 2/2 | Complete   | 2026-04-02 | - |
 | 7. Draft/Commit Amendment Model | 2/2 | Complete   | 2026-04-02 | - |
-| 8. Session Management | 1/2 | In Progress|  | - |
+| 8. Session Management | 2/2 | Complete   | 2026-04-03 | - |
 | 9. Agent 3 (Interactions) | v1.1 | 0/? | Not started | - |
 | 10. 3-Agent Parallel Dispatch | v1.1 | 0/? | Not started | - |
