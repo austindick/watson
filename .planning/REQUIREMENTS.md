@@ -29,11 +29,11 @@ Requirements for Watson 1.1: Ambient Mode & Iteration. Each maps to roadmap phas
 
 ### Agent 3 (Interactions)
 
-- [ ] **INTR-01**: Interaction agent reads library component built-in interaction states from design system book and applies them to the section
-- [ ] **INTR-02**: Interaction agent accepts pre-gathered interactionContext from discuss and structures user-described states and behaviors
-- [ ] **INTR-03**: Interaction agent produces a structured INTERACTION.md per section combining discuss context with library defaults
-- [ ] **INTR-04**: When no discuss context exists, agent applies library component defaults only and notes that no custom interactions were specified
-- [ ] **INTR-05**: discuss subskill emits interactionContext field in its return status JSON
+- [x] **INTR-01**: Interaction agent reads library component built-in interaction states from design system book and applies them to the section
+- [x] **INTR-02**: Interaction agent accepts pre-gathered interactionContext from discuss and structures user-described states and behaviors
+- [x] **INTR-03**: Interaction agent produces a structured INTERACTION.md per section combining discuss context with library defaults
+- [x] **INTR-04**: When no discuss context exists, agent applies library component defaults only and notes that no custom interactions were specified
+- [x] **INTR-05**: discuss subskill emits interactionContext field in its return status JSON
 
 ### 3-Agent Parallel Dispatch
 
@@ -84,11 +84,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SESS-02 | Phase 8 | Complete |
 | SESS-03 | Phase 8 | Complete |
 | SESS-04 | Phase 8 | Complete |
-| INTR-01 | Phase 9 | Pending |
-| INTR-02 | Phase 9 | Pending |
-| INTR-03 | Phase 9 | Pending |
-| INTR-04 | Phase 9 | Pending |
-| INTR-05 | Phase 9 | Pending |
+| INTR-01 | Phase 9 | Complete |
+| INTR-02 | Phase 9 | Complete |
+| INTR-03 | Phase 9 | Complete |
+| INTR-04 | Phase 9 | Complete |
+| INTR-05 | Phase 9 | Complete |
 | PARA-01 | Phase 10 | Pending |
 | PARA-02 | Phase 10 | Pending |
 | PARA-03 | Phase 10 | Pending |

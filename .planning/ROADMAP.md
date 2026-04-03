@@ -100,10 +100,11 @@ Plans:
   2. When discuss has already documented interaction context, the agent structures those user-described states and behaviors into INTERACTION.md
   3. A section with no discuss context produces INTERACTION.md with library component defaults only, noting no custom interactions were specified
   4. discuss.md emits an interactionContext field in its return status JSON that loupe.md can forward to the interaction agent
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 09-01: TBD
+- [ ] 09-01-PLAN.md — Interaction agent implementation + discuss interactionContext emit
+- [ ] 09-02-PLAN.md — Loupe dispatch wiring + consolidator INTERACTION.md handling
 
 ### Phase 10: 3-Agent Parallel Dispatch
 **Goal**: The Loupe pipeline dispatches layout, design, and interaction agents simultaneously per section, with a wait gate that requires all three outputs before the builder proceeds — no increase in total build time
@@ -129,5 +130,5 @@ Plans:
 | 6. Ambient Activation + STATUS.md Schema | 2/2 | Complete   | 2026-04-02 | - |
 | 7. Draft/Commit Amendment Model | 2/2 | Complete   | 2026-04-02 | - |
 | 8. Session Management | 2/2 | Complete   | 2026-04-03 | - |
-| 9. Agent 3 (Interactions) | v1.1 | 0/? | Not started | - |
+| 9. Agent 3 (Interactions) | 1/2 | In Progress|  | - |
 | 10. 3-Agent Parallel Dispatch | v1.1 | 0/? | Not started | - |
