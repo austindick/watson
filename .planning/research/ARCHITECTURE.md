@@ -1,437 +1,561 @@
 # Architecture Research
 
-**Domain:** Claude Code skill framework — Watson 1.1 integration architecture
-**Researched:** 2026-04-01
-**Confidence:** HIGH for integration patterns (derived from reading all existing skill files); MEDIUM for ambient activation reliability (WebSearch confirmed functional but noted ~50% auto-trigger rate without hooks); HIGH for 3-agent parallel (direct extension of proven 2-agent pattern)
+**Domain:** Claude Code plugin deployment — Watson 1.2 migration architecture
+**Researched:** 2026-04-02
+**Confidence:** HIGH for plugin directory structure and hooks.json format (official docs, WebFetch); HIGH for CLAUDE_PLUGIN_ROOT substitution in skill/agent content (official docs confirmed); MEDIUM for ambient rule in plugin (no official plugin-rules support found, workaround documented); LOW for statusLine plugin-level support (not documented as plugin-scoped feature)
 
 ---
 
-## System Overview: Watson 1.1 Target State
+## System Overview: Watson Plugin Structure
+
+Watson's current layout at `~/.claude/skills/watson/` maps to a self-contained plugin directory. The plugin cache system copies all files on install, which means every path must be portable — no hardcoded `~/.claude/skills/watson/` references can survive.
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     AMBIENT ACTIVATION LAYER  (NEW)                  │
-│  paths: "src/pages/**/*.tsx"  in SKILL.md frontmatter               │
-│  Description-based auto-load when user edits prototype files        │
-│  UserPromptSubmit hook (optional hardening) injects context         │
-└───────────────────────────┬─────────────────────────────────────────┘
-                            │ (activates when working in prototype dir)
-┌───────────────────────────▼─────────────────────────────────────────┐
-│                     MASTER ORCHESTRATOR                              │
-│                   watson/SKILL.md  (v1.1 changes)                   │
-│   + Draft/commit state awareness                                     │
-│   + Session management (branch detection/creation)                  │
-│   + Ambient re-entry path (no /watson invocation needed)            │
-└──────┬───────────────────┬──────────────────┬───────────────────────┘
-       │                   │                  │
-┌──────▼──────┐   ┌────────▼────────┐  ┌──────▼──────────┐
-│  SUBSKILLS  │   │    SUBSKILLS    │  │    UTILITIES    │
-│             │   │                 │  │                 │
-│ skills/     │   │ skills/         │  │ utilities/      │
-│ discuss.md  │   │ loupe.md        │  │ librarian.md    │
-│ (+ draft/   │   │ (v1.1: 3-agent  │  │ (unchanged)     │
-│  commit     │   │  parallel)      │  │                 │
-│  awareness) │   │                 │  │                 │
-└─────────────┘   └──────┬──────────┘  └─────────────────┘
-                         │
-         ┌───────────────┼──────────────────────────────────┐
-         │               │                   │              │
-┌────────▼───┐  ┌────────▼──────────────────▼─┐  ┌─────────▼──────┐
-│  FOREGROUND│  │  PARALLEL BACKGROUND  (v1.1) │  │  SEQUENTIAL    │
-│  AGENTS    │  │  3 agents per section         │  │  FOREGROUND    │
-│            │  │                               │  │  AGENTS        │
-│ decomposer │  │  layout.md   design.md        │  │  builder.md    │
-│            │  │              interaction.md   │  │  reviewer.md   │
-│            │  │              (NEW — Agent 3)  │  │  consolidator  │
-└────────────┘  └───────────────────────────────┘  └────────────────┘
-                         │
-┌────────────────────────▼────────────────────────────────────────────┐
-│                     DRAFT/COMMIT LAYER  (NEW)                        │
-│  Blueprint files: CONTEXT.md, LAYOUT.md, DESIGN.md, INTERACTION.md  │
-│  State: "draft" (discuss amendments, pending rebuild) vs            │
-│         "committed" (explicitly locked by user)                      │
-│  Stored in: blueprint/STATUS.md  (new file)                         │
-│  Consumers: SKILL.md (routing), discuss.md (amendment writes)       │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Integration Points: What Changes and What's New
-
-### Feature 1: Ambient Mode
-
-**What it is:** Watson activates automatically when the user works in a prototype directory without typing `/watson`.
-
-**Mechanism:** Claude Code's `paths` frontmatter field in `SKILL.md`. When the field is set, Claude loads the skill automatically when the user reads, writes, or edits a file matching the glob pattern.
-
-**Integration point:** `SKILL.md` frontmatter only. No new files needed.
-
-```yaml
----
-name: watson
-version: 1.1.0
-description: Design prototyping assistant — activates automatically in prototype directories. Use when building, discussing, or iterating on UI prototypes in the Playground.
-paths:
-  - "src/pages/**/*.tsx"
-  - "src/pages/**/*.ts"
----
-```
-
-**Setup Detection change:** SKILL.md's current "Setup Detection" step assumes explicit invocation. In ambient mode, the user has not typed `/watson` — they are already working in a file. The setup detection logic must additionally handle "ambient entry":
-
-- If user is already editing a file matching `paths`, skip the "find prototype directory" question — infer it from the file they are editing (`{editedFilePath}` context)
-- If blueprint exists → returning user, proceed to Intent Classification
-- If blueprint missing → prompt softly: "I can help with this prototype — want me to set it up?"
-
-**Reliability note:** Description-based ambient activation has approximately 50% auto-trigger rate in practice (WebSearch, MEDIUM confidence). The `paths` frontmatter approach is more reliable — it triggers on file access patterns, not language matching. If reliability remains insufficient after initial testing, a `UserPromptSubmit` hook can be added as a hardening layer to inject explicit activation context.
-
-**Nothing else changes:** loupe.md, discuss.md, and all agents are unaffected by ambient mode. Ambient mode is purely an entry-path concern for SKILL.md.
-
----
-
-### Feature 2: Draft/Commit Amendment Model
-
-**What it is:** Blueprint changes from `discuss` are exploratory ("draft") by default. Users explicitly lock in changes with a "commit" action to mark them as the new authoritative state.
-
-**Where state lives:** A new file `blueprint/STATUS.md` per prototype. This keeps state co-located with the blueprint it describes and does not require any global Watson state.
-
-**STATUS.md schema:**
-
-```markdown
-# Blueprint Status
-
-**State:** draft | committed
-**Last committed:** [ISO date or "never"]
-**Pending amendments:** [list of changed sections, or "none"]
-```
-
-**Integration points:**
-
-| Component | Change |
-|-----------|--------|
-| `SKILL.md` | Reads STATUS.md on entry; surfaces "you have uncommitted design changes" if state is draft |
-| `discuss.md` | After writing a `## Discuss Amendments` section to any blueprint file, writes STATUS.md with `State: draft` and records which file was amended |
-| `loupe.md` | Checks STATUS.md before pipeline run; if draft, show: "Building with pending design changes — these are exploratory until you commit them" |
-| `utilities/watson-init.md` | Writes initial STATUS.md (`State: committed`, `Last committed: [date]`, `Pending amendments: none`) during prototype setup |
-
-**Commit action:** User says "commit" / "lock this in" / "finalize these changes." SKILL.md catches this intent, writes STATUS.md with `State: committed`, `Last committed: [now]`, `Pending amendments: none`.
-
-**No new agents needed.** Draft/commit is pure orchestration and file-write logic in SKILL.md + discuss.md.
-
----
-
-### Feature 3: Session Management
-
-**What it is:** Watson automates prototype branch creation and detection — new prototypes get a feature branch, returning users land on the right branch.
-
-**Where it runs:** SKILL.md's Setup Flow (new prototypes) and Setup Detection (returning users). No subskills or agents involved.
-
-**New prototype flow:**
-1. After setup questions are answered, SKILL.md checks current git branch
-2. If on `main`/`master`: offer to create a feature branch
-   ```
-   - header: "Branch"
-   - question: "Should I create a feature branch for this prototype?"
-   - options: ["Yes, create one", "I'll manage branches myself"]
-   ```
-3. If yes: run `git checkout -b prototype/[prototype-name-slug]`
-4. Record branch name in `blueprint/STATUS.md` under a `## Session` section
-
-**Returning prototype flow:**
-1. SKILL.md reads `blueprint/STATUS.md` for recorded branch name
-2. If current branch differs from recorded branch: surface a soft warning
-   ```
-   "You're on branch [current] — this prototype was last worked on from [recorded branch]. Want to switch?"
-   ```
-3. User chooses; SKILL.md runs `git checkout [branch]` if confirmed
-
-**Constraints:**
-- All git operations run via Bash tool in SKILL.md — no external scripts
-- Git operations are always user-confirmed before execution (no silent checkouts)
-- If git is not available or repo is not initialized: skip branch management silently, do not block Watson
-- Branch naming: `prototype/[slug]` where slug is kebab-case of prototype name
-
-**STATUS.md extended schema:**
-
-```markdown
-# Blueprint Status
-
-**State:** draft | committed
-**Last committed:** [ISO date or "never"]
-**Pending amendments:** [comma-separated list, or "none"]
-
-## Session
-**Branch:** prototype/[slug]
-**Created:** [ISO date]
-```
-
----
-
-### Feature 4: Agent 3 (Interactions)
-
-**What it is:** The `interaction.md` agent stub is activated. It fetches Figma interaction/state data per section and produces an `INTERACTION.md` spec for the builder to consume.
-
-**Figma MCP reality check:** Watson's existing agents reference `mcp__figma__get_figma_data`. The official Figma MCP server (as of February 2026) does not expose a tool by this name. The available tools are `get_metadata` (sparse XML of layer IDs, names, types, positions, sizes) and `get_design_context` (React+Tailwind rendering output). Watson 1.0 agents were built and validated against `mcp__figma__get_figma_data` — meaning the actual MCP tool available in the Faire environment likely has a different name than the official public server. This is LOW confidence on the exact tool name. **The interaction agent must mirror the same tool-call pattern used in `layout.md` and `design.md` — whatever tool those agents actually call, Agent 3 calls the same tool.**
-
-**What Agent 3 extracts from Figma data:**
-Figma's React+Tailwind output includes component variant data (e.g., `Button variant="primary" state="hover"`), conditional rendering patterns, and component names that imply state machines. Agent 3 infers interaction states from:
-- Component variant names (Figma "interactive component" variants expose state names: `Default`, `Hover`, `Pressed`, `Disabled`, `Loading`)
-- Conditional className patterns in the Tailwind output
-- Layer names that follow state-naming conventions (e.g., `Button/Hover`, `Input/Error`)
-
-Figma does NOT reliably expose animation timing or prototype-link transitions via MCP. Agent 3 infers timing from design system conventions (loaded from `libraryPaths`) and documents inferred values explicitly.
-
-**`discuss.md` context pass-through:** If the discuss phase captured interaction specifics in `INTERACTION.md` blueprint file, Agent 3 reads `{blueprintPath}/INTERACTION.md` before fetching Figma data. Pre-gathered discuss context takes precedence over Figma inference for any section detail it covers. Figma inference fills gaps.
-
-**Agent 3 contract (implementing the existing stub):**
-
-```
-Inputs:
-  nodeId         — section nodeId for Figma state variant inspection
-  sectionName    — used to construct output path
-  blueprintPath  — reads {blueprintPath}/INTERACTION.md for discuss context
-  libraryPaths   — design system book for DS-standard interaction patterns
-  watsonMode     — boolean
-
-Output:
-  .watson/sections/{sectionName}/INTERACTION.md  (< 50 lines)
-  Sections: Visible States, Confirmed/Inferred States, State Transitions, Animation and Timing
-```
-
-**Builder change:** `loupe.md` currently passes `interactionPath: null` to the builder. In v1.1, it passes the resolved interaction path (or null if Agent 3 produced no output — fallback behavior already exists in `builder.md` Step 1).
-
-**Dispatch classification:** Background agent (no `AskUserQuestion`). Mirrors layout and design agents.
-
----
-
-### Feature 5: 3-Agent Parallel Dispatch
-
-**What it is:** Phase 2 of `loupe.md` currently dispatches 2 background agents per section (layout + design). In v1.1, it dispatches 3 (layout + design + interaction).
-
-**Change is confined to `loupe.md` Phase 2 only.**
-
-**Current Phase 2:**
-```
-For each section where referenceType = "figma":
-  Dispatch @agents/layout.md (background)
-  Dispatch @agents/design.md (background)
-  Wait for both
-```
-
-**v1.1 Phase 2:**
-```
-For each section where referenceType = "figma":
-  Dispatch @agents/layout.md (background)
-  Dispatch @agents/design.md (background)
-  Dispatch @agents/interaction.md (background)  ← NEW
-  Wait for all three
-```
-
-**Output file check additions:** Phase 3 already handles null paths for missing layout/design outputs. Add analogous check for INTERACTION.md:
-- If `INTERACTION.md` is missing after agents complete: pass `interactionPath: null` to builder (already the correct fallback per builder constraints)
-- Do not retry interaction agent failure independently — if all three are missing, apply existing "both missing" retry rule
-
-**`interactionPath` in Phase 3 dispatch to builder:**
-```
-interactionPath: .watson/sections/{section.name}/INTERACTION.md
-  (set to null if file is missing after agents completed)
-```
-
-**Discuss-only sections:** Unchanged. Discuss-only sections skip Phase 2 entirely. For these sections, `interactionPath` is set to `{blueprintPath}/INTERACTION.md` (the same pattern as layoutPath/designPath for discuss-only sections).
-
----
-
-## Component Change Summary
-
-| Component | Change Type | What Changes |
-|-----------|-------------|--------------|
-| `SKILL.md` | Modified | Add `paths` frontmatter; ambient entry detection; draft/commit routing; session management (branch create/switch) |
-| `skills/discuss.md` | Modified | Write STATUS.md to `draft` on any blueprint amendment |
-| `skills/loupe.md` | Modified | Phase 2: add interaction agent to parallel dispatch; Phase 3: pass `interactionPath` to builder |
-| `agents/interaction.md` | New (implements stub) | Full implementation of existing contract stub |
-| `blueprint/STATUS.md` | New file per prototype | Draft/commit state + session branch tracking |
-| `utilities/watson-init.md` | Modified | Write initial STATUS.md during setup |
-| `agents/layout.md` | Unchanged | — |
-| `agents/design.md` | Unchanged | — |
-| `agents/builder.md` | Unchanged | Already accepts `interactionPath` as optional input |
-| `agents/reviewer.md` | Unchanged | — |
-| `agents/consolidator.md` | Unchanged | — |
-| `agents/decomposer.md` | Unchanged | — |
-| `utilities/librarian.md` | Unchanged | — |
-| Library books | Unchanged | — |
-
----
-
-## Data Flow Changes
-
-### Ambient Entry Path (new)
-
-```
-User edits src/pages/[prototype]/[file].tsx
-    ↓ (paths: frontmatter triggers)
-SKILL.md: ambient entry detected
-    ↓ read blueprint from parent directory
-Setup Detection: find blueprint/ relative to edited file
-    ↓
-Blueprint state check → Intent Classification (unchanged from here)
-```
-
-### Draft/Commit Flow (new)
-
-```
-discuss.md: writes ## Discuss Amendments to LAYOUT.md / DESIGN.md / INTERACTION.md
-    ↓
-discuss.md: writes blueprint/STATUS.md → State: draft, Pending: [file list]
-    ↓
-[Next session / any Watson invocation]
-SKILL.md: reads STATUS.md → surfaces "uncommitted changes" notice
-    ↓
-User: "commit" / explicit lock-in signal
-    ↓
-SKILL.md: writes STATUS.md → State: committed, Last committed: [now], Pending: none
-```
-
-### 3-Agent Parallel Phase 2 (updated)
-
-```
-loupe.md Phase 2: for each figma section
-    ↓ dispatch simultaneously
-layout.md (background)   design.md (background)   interaction.md (background)
-    ↓                         ↓                          ↓
-.watson/sections/N/       .watson/sections/N/       .watson/sections/N/
-  LAYOUT.md                 DESIGN.md                 INTERACTION.md
-    ↓
-loupe.md: wait for all three, then verify all three outputs
-    ↓
-Phase 3: builder receives layoutPath + designPath + interactionPath
-```
-
-### Agent 3 Internal Flow
-
-```
-interaction.md:
-  Step 1: Read libraryPaths for DS-standard interaction patterns
-  Step 2: Read {blueprintPath}/INTERACTION.md for discuss context (if exists)
-  Step 3: Fetch section data from Figma MCP (same tool as layout.md/design.md)
-  Step 4: Extract variant names → map to states
-  Step 5: Cross-reference DS patterns from library books
-  Step 6: Identify state transitions from conditional rendering patterns
-  Step 7: Write INTERACTION.md (< 50 lines)
-    Output: Visible States, Confirmed/Inferred States, State Transitions, Animation and Timing
-```
-
----
-
-## Structural Changes to File Tree
-
-```
-~/.claude/skills/watson/
-├── SKILL.md                         # Modified: paths frontmatter, ambient entry, session mgmt
+watson-plugin/                        ← plugin root (GitHub repo: austindick/watson)
+├── .claude-plugin/
+│   └── plugin.json                   ← manifest (name, version, author, repo)
 ├── skills/
-│   ├── discuss.md                   # Modified: writes STATUS.md on amendment
-│   └── loupe.md                     # Modified: 3-agent parallel, interactionPath pass-through
-├── agents/
-│   ├── decomposer.md                # Unchanged
-│   ├── layout.md                    # Unchanged
-│   ├── design.md                    # Unchanged
-│   ├── interaction.md               # IMPLEMENTED (was stub)
-│   ├── builder.md                   # Unchanged
-│   ├── reviewer.md                  # Unchanged
-│   └── consolidator.md              # Unchanged
-├── utilities/
-│   └── watson-init.md               # Modified: writes STATUS.md on init
+│   └── watson/
+│       └── SKILL.md                  ← maps from SKILL.md (orchestrator entry point)
+├── agents/                           ← maps from agents/ (all 8 agent files)
+│   ├── builder.md
+│   ├── consolidator.md
+│   ├── decomposer.md
+│   ├── design.md
+│   ├── interaction.md
+│   ├── layout.md
+│   ├── librarian.md
+│   └── reviewer.md
+├── commands/                         ← maps from utilities/ (watson-init as command)
+│   └── watson-init.md                ← invocable as @commands/watson-init
+├── library/                          ← maps from library/ (bundled reference books)
+│   ├── LIBRARY.md
+│   ├── design-system/
+│   │   ├── BOOK.md
+│   │   ├── global-theme/
+│   │   ├── components/
+│   │   └── icons/
+│   └── playground-conventions/
+│       ├── BOOK.md
+│       ├── project-structure/
+│       ├── scaffolding/
+│       ├── components/
+│       ├── design-tokens/
+│       ├── dev-workflow/
+│       ├── multi-variant/
+│       └── contributor-registration/
+├── references/                       ← maps from references/ (agent-contract, book-schema, etc.)
+│   ├── agent-contract.md
+│   ├── book-schema.md
+│   ├── source-scanning.md
+│   └── artifact-schemas/
+├── hooks/
+│   └── hooks.json                    ← Watson-specific hooks (SessionStart, SessionEnd)
+└── scripts/
+    └── watson-statusline.js          ← Watson-only fork of share-proto-statusline.js
+```
 
-# Per-prototype blueprint adds STATUS.md:
-[prototype-dir]/
-└── blueprint/
-    ├── CONTEXT.md                   # Unchanged
-    ├── LAYOUT.md                    # Unchanged
-    ├── DESIGN.md                    # Unchanged
-    ├── INTERACTION.md               # Unchanged
-    └── STATUS.md                    # NEW: draft/commit state + session branch
+**Important:** The plugin cache prohibits path traversal outside the plugin root. Files referenced via `../shared-utils` will not work after install. The current `share-proto-statusline.js` at `~/.claude/hooks/` is shared with the share-proto skill — Watson cannot reference it from within its plugin boundary.
 
-# Ephemeral staging adds INTERACTION.md per section:
-[prototype-dir]/
-└── .watson/
-    └── sections/
-        └── [SectionName]/
-            ├── LAYOUT.md            # Unchanged
-            ├── DESIGN.md            # Unchanged
-            └── INTERACTION.md       # NEW output from interaction agent
+---
+
+## File-by-File Migration Map
+
+### Core Orchestrator
+
+| Current path | Plugin destination | Change required |
+|---|---|---|
+| `~/.claude/skills/watson/SKILL.md` | `skills/watson/SKILL.md` | Path rewrite: all `~/.claude/skills/watson/` references → `${CLAUDE_PLUGIN_ROOT}/` |
+
+### Agents (8 files)
+
+| Current path | Plugin destination | Change required |
+|---|---|---|
+| `agents/builder.md` | `agents/builder.md` | libraryPaths examples updated (paths are resolved at runtime — remove hardcoded example paths from inline documentation) |
+| `agents/consolidator.md` | `agents/consolidator.md` | No path references — no change |
+| `agents/decomposer.md` | `agents/decomposer.md` | No path references — no change |
+| `agents/design.md` | `agents/design.md` | No path references — no change |
+| `agents/interaction.md` | `agents/interaction.md` | No path references — no change |
+| `agents/layout.md` | `agents/layout.md` | No path references — no change |
+| `agents/librarian.md` | `agents/librarian.md` | @references/ cross-references (see below); output path instruction updated |
+| `agents/reviewer.md` | `agents/reviewer.md` | No path references — no change |
+
+### Subskills (2 files)
+
+| Current path | Plugin destination | Change required |
+|---|---|---|
+| `skills/discuss.md` | `skills/watson/discuss.md` (OR separate skill dir) | `~/.claude/skills/watson/library/LIBRARY.md` → `${CLAUDE_PLUGIN_ROOT}/library/LIBRARY.md` |
+| `skills/loupe.md` | `skills/watson/loupe.md` (OR separate skill dir) | All hardcoded `~/.claude/skills/watson/library/...` paths in libraryPaths[] example → `${CLAUDE_PLUGIN_ROOT}/library/...` |
+
+**Note on skill directory structure:** The plugin system expects each skill to be a directory with a `SKILL.md` file (e.g., `skills/watson/SKILL.md`). The subskills `discuss.md` and `loupe.md` are currently dispatched from SKILL.md as `@skills/discuss.md`, not as user-invocable skills. They can stay as flat files in a non-standard location (e.g., `skills/watson/discuss.md`) since the dispatch mechanism is instruction-based, not discovery-based.
+
+### Utilities
+
+| Current path | Plugin destination | Change required |
+|---|---|---|
+| `utilities/watson-init.md` | `commands/watson-init.md` | No @-references or absolute paths in this file; no change needed |
+
+**Note:** `watson-init.md` is invoked from SKILL.md as `@utilities/watson-init.md`. In the plugin, this reference needs updating to match the new location (`@commands/watson-init.md` or inline as a skill). See Path Reference Changes section below.
+
+### References (4 files + subdirectory)
+
+| Current path | Plugin destination | Change required |
+|---|---|---|
+| `references/agent-contract.md` | `references/agent-contract.md` | libraryPaths example contains `~/.claude/skills/watson/library/...` — update example to `${CLAUDE_PLUGIN_ROOT}/library/...` |
+| `references/book-schema.md` | `references/book-schema.md` | No path references — no change |
+| `references/source-scanning.md` | `references/source-scanning.md` | No path references — no change |
+| `references/artifact-schemas/` | `references/artifact-schemas/` | No path references — no change |
+
+### Library (bundled books)
+
+| Current path | Plugin destination | Change required |
+|---|---|---|
+| `library/LIBRARY.md` | `library/LIBRARY.md` | Book paths in LIBRARY.md are relative (`library/design-system/BOOK.md`) — these stay relative and continue working |
+| `library/design-system/BOOK.md` | `library/design-system/BOOK.md` | `sources` field lists `~/.claude/skills/watson-lite/...` — update to note that sources are Faire-internal, not bundled |
+| `library/playground-conventions/BOOK.md` | `library/playground-conventions/BOOK.md` | Same sources note |
+| All chapter and page files | Same relative paths | No change |
+
+### Hooks
+
+| Current location | Plugin destination | Migration action |
+|---|---|---|
+| `~/.claude/settings.json` → `SessionStart` (watson state recovery check) | `hooks/hooks.json` | Move inline, use `${CLAUDE_PLUGIN_ROOT}` if any script reference needed |
+| `~/.claude/settings.json` → `SessionEnd` (watson state cleanup) | `hooks/hooks.json` | Move inline (command is pure Node.js inline, no script path) |
+| `~/.claude/settings.json` → `statusLine` | NOT in plugin | See Shared StatusLine section below |
+
+### Ambient Rule
+
+| Current location | Plugin destination | Migration action |
+|---|---|---|
+| `~/.claude/rules/watson-ambient.md` | No official plugin support | See Ambient Rule section below |
+
+---
+
+## Path Reference Changes
+
+### Category 1: Absolute `~/.claude/skills/watson/` paths in skill/agent content
+
+**Where they appear:**
+- `skills/discuss.md` line 37: `Read ~/.claude/skills/watson/library/LIBRARY.md`
+- `skills/loupe.md` lines 37, 44-48: `~/.claude/skills/watson/library/...` in libraryPaths example
+- `references/agent-contract.md` line 16: libraryPaths example with absolute paths
+
+**Fix:** Replace `~/.claude/skills/watson/` with `${CLAUDE_PLUGIN_ROOT}/`.
+
+Official docs confirm: "`${CLAUDE_PLUGIN_ROOT}` is substituted inline anywhere it appears in skill content, agent content, hook commands, and MCP or LSP server configs." (HIGH confidence — WebFetch from code.claude.com/docs/en/plugins-reference)
+
+```
+Before: ~/.claude/skills/watson/library/LIBRARY.md
+After:  ${CLAUDE_PLUGIN_ROOT}/library/LIBRARY.md
+```
+
+### Category 2: @-style dispatch references
+
+**Where they appear (all in SKILL.md):**
+- `@utilities/watson-init.md` (3 occurrences)
+- `@skills/discuss.md` (2 occurrences)
+- `@skills/loupe.md` (2 occurrences)
+
+**Where they appear (in skill and agent files):**
+- `skills/loupe.md`: `@agents/decomposer.md`, `@agents/layout.md`, `@agents/design.md`, `@agents/interaction.md`, `@agents/builder.md`, `@agents/reviewer.md`, `@agents/consolidator.md`
+- `agents/librarian.md`: `@references/book-schema.md`, `@references/source-scanning.md`, `@references/agent-contract.md`
+
+**Behavior in plugins:** The `@`-style path dispatch is a Claude Code instruction-following convention, not a Claude Code file resolution mechanism. Claude Code does NOT automatically expand `@agents/builder.md` to a file path — it is text that Claude reads and acts upon by using the `Read` tool with an appropriate path.
+
+**Required fix:** The `@agents/`, `@skills/`, `@utilities/`, `@references/` prefixes must be replaced with full paths. Use `${CLAUDE_PLUGIN_ROOT}` as the base:
+
+```
+Before: @agents/builder.md
+After:  ${CLAUDE_PLUGIN_ROOT}/agents/builder.md
+
+Before: @utilities/watson-init.md
+After:  ${CLAUDE_PLUGIN_ROOT}/commands/watson-init.md  (if moved to commands/)
+
+Before: @references/book-schema.md
+After:  ${CLAUDE_PLUGIN_ROOT}/references/book-schema.md
+```
+
+**Confidence:** MEDIUM. The `${CLAUDE_PLUGIN_ROOT}` substitution in skill content is confirmed HIGH. Whether the `@` syntax works as path reference vs. pure instruction text requires validation in a live plugin session. Given the substitution mechanism operates on the full text of skill/agent files, `${CLAUDE_PLUGIN_ROOT}/agents/builder.md` will resolve correctly.
+
+### Category 3: libraryPaths[] runtime construction
+
+**Where it appears:** `skills/loupe.md` and `skills/discuss.md`
+
+The libraryPaths[] array is constructed at runtime by reading `LIBRARY.md`, then `BOOK.md` manifests. The paths in these manifests are relative (`library/design-system/BOOK.md`).
+
+**The problem:** Subskills currently hardcode the base path when building libraryPaths[]:
+```
+"~/.claude/skills/watson/library/design-system/global-theme/CHAPTER.md"
+```
+
+This example is shown in `loupe.md` as illustration, but the instruction says "Never improvise paths. All paths come from LIBRARY.md and BOOK.md manifests." If those manifests contain relative paths, the subskill still needs to know the absolute base to read them.
+
+**Fix strategy:** Two-step approach:
+1. `LIBRARY.md` paths stay relative (e.g., `library/design-system/BOOK.md`)
+2. Subskills resolve the base path at runtime: "Read `${CLAUDE_PLUGIN_ROOT}/library/LIBRARY.md`, then read each book's BOOK.md at `${CLAUDE_PLUGIN_ROOT}/{path from LIBRARY.md}`"
+
+This makes the full path portable: `${CLAUDE_PLUGIN_ROOT}/library/design-system/global-theme/CHAPTER.md`
+
+**Instruction change required in loupe.md and discuss.md:** Replace the hardcoded base in the library resolution instruction:
+```
+Before: Read ~/.claude/skills/watson/library/LIBRARY.md
+After:  Read ${CLAUDE_PLUGIN_ROOT}/library/LIBRARY.md
+```
+
+And update the libraryPaths example from hardcoded absolute paths to the portable form:
+```
+Before: "~/.claude/skills/watson/library/design-system/global-theme/CHAPTER.md"
+After:  "${CLAUDE_PLUGIN_ROOT}/library/design-system/global-theme/CHAPTER.md"
 ```
 
 ---
 
-## Architectural Patterns: New and Changed
+## Hooks Migration
 
-### Pattern: Paths-Based Ambient Activation
+### Format: settings.json → hooks/hooks.json
 
-**What:** `SKILL.md` sets `paths: ["src/pages/**/*.tsx", ...]` in frontmatter. Claude Code loads Watson automatically when the user works with matching files.
+The hooks in `~/.claude/settings.json` are the same JSON format used in `hooks/hooks.json`. The only structural difference is the outer key: settings.json uses `"hooks": { "EventName": [...] }` at the top level, while hooks.json uses the same structure.
 
-**When to use:** Prototype directories follow a known pattern (`src/pages/`). This is the case for the Playground.
+**Current SessionEnd hook (Watson cleanup):**
+```json
+{
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const fs=require('fs'); const f='/tmp/watson-active.json'; if(!fs.existsSync(f)) process.exit(0); try { const s=JSON.parse(fs.readFileSync(f,'utf8')); if(s.branch) fs.writeFileSync('/tmp/watson-session-end.json', JSON.stringify({branch:s.branch,actions:s.actions||[],timestamp:new Date().toISOString()})); fs.unlinkSync(f); } catch(e) { try { fs.unlinkSync(f); } catch(e2) {} }\""
+          }
+        ]
+      }
+    ]
+  }
+}
+```
 
-**Trade-offs:** Reliable file-based trigger vs. description-based trigger. Does not require a hook. Limitation: only triggers when Claude is actively working with a matching file — background awareness is not available. If the user opens a new conversation without touching prototype files, ambient activation does not fire.
+**Current SessionStart hook (Watson recovery check):**
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f /tmp/watson-active.json ]; then echo 'Watson was active before /clear. Run /watson to reactivate.'; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
 
-**Hardening option:** Add a `UserPromptSubmit` hook that checks `cwd` against known prototype directory patterns and injects `additionalContext` to activate Watson. Use only if path-based activation proves insufficient in practice.
+**watson-plugin/hooks/hooks.json — combined Watson hooks:**
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f /tmp/watson-active.json ]; then echo 'Watson was active before /clear. Run /watson to reactivate.'; fi"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const fs=require('fs'); const f='/tmp/watson-active.json'; if(!fs.existsSync(f)) process.exit(0); try { const s=JSON.parse(fs.readFileSync(f,'utf8')); if(s.branch) fs.writeFileSync('/tmp/watson-session-end.json', JSON.stringify({branch:s.branch,actions:s.actions||[],timestamp:new Date().toISOString()})); fs.unlinkSync(f); } catch(e) { try { fs.unlinkSync(f); } catch(e2) {} }\""
+          }
+        ]
+      }
+    ]
+  }
+}
+```
 
-### Pattern: Co-located Blueprint State
+**Note on hook events:** Claude Code supports `SessionStart`, `SessionEnd`, `PostToolUse`, `PreToolUse`, `UserPromptSubmit`, `Stop`, and many others. Plugin hooks respond to the same events as user-defined hooks. Hook commands have `${CLAUDE_PLUGIN_ROOT}` available as an environment variable. For inline `node -e` commands (no external script), no path substitution is needed.
 
-**What:** `blueprint/STATUS.md` lives next to `CONTEXT.md`, `LAYOUT.md`, etc. All state about this prototype's draft/commit status and session branch is in one file, in the prototype directory.
-
-**When to use:** State that is per-prototype and must persist across sessions.
-
-**Trade-offs:** No global Watson state file needed; each prototype is self-contained. Downside: STATUS.md must be checked by every Watson entry point (SKILL.md, discuss.md, loupe.md). The check is a single file read — acceptable overhead.
-
-### Pattern: Discuss → STATUS.md Write Contract
-
-**What:** Every time discuss.md writes a `## Discuss Amendments` section to any blueprint file, it immediately writes `STATE: draft` to STATUS.md. This is a hard rule — not optional.
-
-**Why:** Without this rule, the system has no way to know whether blueprint amendments are "new and pending" or "already built." The STATUS.md write is the mechanism that makes the draft/commit distinction reliable.
-
-### Pattern: Interaction Agent as Parallel Peer
-
-**What:** The interaction agent is classified as a background agent (no `AskUserQuestion`) and dispatched in parallel with layout and design agents. It reads the same Figma section nodeId and the same libraryPaths.
-
-**Why:** All three research agents are read-only with respect to the build pipeline. They write to isolated section staging files and have no data dependencies between them. Running them in parallel cuts Phase 2 time by approximately 33% vs. running interaction sequentially.
-
-**Constraint:** The interaction agent must NEVER use `AskUserQuestion`. Ambiguity must be resolved by the discuss subskill (which writes to `{blueprintPath}/INTERACTION.md` before loupe runs) or inferred silently from Figma data. When interaction context is genuinely unknown, the agent writes `_Not determined from available data_` in the relevant section and the builder falls back to library component defaults.
+**Migration cleanness:** Both current Watson hooks use inline shell commands — no script file references. They migrate verbatim to `hooks/hooks.json`. The `gsd-check-update.js` and `gsd-context-monitor.js` hooks in settings.json are GSD framework hooks, not Watson hooks — they stay in `settings.json` and are NOT migrated into the Watson plugin.
 
 ---
 
-## Anti-Patterns: 1.1-Specific
+## Shared StatusLine Script
 
-### Anti-Pattern: Writing Draft State to CONTEXT.md Body
+### The Problem
 
-**What people do:** Embed "draft" markers inside CONTEXT.md content — `[DRAFT] sidebar width: 280px`.
+`~/.claude/hooks/share-proto-statusline.js` is shared between Watson (reads `/tmp/watson-active.json`) and share-proto (manages tunnel links via `/tmp/share-proto.json`). Watson cannot reference this file from inside the plugin boundary after installation.
 
-**Why it's wrong:** CONTEXT.md is a reference document read by agents. Draft markers inside content corrupt the reference. Agents may interpret `[DRAFT]` as part of a decision.
+The `statusLine` setting is a `settings.json` feature, not a plugin-level feature. Confirmed via official docs: "Add a `statusLine` field to your user settings (`~/.claude/settings.json`) or project settings." No plugin manifest field for `statusLine` is documented. (HIGH confidence — direct official doc quote)
 
-**Do this instead:** CONTEXT.md is immutable content. All draft tracking lives in STATUS.md only.
+### Resolution Strategy: Fork the Script
 
-### Anti-Pattern: Interaction Agent Asking for Clarification
+Watson bundles its own status line script in `scripts/watson-statusline.js`. This fork:
+- Removes the share-proto tunnel logic (lines 50-87 of current script)
+- Retains the Watson active indicator (lines 103-113)
+- Retains the git branch display, context bar, model/dir display
 
-**What people do:** The interaction agent cannot determine if a component has a hover state from Figma data alone, so it asks the user mid-pipeline.
+**What each skill owns after forking:**
 
-**Why it's wrong:** Background agents cannot use `AskUserQuestion`. The agent hangs silently or produces corrupt output. This is the same as Anti-Pattern 3 from v1.0 but now applies to a new agent.
+| Script | Owner | Contains |
+|---|---|---|
+| `~/.claude/hooks/share-proto-statusline.js` | share-proto skill (unchanged) | Full script: context bar + tunnel links + Watson indicator + git branch |
+| `${CLAUDE_PLUGIN_ROOT}/scripts/watson-statusline.js` | watson plugin | Subset: context bar + Watson indicator + git branch (no tunnel logic) |
 
-**Do this instead:** The interaction agent infers from available data and documents uncertainty in the `Confirmed/Inferred States` section with explicit "Inferred — verify" labels. Builder and reviewer handle under-specified interactions using library component defaults.
+**Remaining problem:** `statusLine` must still be configured in `settings.json` at the user level. It cannot be automatically set by plugin install. This is a mandatory post-install step.
 
-### Anti-Pattern: Ambient Mode Blocking on Missing Blueprint
+**Installer instruction (required in README):**
+```json
+// Add to ~/.claude/settings.json after installing the Watson plugin:
+{
+  "statusLine": {
+    "type": "command",
+    "command": "node \"${WATSON_PLUGIN_ROOT}/scripts/watson-statusline.js\""
+  }
+}
+```
 
-**What people do:** On ambient entry, Watson discovers there is no blueprint and immediately runs the full setup flow, interrupting the user's active editing work.
+Note: `${WATSON_PLUGIN_ROOT}` is not a real variable in this context — the README must instruct users to find and paste their actual plugin cache path, or use the resolved absolute path. This is a known friction point in the install flow.
 
-**Why it's wrong:** The user was editing code, not invoking Watson. An interruptive setup flow breaks their flow and creates confusion ("why is my code editor asking me design questions?").
+**Alternative:** If teammates already have share-proto installed (which installs the shared statusline), the Watson indicator already works — they need no additional statusLine configuration. Document this as the recommended path for Faire teammates: "If you have share-proto installed, Watson status already appears automatically."
 
-**Do this instead:** On ambient entry with no blueprint, Watson surfaces a single soft prompt: "I can help with this prototype — want me to set it up?" If the user ignores it or says no, Watson stays dormant. Setup only runs on explicit confirmation.
+---
 
-### Anti-Pattern: Git Branch Operations Without Confirmation
+## Ambient Rule
 
-**What people do:** On new prototype creation, Watson automatically creates and checks out a branch without asking, treating it as a convenience.
+### Current Implementation
 
-**Why it's wrong:** Silent git operations surprise users. Designers may not be aware they are on a new branch. If they push to the wrong remote or merge unexpectedly, work is lost.
+`~/.claude/rules/watson-ambient.md` uses `paths:` frontmatter to activate Watson prompts when Claude works in `packages/design/prototype-playground/**`. This is a user-level rules file.
 
-**Do this instead:** Every git operation (checkout, branch create) is preceded by an explicit user confirmation via `AskUserQuestion`. The operation runs only on explicit "yes." The branch name is shown before creation.
+### Plugin Rules Support
+
+**Finding:** The Claude Code plugin system has no documented `rules/` directory or mechanism for plugins to ship path-specific rules. The plugin directory structure supports `commands/`, `agents/`, `skills/`, `hooks/`, `output-styles/`, `bin/`, and `settings.json`. There is no `rules/` equivalent for plugins.
+
+Rules files live at `~/.claude/rules/` (user scope) or `.claude/rules/` (project scope). Neither is shippable via plugin. (MEDIUM confidence — absence of documentation for plugin rules is not the same as confirmed impossibility, but thorough review of official plugin docs found no mention)
+
+### Resolution Strategies
+
+**Option A — Manual install step (recommended for 1.2):** Include `watson-ambient.md` in the plugin's `docs/` or `references/` directory as a template. Installation instructions tell teammates to copy it to `~/.claude/rules/watson-ambient.md` manually. Single file, one copy command.
+
+```
+# In plugin docs/install-guide.md:
+cp "${CLAUDE_PLUGIN_ROOT}/docs/watson-ambient.md" ~/.claude/rules/watson-ambient.md
+```
+
+**Option B — SessionStart hook writes the rule:** A `SessionStart` hook in `hooks/hooks.json` checks whether `~/.claude/rules/watson-ambient.md` exists and writes it from the bundled template if absent. This makes installation truly one-command.
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f ~/.claude/rules/watson-ambient.md ] || cp \"${CLAUDE_PLUGIN_ROOT}/docs/watson-ambient.md\" ~/.claude/rules/watson-ambient.md"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Tradeoff of Option B:** The hook writes outside the plugin root — it touches `~/.claude/rules/`. Plugin updates that change the ambient rule content will NOT automatically update `~/.claude/rules/watson-ambient.md` (since the hook only runs when the file is absent). Requires a version-checking approach (compare file hash) or a manual "reinstall rule" command to force-update. Also, uninstalling the plugin does not clean up `~/.claude/rules/watson-ambient.md`.
+
+**Option C — SKILL.md activation as fallback:** The existing Session toggle (AskUserQuestion gate via `/watson`) already works without the ambient rule. The ambient rule is a convenience for Prototype Playground users. If the ambient rule is not installed, Watson functions normally via `/watson` invocation. Document this clearly: ambient detection requires the optional manual step; slash command requires nothing extra.
+
+**Recommendation for 1.2:** Option A (manual copy). Ship the rule file in `docs/watson-ambient.md`. Document the copy command in the install guide. If teammates find it burdensome, upgrade to Option B in 1.3.
+
+---
+
+## Plugin Manifest
+
+```json
+{
+  "name": "watson",
+  "version": "1.2.0",
+  "description": "Agentic product development companion for Faire's Prototype Playground — design discussion, Figma-to-code pipeline, and library-grounded prototyping.",
+  "author": {
+    "name": "Austin Dick",
+    "url": "https://github.com/austindick"
+  },
+  "repository": "https://github.com/austindick/watson",
+  "license": "MIT"
+}
+```
+
+**On skill namespacing:** Plugin skills are namespaced as `/plugin-name:skill-name`. With `"name": "watson"`, the skill becomes `/watson:watson`. This is awkward — the user must type `/watson:watson` instead of `/watson`.
+
+**Resolution options:**
+- Name the plugin `"watson"` and the skill directory `"main"` → command becomes `/watson:main` (still awkward)
+- Name the plugin something else (e.g., `"wp"`) and keep skill as `"watson"` → `/wp:watson` (also awkward)
+- Accept `/watson:watson` and document it, or alias via a `commands/watson.md` command that simply dispatches the skill
+
+The cleanest approach: keep `"name": "watson"`, put the main skill in `skills/watson/SKILL.md`, accept `/watson:watson` as the full invocation. Alternatively, rename the skill directory to something like `main` or `go` to get `/watson:main` — slightly less awkward.
+
+**Alternative — commands/ for the entry point:** A `commands/watson.md` file creates a `/watson` command (namespaced to `/watson:watson`). A standalone `commands/go.md` creates `/watson:go`. Neither avoids namespacing.
+
+**Practical decision for 1.2:** Use `commands/watson.md` (a thin entry point that reads SKILL.md behavior) to create the `/watson:watson` command. Document that teammates should alias it in shell config: `alias cw="claude --plugin watson"`. Revisit naming in 1.3 if namespacing proves friction-heavy.
+
+---
+
+## Plugin Directory Structure (Final)
+
+```
+watson-plugin/
+├── .claude-plugin/
+│   └── plugin.json
+├── skills/
+│   └── watson/
+│       ├── SKILL.md                    ← master orchestrator (path-updated)
+│       ├── discuss.md                  ← discuss subskill (LIBRARY.md path updated)
+│       └── loupe.md                    ← loupe subskill (library paths updated)
+├── agents/
+│   ├── builder.md
+│   ├── consolidator.md
+│   ├── decomposer.md
+│   ├── design.md
+│   ├── interaction.md
+│   ├── layout.md
+│   ├── librarian.md                    ← @references/ paths updated
+│   └── reviewer.md
+├── commands/
+│   └── watson-init.md                  ← utilities/watson-init.md (no path changes)
+├── library/
+│   ├── LIBRARY.md                      ← relative paths, no change
+│   ├── design-system/
+│   │   ├── BOOK.md
+│   │   ├── global-theme/
+│   │   │   └── CHAPTER.md
+│   │   ├── components/
+│   │   │   └── CHAPTER.md (+ page files)
+│   │   └── icons/
+│   │       └── CHAPTER.md
+│   └── playground-conventions/
+│       ├── BOOK.md
+│       └── [7 chapter directories]/
+├── references/
+│   ├── agent-contract.md               ← libraryPaths example updated
+│   ├── book-schema.md
+│   ├── source-scanning.md
+│   └── artifact-schemas/
+│       ├── DESIGN-EXAMPLE.md
+│       ├── INTERACTIONS-EXAMPLE.md
+│       └── LAYOUT-EXAMPLE.md
+├── docs/
+│   ├── watson-ambient.md               ← copy of watson-ambient.md rule (template)
+│   ├── install-guide.md
+│   └── architecture.md (optional)
+├── hooks/
+│   └── hooks.json                      ← Watson SessionStart + SessionEnd hooks
+└── scripts/
+    └── watson-statusline.js            ← Watson-only fork (no share-proto tunnel logic)
+```
+
+---
+
+## Data Flow: Path Resolution at Runtime
+
+```
+User invokes /watson:watson
+    ↓
+SKILL.md loads from ${CLAUDE_PLUGIN_ROOT}/skills/watson/SKILL.md
+    ↓
+SKILL.md dispatches @utilities/watson-init.md
+    → resolves to Read ${CLAUDE_PLUGIN_ROOT}/commands/watson-init.md
+    ↓
+SKILL.md dispatches @skills/discuss.md or @skills/loupe.md
+    → resolves to Read ${CLAUDE_PLUGIN_ROOT}/skills/watson/discuss.md
+                     Read ${CLAUDE_PLUGIN_ROOT}/skills/watson/loupe.md
+    ↓
+loupe.md reads ${CLAUDE_PLUGIN_ROOT}/library/LIBRARY.md
+    → reads BOOK.md files at ${CLAUDE_PLUGIN_ROOT}/library/{book}/BOOK.md
+    → builds libraryPaths[] as absolute ${CLAUDE_PLUGIN_ROOT}/library/{...}/CHAPTER.md paths
+    ↓
+loupe.md dispatches agents
+    → resolves to Read ${CLAUDE_PLUGIN_ROOT}/agents/{agent}.md
+    ↓
+agents receive libraryPaths[] (fully resolved absolute paths)
+    → agents Read each path directly
+    ↓
+librarian.md reads ${CLAUDE_PLUGIN_ROOT}/references/book-schema.md
+    → and source-scanning.md, agent-contract.md
+```
+
+---
+
+## Change Catalog: Every File That Needs Editing
+
+**High-change files (path rewrites required):**
+
+| File | Changes needed |
+|---|---|
+| `skills/watson/SKILL.md` | Replace `@utilities/` → `${CLAUDE_PLUGIN_ROOT}/commands/`; Replace `@skills/` → `${CLAUDE_PLUGIN_ROOT}/skills/watson/` |
+| `skills/watson/discuss.md` | Replace `~/.claude/skills/watson/library/LIBRARY.md` → `${CLAUDE_PLUGIN_ROOT}/library/LIBRARY.md` |
+| `skills/watson/loupe.md` | Replace `~/.claude/skills/watson/library/LIBRARY.md` → `${CLAUDE_PLUGIN_ROOT}/library/LIBRARY.md`; Update hardcoded libraryPaths example paths |
+| `agents/librarian.md` | Replace `@references/` → `${CLAUDE_PLUGIN_ROOT}/references/` (3 occurrences) |
+
+**Medium-change files (example paths updated):**
+
+| File | Changes needed |
+|---|---|
+| `references/agent-contract.md` | Update libraryPaths example from `~/.claude/skills/watson/...` to `${CLAUDE_PLUGIN_ROOT}/...` |
+
+**No-change files (8 agent files except librarian, utilities/watson-init.md, all library content):**
+
+These files contain no absolute paths or @-style references that need updating. They are dropped into the plugin directory and work as-is.
+
+**New files (2 additions):**
+
+| File | Purpose |
+|---|---|
+| `.claude-plugin/plugin.json` | Plugin manifest |
+| `hooks/hooks.json` | Watson hooks (migrated from settings.json) |
+| `docs/watson-ambient.md` | Ambient rule template for manual install |
+| `scripts/watson-statusline.js` | Watson-only fork of share-proto-statusline.js |
+
+---
+
+## Anti-Patterns
+
+### Anti-Pattern 1: Keeping `~/.claude/skills/watson/` Paths in Skill Files
+
+**What people do:** Copy files to the plugin directory without updating absolute paths, assuming Watson still lives at `~/.claude/skills/watson/`.
+
+**Why it's wrong:** The plugin cache installs to `~/.claude/plugins/cache/watson-[id]/`. `~/.claude/skills/watson/` no longer exists for plugin users. All `Read ~/.claude/skills/watson/library/LIBRARY.md` instructions fail silently — Claude attempts the read, gets a "file not found" error, and either invents library content or aborts.
+
+**Do this instead:** Use `${CLAUDE_PLUGIN_ROOT}/library/LIBRARY.md` everywhere. This variable is substituted in skill and agent content by Claude Code before the model sees it.
+
+### Anti-Pattern 2: Referencing share-proto-statusline.js From Plugin
+
+**What people do:** Point `statusLine` command to `${CLAUDE_PLUGIN_ROOT}/scripts/share-proto-statusline.js` — copying the shared script into the plugin but keeping share-proto tunnel logic.
+
+**Why it's wrong:** The Watson plugin then renders share-proto tunnel links that may or may not be active. The tunnel logic reads `/tmp/share-proto.json` and `/tmp/share-proto-dev-{pid}.json` — files Watson neither creates nor manages. The links are dead noise.
+
+**Do this instead:** Fork the script to `scripts/watson-statusline.js`. Remove lines 50-87 (share-proto tunnel blocks). Keep only context bar, git branch, Watson active indicator. Watson owns its own script.
+
+### Anti-Pattern 3: Bundling Source Files for the Library Books
+
+**What people do:** Bundle the Slate source files (`faire/frontend`) inside the plugin so teammates can regenerate library books without access to the monorepo.
+
+**Why it's wrong:** Slate source changes frequently. Bundled source would be immediately stale after any Slate release. Plugin size becomes enormous. The value of pre-generated books is precisely that teammates don't need source access.
+
+**Do this instead:** Bundle only the generated library books. The maintainer (Austin) regenerates books from Slate source and commits them to the plugin repo. Teammates get fresh books via `claude plugin update watson`.
+
+### Anti-Pattern 4: Using Plugin hooks.json to Manage statusLine
+
+**What people do:** Put a `SessionStart` hook in hooks.json that writes a `statusLine` entry into `~/.claude/settings.json`.
+
+**Why it's wrong:** Modifying `settings.json` from a hook is fragile — concurrent sessions, JSON parse failures, and key collisions with existing statusLine config from other skills. It violates the principle that plugins should not mutate user settings files.
+
+**Do this instead:** Document `statusLine` as a manual post-install step. Teammates add the line once. If share-proto is already installed, Watson status is already visible — no additional step needed.
 
 ---
 
@@ -440,96 +564,55 @@ interaction.md:
 ### External Services
 
 | Service | Integration | Notes |
-|---------|-------------|-------|
-| Figma MCP | Interaction agent uses same tool as layout/design agents — `mcp__figma__get_figma_data` (Watson-internal name) | Variant names in Figma React+Tailwind output are the primary source of state data; animation timing is inferred from DS library, not directly exposed by MCP |
-| Git (Bash tool) | SKILL.md runs `git checkout -b`, `git checkout` via Bash tool | Always user-confirmed; gracefully skipped if git unavailable |
-| Prototype Playground filesystem | `paths` frontmatter glob matches `src/pages/**/*.tsx` | Requires Playground to follow this directory convention; verify before shipping |
+|---|---|---|
+| GitHub (austindick/watson) | Plugin distribution source | Teammates install via `claude plugin install watson@austindick`; updates via `claude plugin update watson` |
+| Figma MCP | Agents use same Figma MCP tool as today | No change — MCP tools are user-configured, not plugin-scoped |
+| Prototype Playground filesystem | Watson reads/writes blueprint/ and .watson/ directories | No change — these are per-project paths, not plugin paths |
 
 ### Internal Boundaries
 
-| Boundary | Communication | Notes |
-|----------|---------------|-------|
-| SKILL.md → STATUS.md | Direct file read/write | SKILL.md reads on every entry; writes on commit action |
-| discuss.md → STATUS.md | Write only (draft state) | Never reads STATUS.md — routing is SKILL.md's concern |
-| loupe.md → interaction.md | Agent dispatch (background) | Same dispatch pattern as layout + design |
-| interaction.md → builder.md | `INTERACTION.md` file in `.watson/sections/` | Builder already accepts this path — no builder changes needed |
-| loupe.md Phase 3 → builder | `interactionPath` parameter | Currently hardcoded `null`; v1.1 passes resolved path or null |
+| Boundary | Communication | Plugin Notes |
+|---|---|---|
+| SKILL.md → subskills | Read tool dispatches to `${CLAUDE_PLUGIN_ROOT}/skills/watson/discuss.md` | @skills/ prefix must be replaced |
+| SKILL.md → watson-init | Read tool dispatches to `${CLAUDE_PLUGIN_ROOT}/commands/watson-init.md` | @utilities/ prefix must be replaced |
+| loupe.md → agents | Read tool dispatches to `${CLAUDE_PLUGIN_ROOT}/agents/*.md` | @agents/ prefix must be replaced |
+| librarian.md → references | Read tool dispatches to `${CLAUDE_PLUGIN_ROOT}/references/*.md` | @references/ prefix must be replaced |
+| subskills → library | Read tool at `${CLAUDE_PLUGIN_ROOT}/library/...` | Hardcoded base path must be replaced |
+| hooks → /tmp/ state files | Plugin hooks write to /tmp/watson-active.json, /tmp/watson-session-end.json | No change — /tmp/ is not plugin-scoped |
 
 ---
 
-## Suggested Build Order
+## Confidence Assessment
 
-Dependencies determine order. Each step depends on the ones above.
-
-```
-1. artifact-schemas/INTERACTION-EXAMPLE.md  (validate/update schema)
-   — Agent 3 must have a canonical schema before implementation
-   — Review existing stub contract: matches schema? Extend if needed.
-
-2. blueprint/STATUS.md schema definition
-   — Decide exact fields before any file writes it
-   — Trivial: 6-8 lines of Markdown schema documentation
-   — Output: add STATUS.md template to watson-init.md
-
-3. watson-init.md: write STATUS.md on prototype init
-   — Depends on: STATUS.md schema
-   — One new write step at end of setup flow
-
-4. SKILL.md: ambient activation + session management
-   — Depends on: STATUS.md schema
-   — Add paths frontmatter
-   — Add ambient entry detection to Setup Detection
-   — Add branch create/switch to Setup Flow / Setup Detection
-   — Add commit intent routing
-   — Add STATUS.md read on entry (uncommitted changes notice)
-
-5. discuss.md: draft state write
-   — Depends on: STATUS.md schema
-   — One new write after any ## Discuss Amendments write
-   — Minimal change — existing amendment logic unchanged
-
-6. agents/interaction.md: full implementation
-   — Depends on: INTERACTION-EXAMPLE.md schema (Step 1)
-   — Mirror layout.md structure; add discuss context pre-read; add Figma variant extraction
-   — Background dispatch classification confirmed
-
-7. skills/loupe.md: 3-agent parallel + interactionPath pass-through
-   — Depends on: interaction.md implemented (Step 6)
-   — Phase 2: add interaction dispatch
-   — Phase 3: pass interactionPath (resolve or null)
-   — Discuss-only sections: set interactionPath = {blueprintPath}/INTERACTION.md
-
-8. End-to-end integration test
-   — Trigger ambient activation in a prototype directory
-   — Run full pipeline: verify 3 agents produce all three section specs
-   — Confirm builder receives interactionPath and uses it
-   — Confirm STATUS.md is written on discuss amendment and reset on commit
-   — Confirm branch creation flow completes without errors
-```
-
-**Strict ordering rationale:**
-- Schema before agent (Step 1 before Step 6): Agent 3 cannot have a correct output contract without a canonical schema
-- STATUS.md schema before all consumers (Step 2 before Steps 3-5): Three components write STATUS.md; they must agree on format before any writes
-- interaction.md before loupe.md (Step 6 before Step 7): loupe.md dispatches the agent; the agent must exist before the dispatch is wired
-- SKILL.md ambient + session before integration test (Step 4 before Step 8): Ambient entry is the primary test trigger for 1.1 features
+| Area | Confidence | Basis |
+|---|---|---|
+| Plugin directory structure | HIGH | Official docs at code.claude.com/docs/en/plugins-reference (WebFetch) |
+| hooks.json format and events | HIGH | Official docs confirmed format, all event names listed |
+| CLAUDE_PLUGIN_ROOT in skill/agent content | HIGH | "Both are substituted inline anywhere they appear in skill content, agent content..." — direct quote from official docs |
+| Path traversal prohibition | HIGH | Official docs: "Installed plugins cannot reference files outside their directory" |
+| Ambient rule in plugin | MEDIUM-LOW | No plugin rules/ directory documented; workaround via SessionStart hook is plausible but unconfirmed |
+| statusLine as plugin-level setting | LOW (cannot be done) | Not documented as plugin capability; confirmed as user/project settings.json only |
+| @-style dispatch resolution at runtime | MEDIUM | ${CLAUDE_PLUGIN_ROOT} substitution confirmed; actual @-reference → Read tool behavior is instruction-following, not documented API |
 
 ---
 
 ## Sources
 
-- `/Users/austindick/.claude/skills/watson/SKILL.md` — current master orchestrator (read directly, HIGH confidence)
-- `/Users/austindick/.claude/skills/watson/skills/loupe.md` — pipeline orchestrator (read directly, HIGH confidence)
-- `/Users/austindick/.claude/skills/watson/skills/discuss.md` — discuss subskill (read directly, HIGH confidence)
-- `/Users/austindick/.claude/skills/watson/agents/interaction.md` — existing stub (read directly, HIGH confidence)
-- `/Users/austindick/.claude/skills/watson/agents/layout.md` — background agent pattern (read directly, HIGH confidence)
-- `/Users/austindick/.claude/skills/watson/agents/builder.md` — builder input contract (read directly, HIGH confidence)
-- `/Users/austindick/watson/.planning/PROJECT.md` — Watson 1.1 requirements (read directly, HIGH confidence)
-- [Claude Code Skills documentation](https://code.claude.com/docs/en/skills) — `paths` frontmatter, `disable-model-invocation`, ambient activation (WebFetch, HIGH confidence)
-- [Claude Code Hooks documentation](https://code.claude.com/docs/en/hooks) — UserPromptSubmit, CwdChanged hooks (WebFetch, HIGH confidence)
-- [Skills auto-activation reliability analysis](https://scottspence.com/posts/claude-code-skills-dont-auto-activate) — ~50% auto-trigger rate for description-based activation; paths-based is more reliable (WebFetch, MEDIUM confidence)
-- [Figma MCP Tools reference](https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/) — official tools list; `mcp__figma__get_figma_data` not in official public API (WebFetch, HIGH confidence — but Watson may use a different MCP configuration)
-- [Claude Code Changelog](https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md) — `paths` YAML list support v2.1.84, `CwdChanged`/`FileChanged` hooks v2.1.83 (WebFetch, HIGH confidence)
+- [Plugins reference — code.claude.com](https://code.claude.com/docs/en/plugins-reference) — directory structure, manifest schema, CLAUDE_PLUGIN_ROOT, path traversal rules, hooks events (WebFetch, HIGH confidence)
+- [Create plugins — code.claude.com](https://code.claude.com/docs/en/plugins) — migration steps, hooks.json format, component paths (WebFetch, HIGH confidence)
+- [Statusline — code.claude.com](https://code.claude.com/docs/en/statusline) — statusLine is a settings.json feature only; no plugin-level statusLine documented (WebFetch, HIGH confidence)
+- [Claude Code Settings — code.claude.com](https://code.claude.com/docs/en/settings) — scope system, user vs project vs plugin settings (WebFetch, HIGH confidence)
+- `/Users/austindick/.claude/skills/watson/` — all current Watson skill files (Read directly, HIGH confidence)
+- `/Users/austindick/.claude/settings.json` — current hooks and statusLine configuration (Read directly, HIGH confidence)
+- `/Users/austindick/.claude/rules/watson-ambient.md` — ambient rule content and paths: frontmatter (Read directly, HIGH confidence)
+- `/Users/austindick/.claude/hooks/share-proto-statusline.js` — shared statusline script (Read directly, HIGH confidence)
 
 ---
-*Architecture research for: Watson 1.1 — Ambient Mode, Draft/Commit, Session Management, Agent 3, 3-Agent Parallel*
-*Researched: 2026-04-01*
+
+## Prior Research Context
+
+This file supersedes the Watson 1.1 architecture research (also stored here, dated 2026-04-01). For 1.1 integration patterns (ambient mode via paths: frontmatter, draft/commit model, session management git ops, Agent 3 contract, 3-agent parallel dispatch), see the git history of this file or `.planning/phases/` CONTEXT and PLAN files for phases 06-09.
+
+---
+*Architecture research for: Watson 1.2 — Plugin deployment, path portability, hooks migration*
+*Researched: 2026-04-02*

@@ -1,14 +1,14 @@
 # Feature Research
 
-**Domain:** Watson 1.1 — Ambient Mode & Iteration features for an AI-powered prototyping skill framework
-**Researched:** 2026-04-01
-**Confidence:** HIGH (framework internals from existing codebase), MEDIUM (expected behavior patterns for ambient/session features), LOW (competitive parallels — no direct analogues exist)
+**Domain:** Claude Code plugin distribution for a team-shared skill framework (Watson v1.2)
+**Researched:** 2026-04-02
+**Confidence:** HIGH (all findings verified against official Claude Code documentation at code.claude.com)
 
 ---
 
 ## Scope Note
 
-This research covers only the **five new features in Watson 1.1**. The existing Watson 1.0 foundation (orchestrator, library system, discuss subskill, loupe pipeline, 7 agents, blueprint system) is treated as given. References to existing behavior are provided only to clarify dependencies and avoid re-inventing decisions already made.
+This research covers only **plugin distribution features** for Watson 1.2. The existing Watson 1.1 skill framework is treated as given. The question being answered is: what does it take to package Watson as a Claude Code plugin so teammates can install it with one command, receive updates automatically, and use it identically to how it works locally today?
 
 ---
 
@@ -16,126 +16,154 @@ This research covers only the **five new features in Watson 1.1**. The existing 
 
 ### Table Stakes (Users Expect These)
 
-These are the minimum viable behaviors for each feature. Missing them means the feature is either broken or feels unfinished. Complexity is scoped to implementation inside Claude Code skill files only — no scripts, CLIs, or build tooling.
+Features teammates assume will work. Missing these makes the installation feel broken or requires Watson author involvement to set up each machine manually.
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| Ambient mode triggers on natural prototype-related messages | Designers expect a frictionless entry point. Repeating `/watson` every session is friction. The current trigger already accepts "build a prototype" — ambient mode extends this to directory-aware context. | MEDIUM | SKILL.md frontmatter `use_when` is the activation surface. Extend trigger patterns; add directory-presence detection as a signal. Watson already infers prototype directory — ambient just broadens when Watson activates. |
-| Ambient mode recognizes returning users silently | If a user is in a prototype directory mid-build and types a question about the UI, Watson should answer with prototype context loaded — not start a fresh setup flow. | MEDIUM | Blueprint state detection (already in SKILL.md) determines new vs returning. Ambient mode reuses this logic. The difference is activation without `/watson` prefix. |
-| Draft state is the default for discuss amendments | Designers expect to freely explore changes without accidentally committing to a direction. Amendments should feel exploratory until explicitly confirmed. | LOW | Currently, discuss amendments append to `## Discuss Amendments` sections in blueprint files immediately and permanently. Draft mode adds a "pending" layer before they become canon. Conceptually simple; implementation requires a new state signal. |
-| Commit locks blueprint amendments explicitly | Users expect a clear moment when "we're going with this." Without explicit confirmation, it's ambiguous what's decided vs what's being explored. | LOW | A user-facing confirmation step after the discuss summary. Maps to the existing "Ready?" AskUserQuestion at end of discuss — that becomes the commit gate for amendments. Low new implementation work; mostly re-framing existing behavior. |
-| Session start recognizes existing prototype | When a designer opens a prototype directory, Watson should greet them with relevant context: "You're working on [name] — your order-table and header sections are built." Not ask "which prototype?" from scratch. | MEDIUM | Already partially implemented in Setup Detection (SKILL.md). Session management formalizes this into a predictable pattern: check blueprint, check src/ for built sections, summarize state in ≤3 lines. |
-| Agent 3 (Interactions) produces INTERACTION.md per section | The builder already accepts an `interactionPath` input and has a fallback for when it's null. Users expect interaction specs to actually exist rather than always falling back to "library defaults only." | HIGH | This is a full new agent. The stub exists (`interaction.md`) with a contract defined. The complexity is in Figma state inference: identify variant groups, infer states from layer naming conventions, produce a structured spec without over-specifying. |
-| 3-agent parallel dispatch runs layout + design + interactions simultaneously | Users expect the build phase to not get slower as Watson gains capabilities. Adding interactions as a sequential step would noticeably increase pipeline time. | MEDIUM | The loupe subskill already dispatches layout + design as background agents in parallel and waits for both before proceeding. Extending to 3-agent parallel is a mechanical addition to the wait condition in Phase 2 of loupe.md. Requires interaction agent to be background-capable. |
-
----
+| One-command install | Teams expect `claude plugin install watson@faire` — not a multi-step git clone + symlink + settings.json edit | LOW | Two-step: `claude plugin marketplace add austindick/watson`, then `claude plugin install watson@faire` |
+| Plugin manifest (`plugin.json`) | Claude Code needs this to discover components and to namespace the plugin name; without the `name` field, the `/watson` command cannot be guaranteed to register correctly | LOW | `.claude-plugin/plugin.json` with `"name": "watson"` (see namespacing section) |
+| Portable paths via `${CLAUDE_PLUGIN_ROOT}` | Installed plugins are copied to `~/.claude/plugins/cache/` — hardcoded `~/.claude/skills/watson/` paths break immediately after installation | MEDIUM | Every internal path reference across ~15 files must be replaced; this is the largest mechanical work of the milestone |
+| `/watson` command preserved post-install | Teammates using the plugin must get `/watson` exactly as today — not `/faire-watson` or `/watson-plugin` or nothing | MEDIUM | Plugin `name` field controls this; `"name": "watson"` in `plugin.json` registers skills under that namespace, preserving `/watson` |
+| Hooks migrate into `hooks/hooks.json` | Each teammate would need to manually add watson-init's SessionStart hook to their personal `~/.claude/settings.json` otherwise | LOW | Extract existing SessionStart hook configuration into plugin `hooks/hooks.json`; installs automatically with the plugin |
+| Library books bundled with plugin | Teammates need pre-generated books (design-system.md, playground-conventions.md) to use Watson immediately; they can't regenerate from source without faire/frontend access | LOW | Books are static Markdown files; bundle in `library/` directory inside the plugin repo; no generation at install time |
+| Semantic versioning | Claude Code uses the version field to detect whether to update a plugin; without a version bump, existing users never receive changes | LOW | `plugin.json` version field; must be incremented on every push to the distribution repo |
+| Project-scope install (shareable via git) | Team leads want to commit the plugin reference to the Playground repo so all contributors get it automatically | LOW | `claude plugin install watson@faire --scope project` writes to `.claude/settings.json`; commit that file |
 
 ### Differentiators (Competitive Advantage)
 
-These are the features that make Watson 1.1 meaningfully better for the target user (designers and PMs in the Faire Prototype Playground), not just feature-complete.
+Features that make Watson's plugin experience meaningfully better than a manual installation or a raw GitHub clone.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| Ambient mode with prototype-directory awareness | Watson activates when you're *in the context* — not when you remember to invoke it. No other AI design tool does context-aware activation from directory presence. Feels like an always-available design partner rather than a tool you have to summon. | MEDIUM | Directory detection is a signal, not a gate. Watson activates when: (1) use_when trigger matches AND (2) current directory or conversation references a known prototype path. Avoids false activations in non-prototype directories. |
-| Draft/commit model as a design thinking pattern | Framing blueprint amendments as "draft" vs "committed" maps to how designers actually think. Exploration is cheap; decisions are expensive. Watson 1.1 makes this distinction explicit in the workflow rather than treating all blueprint writes as final. | LOW | The UX distinction matters more than the implementation. The commit moment should feel like a deliberate design decision, not a technicality. Use design language: "lock in these decisions" not "commit amendments." |
-| Session continuity: prototype state at a glance | First message of a session surfaces what's been built and what's pending. Designers don't have to remember or re-read files to orient Watson. Reduces the "cold start" overhead of every session. | MEDIUM | Summarize 3 things: prototype name/description (CONTEXT.md), sections built (src/ scan), and pending blueprint decisions (Discuss Amendments sections). Format: 2-3 lines max. Do not ask questions before showing context — show it first, then ask what to do next. |
-| Agent 3 (Interactions) consuming discuss context | When discuss has already gathered interaction decisions (states, transitions, user flows), the interaction agent skips re-asking and works directly from that context. This is the "dedup contract" applied to interactions — decisions made in conversation shouldn't be rediscovered by the pipeline. | HIGH | The discuss-to-interaction handoff requires discuss to emit an `interactionContext` object in the return status, and loupe to pass it to the interaction agent. Agent receives it via `interactionContext` (already in the contract stub). If context is null, agent falls back to Figma state inference. |
-| Figma state inference from variant groups | Rather than asking the designer to describe every interactive state, the interaction agent reads Figma variant properties and infers the state machine. A component with variants named "hover", "active", "disabled" maps directly to interaction states without human intervention. | HIGH | State inference requires reading the Figma component tree at a section level, identifying variant group boundaries, and mapping Figma variant names to interaction state vocabulary. This is the highest-complexity task in Watson 1.1 but also the highest-value: it replaces what would otherwise be a long manual describe-your-states conversation. |
-
----
+| Private GitHub marketplace (`austindick/watson`) | Watson author controls release timing; teammates add the marketplace once and thereafter install/update without any coordination with the author | LOW | GitHub repo with `.claude-plugin/marketplace.json`; supports relative-path or GitHub-source plugin entries |
+| Auto-update at Claude Code session start | Watson improvements reach teammates without any manual action on their part | LOW | Per-marketplace toggle; disabled by default for third-party; teammates enable via `/plugin` UI or set `GITHUB_TOKEN` for private repo access |
+| `extraKnownMarketplaces` in Playground's `.claude/settings.json` | Committing this to the Playground repo prompts all teammates to install the marketplace when they trust the project folder — eliminates "how do I add the marketplace?" entirely | LOW | One JSON field; triggers Claude Code's install prompt flow on project trust |
+| `enabledPlugins` in project settings | Can pre-enable Watson for all Playground contributors, so it's active without any install step beyond trusting the project | LOW | Adds `"watson@faire": true` to `.claude/settings.json`; most aggressive onboarding reduction |
+| GITHUB_TOKEN for private repo auto-updates | Background auto-updates (which run without interactive prompts) work on private repos when `GITHUB_TOKEN` is in the environment | LOW | Document in README; teammates add to `.zshrc` once and never think about updates again |
+| `userConfig` for team-specific paths | Teammates with non-standard Playground or faire/frontend checkout locations can configure `libraryPaths` at plugin enable time — no SKILL.md edits needed | MEDIUM | `userConfig` in `plugin.json` prompts at enable-time; non-sensitive values available as `${user_config.KEY}` in skill/agent content |
 
 ### Anti-Features (Commonly Requested, Often Problematic)
 
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|-----------------|-------------|
-| Ambient mode that activates in any directory | Maximum convenience — Watson is always available | False activations outside prototype directories pollute conversations. Watson activating on a general coding question is disorienting and wastes context. The Prototype Playground has a known project structure; Watson should scope to it. | Activation requires at least one matching signal: prototype directory structure detected (src/prototypes/ or blueprint/ present), OR explicit prototype-related language in the message. Two-signal requirement prevents accidental activation. |
-| Auto-committing blueprint amendments on any user acknowledgment | Reduces friction — "yeah that works" shouldn't require an extra step | "That sounds good" in the middle of a conversation is not the same as "yes, commit that to the blueprint." Auto-committing on ambiguous acknowledgment silently locks decisions the designer didn't intend to finalize. This is the biggest trust-killer for the draft/commit model. | Commit requires the explicit confirm step at the end of the summary: the "Ready?" AskUserQuestion already serves this purpose. Nothing commits on conversational acknowledgment mid-discussion. |
-| Session management via git branch automation | Feels like a logical extension — new prototype session = new branch | Watson is a purely Claude Code skill framework with no external tooling. Running git commands from within a skill file introduces side effects outside Watson's control. Git discipline is an engineering concern; Watson is a design tool. If a branch already exists from a prior session, Watson can surface that fact, but must never create, switch, or merge branches. | Watson surfaces the session state (what's built, what's pending) and lets the user manage their own git workflow. Watson's "session" is the blueprint state — not the git branch. |
-| Interaction agent that specifies animation curves and durations | More complete spec for engineers | Interaction specifications at the curve/duration level require precise values Watson can't reliably infer from Figma data alone. Specifying `cubic-bezier(0.4, 0, 0.2, 1)` for an easing function that Figma only labels "Ease In Out" adds false precision that will be overridden by the engineer anyway. | Interaction agent outputs state names, transitions (what triggers what), and animation intent ("smooth fade", "slide from right") without numeric timing values. Builder uses library component built-in animations for anything not explicitly specified. |
-| Interaction agent running as foreground (interactive) during the pipeline | Seems like it would allow the interaction agent to ask clarifying questions in real-time | Foreground agents block the pipeline and require user attention at an unexpected moment mid-build. The user approved the build already — interrupting to ask interaction questions breaks the "just build" expectation. | All interaction context is gathered before the pipeline starts (either by discuss or by Figma inference). If both fail (no discuss context, no Figma variants), the interaction agent falls back to "library component default states" and logs the gap — it does not interrupt. |
-| Draft state stored as a separate file (e.g., DRAFT-DESIGN.md) | Clean separation between tentative and committed | A separate file per draft creates file management complexity: which file does the builder use? What happens when draft is committed — copy to real file? Discard? This inverts the current clean contract where agents have deterministic output paths. | Draft state is a flag/section appended to the existing blueprint file (`## Pending Amendments` → `## Discuss Amendments` on commit). The same file serves both states. Agents always read the file; builder treats `## Pending Amendments` as informational (not yet committed) and `## Discuss Amendments` as binding. |
-| 3-agent parallel dispatch for discuss-only sections | Consistency — all sections get the same treatment | Discuss-only sections have no Figma node. The interaction agent's primary input is a `nodeId` for Figma state inspection. Running it on a discuss-only section means it can only work from `interactionContext` — which discuss already wrote to INTERACTION.md in the blueprint. Running the agent adds overhead with no new information. | Skip the interaction agent for discuss-only sections, exactly as the layout and design agents are already skipped today. The builder reads the blueprint INTERACTION.md directly for these sections. |
+| npm package distribution | Standard mechanism; familiar to engineers | Watson is purely Markdown files — no JS/TS to compile. npm adds publish workflow complexity, requires an npm account or private registry, and provides zero benefit over GitHub for a markdown-only plugin. Also introduces a second release artifact to keep in sync with the GitHub repo. | GitHub-based marketplace: simpler, no account beyond existing GitHub access, private repo works natively with `GITHUB_TOKEN` |
+| Anthropic official marketplace submission | Maximum discoverability | Watson is Faire-specific (Slate design system, Playground conventions, Faire's PDP). It would mislead external users and likely be rejected as too narrow. Official marketplace is for general-purpose plugins. | Private GitHub marketplace scoped to `austindick/watson`; submit to official only if Watson is ever generalized |
+| Auto-regenerate library books on install | Always-fresh books sound appealing | Library generation requires Librarian agent + source repos (faire/frontend). Teammates may not have faire/frontend, or may have it at a non-standard path. Generation takes significant time and LLM calls per install. Books are stable: the design system doesn't change weekly. | Bundle pre-generated books with the plugin; Watson author regenerates and pushes when Slate changes; teammates receive updates via normal plugin update flow |
+| `paths:` in SKILL.md for ambient auto-activation | Would make Watson activate automatically in Prototype Playground directories without any setup | Known-broken: `paths:` in SKILL.md makes the skill ambient-only and breaks `/watson` slash command registration (confirmed project memory and Watson 1.1 decision log). Watson already solved this with session-toggle + SessionStart hook. | Keep existing approach: SessionStart hook surfaces Watson state; `/watson` toggle preserved; ambient rule remains a documented optional manual step for users who want it |
+| Plugin hooks that write to prototype project files | Hooks could auto-maintain STATUS.md or blueprint files | Plugin hooks execute in the plugin root context with `${CLAUDE_PLUGIN_ROOT}` paths; they cannot safely write to arbitrary project directories. Project file writes belong inside skill/agent content where Claude handles the Edit tool calls with proper paths. | Keep all blueprint/STATUS.md writes inside skill and agent Markdown content; hooks only handle plugin-internal side effects |
+| Single monolithic SKILL.md | Simple to reason about | SKILL.md is currently 198 lines (2 under the 200-line budget). Post-plugin refactor adds path portability changes that will grow it. Watson 1.3 (Discuss Refactor) is already planned to split files. Monolith blocks that work. | Keep existing multi-file structure (SKILL.md + skills/ + agents/ + utilities/); plugin directory structure maps naturally to this layout |
+
+---
+
+## Namespacing Analysis: Impact on `/watson` Command
+
+This is the single most critical distribution decision. Getting it wrong means teammates get a broken or renamed command.
+
+**How plugin namespacing works (HIGH confidence — official Claude Code docs):**
+
+The `name` field in `plugin.json` is the plugin identifier and namespace root. Components are namespaced as `plugin-name:component-name` in UI surfaces like `/agents`. However, a skill with its own `name` field in SKILL.md frontmatter registers its command directly.
+
+**Decision:** `plugin.json` must declare `"name": "watson"`. Combined with a skill at `skills/watson/SKILL.md` (which already has `name: watson` in its frontmatter), the `/watson` command registers identically to how it works in the current `~/.claude/skills/watson/` setup. Teammates see no difference.
+
+**Agent namespacing:** In the `/agents` UI, Watson's 8 agents will appear as `watson:builder`, `watson:reviewer`, etc. This is acceptable and actually better — it scopes Watson's agents clearly away from other installed plugins. Claude's internal agent invocations use the name transparently.
+
+**Subskill naming:** `skills/discuss/SKILL.md` (with `name: discuss` in frontmatter) and `skills/loupe/SKILL.md` (with `name: loupe`) register as `/discuss` and `/loupe` directly. This matches current behavior. Verify during implementation whether these inherit the plugin namespace prefix or use their own SKILL.md `name` — if they inherit, they become `/watson:discuss` which would break existing usage patterns.
+
+**Conflict risk:** LOW. `/watson` is unique enough that no other installed plugin is expected to claim it. Flag in README that users should not install other plugins that register `/watson`.
+
+---
+
+## Installation Friction Analysis
+
+**Current teammate setup (before plugin):**
+1. Copy `~/.claude/skills/watson/` manually (or coordinate with Watson author for a git clone)
+2. Add SessionStart hook to personal `~/.claude/settings.json`
+3. Optionally add ambient rule to `~/.claude/rules/` manually
+4. Regenerate library books (requires faire/frontend checkout + Librarian run)
+Estimated friction: HIGH — 4 manual steps, requires Watson author coordination
+
+**Post-plugin setup (v1.2 target):**
+1. `claude plugin marketplace add austindick/watson`
+2. `claude plugin install watson@faire`
+Estimated friction: LOW — 2 commands, fully self-service
+
+**Post-plugin with project settings committed to Playground repo (v1.2 + `extraKnownMarketplaces`):**
+1. Trust the Playground project folder when Claude prompts
+2. Follow the install prompt in the Claude Code UI
+Estimated friction: MINIMAL — guided entirely by Claude Code's existing UI; Watson author does zero per-teammate work
 
 ---
 
 ## Feature Dependencies
 
 ```
-Ambient Mode
-    └──requires──> SKILL.md use_when trigger extension (broader activation patterns)
-    └──requires──> Session continuity: state summary (what to show when activating automatically)
-    └──reads──> blueprint/CONTEXT.md (to detect prototype and summarize state)
-    └──reads──> src/ directory (to determine which sections are built)
-    └──enhances──> Session management (ambient activation IS the new session start behavior)
+GitHub marketplace repo (austindick/watson)
+    └──enables──> `claude plugin install watson@faire`
+                      └──requires──> plugin.json manifest
+                                         └──requires──> "name": "watson" (preserves /watson)
+                                         └──requires──> semantic version bump per release
 
-Draft/Commit Amendment Model
-    └──extends──> discuss.md "Discuss Amendments" write behavior (already exists)
-    └──extends──> discuss.md "Ready?" confirmation (becomes the commit gate)
-    └──requires──> New amendment state: "pending" vs "committed" (structural addition to blueprint files)
-    └──feeds into──> Builder (builder must distinguish pending from committed amendments)
-    └──feeds into──> Session continuity summary (surfaces "you have pending amendments" on session start)
+Portable paths (${CLAUDE_PLUGIN_ROOT})
+    └──required by──> All internal skill/agent/utility cross-references
+    └──required by──> libraryPaths[] in all 8 agents
+    └──required by──> Hook commands in hooks.json
 
-Session Management
-    └──requires──> Ambient mode (session detection IS ambient activation with context summary)
-    └──reads──> blueprint/CONTEXT.md (prototype name, description, PDP stage)
-    └──reads──> src/ directory scan (which sections are implemented)
-    └──reads──> blueprint files for Discuss Amendments sections (pending decisions)
-    └──does NOT touch──> git (no branch creation, switching, or merging)
+hooks/hooks.json
+    └──replaces──> Manual settings.json SessionStart hook config per teammate
+    └──enables──> watson-init session management without per-user setup
+    └──requires──> Hook command paths using ${CLAUDE_PLUGIN_ROOT}
 
-Agent 3 (Interactions)
-    └──requires──> Figma MCP access (mcp__figma__get_figma_data — already available)
-    └──accepts (optional)──> interactionContext from discuss return status
-    └──reads──> libraryPaths (to validate state vocabulary against design system)
-    └──writes──> .watson/sections/{sectionName}/INTERACTION.md
-    └──feeds into──> Builder (interactionPath input — currently always null in Watson 1.0)
-    └──requires──> discuss.md to emit interactionContext in return status (new field)
-    └──requires──> loupe.md to pass interactionContext to interaction agent dispatch
+Bundled library books
+    └──enables──> Zero-setup experience (no Librarian run required at install)
+    └──requires──> libraryPaths[] in agents to use ${CLAUDE_PLUGIN_ROOT}/library/
+    └──conflicts with──> Auto-regeneration at install time (pick one; bundled wins for v1.2)
 
-3-Agent Parallel Dispatch
-    └──requires──> Agent 3 (Interactions) to exist and be background-capable
-    └──extends──> loupe.md Phase 2 Research: add interaction agent dispatch alongside layout + design
-    └──requires──> loupe.md wait condition: wait for layout + design + interactions before Phase 3
-    └──skips──> discuss-only sections (same skip rule as layout + design agents)
-    └──requires──> loupe.md to pass interactionContext to interaction agent (from discuss return status)
+extraKnownMarketplaces in Playground .claude/settings.json
+    └──enables──> Auto-prompt on project trust
+    └──enhances──> One-command install experience
+    └──requires──> GitHub marketplace to exist first
 
-Draft/Commit ──enhances──> Session Management (pending amendments surfaced on session start)
-Ambient Mode ──enables──> Session Management (ambient activation triggers state summary)
-Agent 3 ──enables──> 3-Agent Parallel Dispatch (prerequisite — must exist first)
-discuss interactionContext ──enhances──> Agent 3 (reduces/eliminates Figma inference when context is pre-gathered)
+GITHUB_TOKEN env var
+    └──enables──> Background auto-updates for private repo
+    └──required by──> Auto-update feature working without interactive auth prompt
 ```
 
 ### Dependency Notes
 
-- **Ambient mode and session management are the same feature with two aspects:** Ambient mode is how Watson activates; session management is what it says when it does. They share the same blueprint-reading and src-scanning logic. Build them together, not separately.
-- **Draft/commit is an extension of existing discuss behavior, not a new system:** The "Discuss Amendments" pattern already exists. Draft/commit adds a temporal distinction (pending vs committed) to something already being written. The commit gate is already there — it's the "Ready?" AskUserQuestion. 1.1 formalizes the semantics.
-- **Agent 3 must be built before 3-agent parallel dispatch:** The parallel dispatch is a mechanical loupe.md change that requires the agent to exist. Do not design the parallel dispatch logic before the agent contract is finalized.
-- **discuss must emit interactionContext for Agent 3 to be fully useful:** Without it, Agent 3 always falls back to Figma inference. The highest-value path is discuss-gathered context flowing directly to the agent. The return status schema addition is small but must not be forgotten.
-- **Builder already accepts interactionPath — no builder changes needed for Agent 3:** The builder contract stub has `interactionPath` as an input. When Agent 3 produces INTERACTION.md, loupe passes the path to builder. This was designed in Watson 1.0 precisely for this moment.
+- **Portable paths are the blocking work:** Every `~/.claude/skills/watson/` reference across SKILL.md, `skills/`, `agents/`, `utilities/` must be replaced with `${CLAUDE_PLUGIN_ROOT}`. This is the largest mechanical task. Libraries at `~/.claude/skills/watson/library/` become `${CLAUDE_PLUGIN_ROOT}/library/`.
+- **hooks/hooks.json replaces settings.json hooks:** The watson-init SessionStart hook currently lives in the user's personal `~/.claude/settings.json`. Moving it to `hooks/hooks.json` means it installs automatically and teammates don't need to edit their personal config at all.
+- **Bundled books are static:** The Watson author runs Librarian, commits the output books to the plugin repo, bumps version, and pushes. Teammates receive updated books via the normal plugin update flow (`claude plugin update watson@faire` or auto-update). This is the correct maintenance model.
+- **Subskill path question needs implementation-time verification:** Confirm whether `skills/discuss/SKILL.md` with `name: discuss` registers as `/discuss` (SKILL.md name wins) or `/watson:discuss` (plugin namespace wins). If the latter, the existing skill interaction pattern changes and users need to know.
 
 ---
 
 ## MVP Definition
 
-### Launch With (Watson 1.1)
+### Launch With (v1.2)
 
-Minimum viable for the milestone goal: Watson feels native to the Prototype Playground — activates automatically, supports iterative workflows, manages sessions, and unlocks interaction-aware prototyping.
+Minimum viable for a teammate to replace their manual Watson setup with one install command and get identical behavior.
 
-- [ ] Ambient mode — SKILL.md `use_when` extended with directory-aware activation patterns; activates on prototype-related messages without `/watson` prefix
-- [ ] Session continuity state summary — on session start, Watson shows prototype name + built sections + pending amendments in ≤3 lines before asking what to do
-- [ ] Draft/commit amendment model — `## Pending Amendments` section distinct from `## Discuss Amendments` in blueprint files; pending → committed on discuss summary confirmation
-- [ ] Agent 3 (Interactions) — full implementation of `interaction.md`: Figma variant group inspection, state inference, `interactionContext` passthrough, INTERACTION.md output under 50 lines
-- [ ] discuss emits interactionContext in return status — new field in the return status schema from discuss.md
-- [ ] 3-agent parallel dispatch in loupe.md — interaction agent dispatched alongside layout + design in Phase 2; wait condition updated to require all three; discuss-only sections skip interaction agent
+- [ ] `plugin.json` manifest with `"name": "watson"`, version, author, repository fields
+- [ ] All `~/.claude/skills/watson/` path references replaced with `${CLAUDE_PLUGIN_ROOT}` across all files
+- [ ] `hooks/hooks.json` with SessionStart hook migrated from settings.json
+- [ ] Library books bundled as static files in `library/` within the plugin repo
+- [ ] GitHub repo (`austindick/watson`) with `.claude-plugin/marketplace.json` pointing to plugin source
+- [ ] README with two-command install instructions
+- [ ] Version bump strategy: increment `plugin.json` version on every push
 
-### Add After Validation (Watson 1.1.x)
+### Add After Validation (v1.2.x)
 
-- [ ] Cross-session preference memory (user's "just build" preference persists across sessions) — SKILL.md currently tracks this within-session only; persistence requires blueprint CONTEXT.md annotation
-- [ ] Interaction agent confidence scoring — agent flags when Figma variant inference is uncertain (e.g., ambiguous variant naming like "state-1", "state-2") rather than silently producing a guess
+Add once the plugin works correctly for the Watson author and one other teammate.
 
-### Future Consideration (Watson 1.2+)
+- [ ] `extraKnownMarketplaces` in Playground's `.claude/settings.json` — prompts teammates automatically on project trust
+- [ ] GITHUB_TOKEN documentation in team onboarding — enables auto-updates for the team
+- [ ] `enabledPlugins` in project settings — eliminates the install step entirely for new Playground contributors
 
-- [ ] `understand` subskill — PRD ingestion → CONTEXT.md enrichment; higher value once designers are using Watson for Understand-stage work
-- [ ] `explore` subskill — competitive pattern review before the discuss conversation; valuable but discuss already has a "pattern research" step that covers the core need
+### Future Consideration (v2+)
+
+- [ ] `userConfig` for configurable `libraryPaths` — add when Watson expands to repos with non-standard structures or when teammates have diverse checkout layouts
+- [ ] Separate stable/beta release channels via marketplace `ref` pinning — add when Watson has enough team users to warrant staged rollouts
+- [ ] Container/CI seed population via `CLAUDE_CODE_PLUGIN_SEED_DIR` — only relevant if Watson is ever used in CI contexts (currently out of scope per PROJECT.md)
 
 ---
 
@@ -143,97 +171,49 @@ Minimum viable for the milestone goal: Watson feels native to the Prototype Play
 
 | Feature | User Value | Implementation Cost | Priority |
 |---------|------------|---------------------|----------|
-| Ambient mode (activation without /watson) | HIGH | LOW | P1 |
-| Session continuity state summary | HIGH | MEDIUM | P1 |
-| Draft/commit amendment model | MEDIUM | LOW | P1 |
-| Agent 3 (Interactions) — Figma state inference | HIGH | HIGH | P1 |
-| discuss emits interactionContext | MEDIUM | LOW | P1 |
-| 3-agent parallel dispatch | MEDIUM | MEDIUM | P1 |
-| Cross-session preference memory | LOW | LOW | P2 |
-| Interaction agent confidence scoring | LOW | LOW | P2 |
+| Plugin manifest + `"name": "watson"` | HIGH | LOW | P1 |
+| Portable paths (`${CLAUDE_PLUGIN_ROOT}` audit) | HIGH | MEDIUM (mechanical, ~15 files) | P1 |
+| Hooks migration to `hooks/hooks.json` | HIGH | LOW | P1 |
+| Library books bundled in `library/` | HIGH | LOW | P1 |
+| GitHub marketplace repo + `marketplace.json` | HIGH | LOW | P1 |
+| Semantic versioning strategy | HIGH | LOW | P1 |
+| `extraKnownMarketplaces` in Playground settings | MEDIUM | LOW | P2 |
+| GITHUB_TOKEN auto-update documentation | MEDIUM | LOW | P2 |
+| `enabledPlugins` in project settings | LOW | LOW | P3 |
+| `userConfig` for configurable `libraryPaths` | LOW | MEDIUM | P3 |
 
 **Priority key:**
-- P1: Required for Watson 1.1 milestone
-- P2: Good-to-have in 1.1 if time allows, otherwise 1.1.x
-- P3: Future milestone
-
----
-
-## Per-Feature Detail: Minimum Viable vs Delight vs Trap
-
-### Ambient Mode
-
-**Minimum viable:** SKILL.md frontmatter trigger patterns extended to activate on "build", "prototype", "redesign", or any design-adjacent verb without requiring `/watson`. Existing blueprint detection (new vs returning) runs immediately on activation.
-
-**Delight:** On ambient activation in an existing prototype directory, Watson's first message is a one-liner context summary ("You're working on Order Management — header and order-table are built, order-sidebar is in progress") before asking what to do. Feels like Watson was already reading over their shoulder.
-
-**Trap to avoid:** Over-broad activation. Adding "help" or "change" to the trigger patterns causes Watson to activate on non-prototype conversations. Stick to: explicit prototype language OR (design-adjacent verb AND prototype directory signal). Two-signal requirement for ambiguous activations.
-
----
-
-### Draft/Commit Amendment Model
-
-**Minimum viable:** After mid-build discuss, amendments go to a `## Pending Amendments` section instead of `## Discuss Amendments`. The commit moment is the existing "Ready?" AskUserQuestion response of "Let's build" — at that point, pending amendments are renamed/promoted to `## Discuss Amendments`. If the user chooses "Save for later" instead, amendments remain pending. On next session, the state summary flags "you have 3 pending amendments."
-
-**Delight:** At the commit gate, Watson shows a diff-style summary: "These 3 decisions will be locked in: [list]." One more confirmation before writing. Designers feel in control.
-
-**Trap to avoid:** Complex state machine with many transitions (pending → reviewing → committed → archived). Start with two states only: pending and committed. The distinction maps to one real question: "has this been explicitly confirmed by the user?" Yes = committed. No = pending.
-
----
-
-### Session Management
-
-**Minimum viable:** On session start (ambient or explicit /watson activation), Watson reads CONTEXT.md, scans src/ for built section markers, and reads blueprint files for `## Pending Amendments` sections. Produces a 2-3 line context summary before the first user interaction.
-
-**Delight:** The summary is written in design language, not file-system language. "You're building the Order Management prototype. The header and main table are done. You've got some uncommitted decisions about the sidebar layout." Not "blueprint/CONTEXT.md populated, 2 sections in .watson/, 3 Pending Amendments in LAYOUT.md."
-
-**Trap to avoid:** Conflating session management with git workflow. Watson describes state — never creates or switches branches. If a designer asks "should I start a new branch?", Watson answers conversationally but does not run any git command.
-
----
-
-### Agent 3 (Interactions)
-
-**Minimum viable:** Agent reads `nodeId` from dispatch, calls `mcp__figma__get_figma_data` scoped to that node, identifies component variant groups (components with multiple variants), infers state names from variant property names ("hover", "active", "error", "disabled", "loading"), and writes a structured INTERACTION.md under 50 lines. If `interactionContext` is provided from discuss, skips Figma inference for any states already described and uses the discuss context directly.
-
-**Delight:** Agent distinguishes between confirmed states (explicitly named variants in Figma) and inferred states (heuristic guesses from layer names or structure), and marks inferred states clearly in the output. Builder knows which states have Figma backing and which are guesses.
-
-**Trap to avoid:** Over-inferring. If a Figma section has no variant groups and discuss provided no interaction context, the agent should produce a minimal INTERACTION.md noting "no variant groups detected — builder will use library component defaults." Do NOT fabricate states from thin air. A sparse INTERACTION.md that's honest is better than a rich one that's invented.
-
----
-
-### 3-Agent Parallel Dispatch
-
-**Minimum viable:** loupe.md Phase 2 dispatches layout, design, AND interaction agents simultaneously as background agents for each figma section. The wait condition changes from "wait for layout + design" to "wait for layout + design + interaction." Interaction agent receives `nodeId`, `sectionName`, `blueprintPath`, `libraryPaths`, `watsonMode: true`, and `interactionContext` (null if discuss didn't provide one). Discuss-only sections skip all three research agents, same as today.
-
-**Delight:** Progress message updates: "Mapping out the [section name]..." covers all three agents. No separate "analyzing interactions..." message — keep it a single beat in designer language.
-
-**Trap to avoid:** Letting the interaction agent's null-case (no variants found, no discuss context) block the pipeline. If interaction agent produces no output (or fails), loupe logs it and proceeds with `interactionPath: null` — exactly the same as today. The parallel dispatch must be robust to the interaction agent producing nothing.
+- P1: Must have for one-command install to function correctly
+- P2: Meaningfully improves teammate experience; add in v1.2 or v1.2.x
+- P3: Nice to have; defer until v1.2 is validated working
 
 ---
 
 ## Competitor Feature Analysis
 
-No direct analogues exist for this specific feature set (ambient activation + draft/commit amendment model + session continuity for an AI prototyping skill). The following table assesses directional parallels:
+Watson is unique at Faire; "competitors" here are other Claude Code plugins that distribute multi-file skill frameworks.
 
-| Feature | GitHub Copilot Workspace | Cursor | Figma Make | Watson 1.1 approach |
-|---------|--------------------------|--------|------------|---------------------|
-| Context-aware activation | Workspace-scoped (always on in repo) | File-focused (current file context) | Figma-scoped (Figma canvas only) | Blueprint-directory scoped — activates when design work is detected |
-| Draft/exploratory state | Branch-based (implicit — uncommitted changes are drafts) | None — all edits are immediate | None | Explicit pending/committed distinction within blueprint files |
-| Session continuity summary | Workspace overview (issues, PRs, file changes) | None | None | Prototype-specific state: name, built sections, pending decisions |
-| Interaction spec inference | None | None | Limited (Figma component props) | Figma variant group inspection + discuss context passthrough |
-| Multi-agent parallel execution | None | None | None | Background agent parallelism, already validated in 1.0 |
-
-**Key insight:** Watson's draft/commit model is more fine-grained than git-branch drafting because it operates at the decision level, not the file level. A designer can have committed decisions about layout and pending decisions about interactions in the same prototype, simultaneously. This granularity has no direct analogue.
+| Feature | obra/superpowers (community example) | anthropic/commit-commands (official example) | Watson v1.2 approach |
+|---------|--------------------------------------|---------------------------------------------|----------------------|
+| Distribution method | GitHub-based marketplace | Anthropic official marketplace | Private GitHub marketplace (`austindick/watson`) |
+| Command namespace | `superpowers:` prefix (skills use plugin name) | Direct (`/commit-commands:commit`) | `/watson` direct (skill SKILL.md `name` field takes precedence) |
+| Bundled reference files | None documented | None | Library books in `library/`; key differentiator |
+| Hooks | `hooks/hooks.json` | Not applicable | `hooks/hooks.json` for SessionStart migration |
+| Auto-update default | Disabled for third-party | Enabled (official marketplace) | Disabled; documented opt-in via `GITHUB_TOKEN` |
+| Team configuration | None | None | `extraKnownMarketplaces` in project settings |
+| User-configurable options | None | None | Future: `userConfig` for `libraryPaths` |
 
 ---
 
 ## Sources
 
-- Watson SKILL.md, discuss.md, loupe.md, interaction.md — source of truth for existing contracts, existing behavior, and agent stub definitions (`/Users/austindick/.claude/skills/watson/`)
-- Watson PROJECT.md — milestone goals, out-of-scope decisions, constraints (`/Users/austindick/watson/.planning/PROJECT.md`)
-- Watson 1.0 FEATURES.md — prior research establishing context for what's already built (`/Users/austindick/watson/.planning/research/FEATURES.md`)
+- [Claude Code Plugins Reference](https://code.claude.com/docs/en/plugins-reference) — HIGH confidence; manifest schema, namespacing behavior, hooks format, `${CLAUDE_PLUGIN_ROOT}`, `${CLAUDE_PLUGIN_DATA}`, installation scopes, `userConfig`
+- [Claude Code Plugin Marketplaces](https://code.claude.com/docs/en/plugin-marketplaces) — HIGH confidence; `marketplace.json` format, GitHub distribution, auto-update behavior, private repo auth, `extraKnownMarketplaces`, `enabledPlugins`, version resolution, release channels
+- [Discover and Install Plugins](https://code.claude.com/docs/en/discover-plugins) — HIGH confidence; install commands, scope options, auto-update toggle behavior, `/reload-plugins`
+- Watson PROJECT.md (`/Users/austindick/watson/.planning/PROJECT.md`) — v1.2 milestone requirements, current skill file structure, active/out-of-scope decisions
+- Project memory (`paths:` field breaks slash command registration) — confirmed pitfall, informed anti-features section
 
 ---
 
-*Feature research for: Watson 1.1 — Ambient Mode & Iteration*
-*Researched: 2026-04-01*
+*Feature research for: Claude Code plugin distribution (Watson v1.2)*
+*Researched: 2026-04-02*
