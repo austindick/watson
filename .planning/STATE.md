@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 10-01-PLAN.md
-last_updated: "2026-04-03T02:33:56.756Z"
+stopped_at: Completed 11-01-PLAN.md
+last_updated: "2026-04-03T03:03:20.025Z"
 last_activity: 2026-04-01 — Roadmap created; 5 phases defined for Watson 1.1
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 9
-  completed_plans: 9
+  total_phases: 6
+  completed_phases: 6
+  total_plans: 10
+  completed_plans: 10
   percent: 0
 ---
 
@@ -75,6 +75,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 10]: layoutPath and designPath removed from interaction agent inputs entirely — clean removal avoids confusion where callers pass stale params expecting them to be used
 - [Phase 10]: Interaction agent Step 1 replaced with direct Figma MCP fetch via mcp__figma__get_figma_data — same call pattern as layout + design agents; slight duplication accepted per locked decisions
 - [Phase 10]: retry-once + null fallback for INTERACTION.md migrated from deleted sequential block into unified wait gate — prevents silent failure where interactionPath is never set
+- [Phase 11-restore-drft04-review-gate-doc-fixes]: DRFT-04 gate uses forward scan of blueprint files for [PENDING] lines — not reverse-map from drafts: slugs
+- [Phase 11-restore-drft04-review-gate-doc-fixes]: Session-start gate (Path B step 5) and Tier 2 pre-build warning are distinct and both necessary
 
 ### Pending Todos
 
@@ -88,6 +90,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-03T02:31:15.699Z
-Stopped at: Completed 10-01-PLAN.md
+Last session: 2026-04-03T03:03:20.023Z
+Stopped at: Completed 11-01-PLAN.md
 Resume file: None

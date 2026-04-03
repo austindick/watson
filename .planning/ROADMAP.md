@@ -43,7 +43,7 @@ Full details: `milestones/Watson 1.0-ROADMAP.md`
 - [x] **Phase 8: Session Management** - Watson creates and switches git branches for prototype sessions with user confirmation (completed 2026-04-03)
 - [x] **Phase 9: Agent 3 (Interactions)** - Interaction agent structures discuss context and library defaults into INTERACTION.md per section (completed 2026-04-03)
 - [x] **Phase 10: 3-Agent Parallel Dispatch** - loupe.md dispatches layout, design, and interaction agents simultaneously per section (completed 2026-04-03)
-- [ ] **Phase 11: Restore DRFT-04 Review Gate + Doc Fixes** - Restore dropped amendment review gate in SKILL.md Path B and fix documentation mismatches (gap closure)
+- [x] **Phase 11: Restore DRFT-04 Review Gate + Doc Fixes** - Restore dropped amendment review gate in SKILL.md Path B and fix documentation mismatches (gap closure) (completed 2026-04-03)
 
 ## Phase Details
 
@@ -147,4 +147,4 @@ Plans:
 | 8. Session Management | 2/2 | Complete   | 2026-04-03 | - |
 | 9. Agent 3 (Interactions) | 2/2 | Complete   | 2026-04-03 | - |
 | 10. 3-Agent Parallel Dispatch | 1/1 | Complete    | 2026-04-03 | - |
-| 11. Restore DRFT-04 Review Gate + Doc Fixes | 0/1 | Pending | - | - |
+| 11. Restore DRFT-04 Review Gate + Doc Fixes | 1/1 | Complete   | 2026-04-03 | - |
