@@ -85,10 +85,11 @@ Plans:
   2. Returning to an existing prototype presents the user with a confirmation step before switching to the matching branch
   3. All Watson branches follow the watson/{prototype-slug} naming convention without exception
   4. At new session start, Watson lists inactive Watson branches and offers to delete them (with user confirmation)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 08-01: TBD
+- [ ] 08-01-PLAN.md — 2-path fork routing (replaces blueprint gate), watson-init branch creation, branch conflict/collaboration handling, status line branch display
+- [ ] 08-02-PLAN.md — Session history lifecycle: action tracking in subskills, SessionEnd hook extension, /watson off session write, loupe push-on-first-build
 
 ### Phase 9: Agent 3 (Interactions)
 **Goal**: A fully implemented interaction agent structures discuss-provided context and augments with library component defaults, producing INTERACTION.md output per section that the builder can consume — no Figma variant inference
@@ -127,6 +128,6 @@ Plans:
 | 1-5. Watson 1.0 Foundation | v1.0 | 15/15 | Complete | 2026-04-01 |
 | 6. Ambient Activation + STATUS.md Schema | 2/2 | Complete   | 2026-04-02 | - |
 | 7. Draft/Commit Amendment Model | 2/2 | Complete   | 2026-04-02 | - |
-| 8. Session Management | v1.1 | 0/? | Not started | - |
+| 8. Session Management | v1.1 | 0/2 | Planning complete | - |
 | 9. Agent 3 (Interactions) | v1.1 | 0/? | Not started | - |
 | 10. 3-Agent Parallel Dispatch | v1.1 | 0/? | Not started | - |
