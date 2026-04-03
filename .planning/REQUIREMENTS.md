@@ -22,10 +22,10 @@ Requirements for Watson 1.1: Ambient Mode & Iteration. Each maps to roadmap phas
 
 ### Session Management
 
-- [ ] **SESS-01**: Watson creates a new git branch for a new prototype session with user confirmation
-- [ ] **SESS-02**: Watson switches to an existing prototype branch when returning to a prototype, with user confirmation
-- [ ] **SESS-03**: Watson uses a consistent branch naming convention (`watson/{prototype-slug}`)
-- [ ] **SESS-04**: On new session start, Watson surfaces existing Watson branches and offers cleanup of inactive ones
+- [x] **SESS-01**: Watson creates a new git branch for a new prototype session with user confirmation
+- [x] **SESS-02**: Watson switches to an existing prototype branch when returning to a prototype, with user confirmation
+- [x] **SESS-03**: Watson uses a consistent branch naming convention (`watson/{prototype-slug}`)
+- [x] **SESS-04**: On new session start, Watson surfaces existing Watson branches and offers cleanup of inactive ones
 
 ### Agent 3 (Interactions)
 
@@ -80,10 +80,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DRFT-02 | Phase 7 | Complete |
 | DRFT-03 | Phase 7 | Complete |
 | DRFT-04 | Phase 7 | Complete |
-| SESS-01 | Phase 8 | Pending |
-| SESS-02 | Phase 8 | Pending |
-| SESS-03 | Phase 8 | Pending |
-| SESS-04 | Phase 8 | Pending |
+| SESS-01 | Phase 8 | Complete |
+| SESS-02 | Phase 8 | Complete |
+| SESS-03 | Phase 8 | Complete |
+| SESS-04 | Phase 8 | Complete |
 | INTR-01 | Phase 9 | Pending |
 | INTR-02 | Phase 9 | Pending |
 | INTR-03 | Phase 9 | Pending |
