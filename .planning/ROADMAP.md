@@ -115,10 +115,10 @@ Plans:
   2. The builder does not start until all three agent outputs are present (or interaction explicitly fell back to null)
   3. A section where the interaction agent errors or produces empty output does not block the pipeline — interactionPath falls back to null and the build continues
   4. Discuss-only sections skip the interaction agent dispatch using the same skip logic as layout and design agents
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 10-01: TBD
+- [ ] 10-01-PLAN.md — Interaction agent Figma fetch refactor + loupe.md parallel dispatch + wait gate extension + agent-contract.md update
 
 ## Progress
 
@@ -131,4 +131,4 @@ Plans:
 | 7. Draft/Commit Amendment Model | 2/2 | Complete   | 2026-04-02 | - |
 | 8. Session Management | 2/2 | Complete   | 2026-04-03 | - |
 | 9. Agent 3 (Interactions) | 2/2 | Complete   | 2026-04-03 | - |
-| 10. 3-Agent Parallel Dispatch | v1.1 | 0/? | Not started | - |
+| 10. 3-Agent Parallel Dispatch | v1.1 | 0/1 | Not started | - |
