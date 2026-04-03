@@ -43,6 +43,7 @@ Full details: `milestones/Watson 1.0-ROADMAP.md`
 - [x] **Phase 8: Session Management** - Watson creates and switches git branches for prototype sessions with user confirmation (completed 2026-04-03)
 - [x] **Phase 9: Agent 3 (Interactions)** - Interaction agent structures discuss context and library defaults into INTERACTION.md per section (completed 2026-04-03)
 - [x] **Phase 10: 3-Agent Parallel Dispatch** - loupe.md dispatches layout, design, and interaction agents simultaneously per section (completed 2026-04-03)
+- [ ] **Phase 11: Restore DRFT-04 Review Gate + Doc Fixes** - Restore dropped amendment review gate in SKILL.md Path B and fix documentation mismatches (gap closure)
 
 ## Phase Details
 
@@ -120,6 +121,20 @@ Plans:
 Plans:
 - [ ] 10-01-PLAN.md — Interaction agent Figma fetch refactor + loupe.md parallel dispatch + wait gate extension + agent-contract.md update
 
+### Phase 11: Restore DRFT-04 Review Gate + Doc Fixes
+**Goal**: Restore the amendment review gate that was dropped during Phase 8's SKILL.md rewrite, and fix documentation mismatches identified by milestone audit
+**Depends on**: Phase 10 (all prior phases complete)
+**Requirements**: DRFT-04
+**Gap Closure**: Closes gaps from v1.1 milestone audit
+**Success Criteria** (what must be TRUE):
+  1. SKILL.md Path B presents AskUserQuestion review gate (Commit all / Discard all / Keep pending) when `drafts:` is non-empty, before proceeding to Intent Classification
+  2. interaction.md frontmatter declares `dispatch: background` matching actual loupe.md dispatch behavior
+  3. 10-01-SUMMARY.md frontmatter includes PARA-01 through PARA-04 in requirements_completed
+**Plans**: 1 plan
+
+Plans:
+- [ ] 11-01-PLAN.md — Restore review gate in SKILL.md Path B + interaction.md frontmatter fix + SUMMARY frontmatter fix
+
 ## Progress
 
 **Execution Order:** 6 → 7 → 8 → 9 → 10
@@ -132,3 +147,4 @@ Plans:
 | 8. Session Management | 2/2 | Complete   | 2026-04-03 | - |
 | 9. Agent 3 (Interactions) | 2/2 | Complete   | 2026-04-03 | - |
 | 10. 3-Agent Parallel Dispatch | 1/1 | Complete    | 2026-04-03 | - |
+| 11. Restore DRFT-04 Review Gate + Doc Fixes | 0/1 | Pending | - | - |
