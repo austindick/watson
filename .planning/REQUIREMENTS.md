@@ -37,10 +37,10 @@ Requirements for Watson 1.1: Ambient Mode & Iteration. Each maps to roadmap phas
 
 ### 3-Agent Parallel Dispatch
 
-- [ ] **PARA-01**: loupe.md dispatches layout, design, and interaction agents simultaneously per Figma section
-- [ ] **PARA-02**: loupe.md wait gate requires all three agent outputs before proceeding to builder
-- [ ] **PARA-03**: Interaction agent failure or empty output does not block the pipeline — falls back to interactionPath: null
-- [ ] **PARA-04**: Discuss-only sections skip the interaction agent (same skip rule as layout and design)
+- [x] **PARA-01**: loupe.md dispatches layout, design, and interaction agents simultaneously per Figma section
+- [x] **PARA-02**: loupe.md wait gate requires all three agent outputs before proceeding to builder
+- [x] **PARA-03**: Interaction agent failure or empty output does not block the pipeline — falls back to interactionPath: null
+- [x] **PARA-04**: Discuss-only sections skip the interaction agent (same skip rule as layout and design)
 
 ## v1.2 Requirements
 
@@ -89,10 +89,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INTR-03 | Phase 9 | Complete |
 | INTR-04 | Phase 9 | Complete |
 | INTR-05 | Phase 9 | Complete |
-| PARA-01 | Phase 10 | Pending |
-| PARA-02 | Phase 10 | Pending |
-| PARA-03 | Phase 10 | Pending |
-| PARA-04 | Phase 10 | Pending |
+| PARA-01 | Phase 10 | Complete |
+| PARA-02 | Phase 10 | Complete |
+| PARA-03 | Phase 10 | Complete |
+| PARA-04 | Phase 10 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 20 total
