@@ -21,15 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-03)
 
 **Core value:** Every prototype decision is grounded in real context and traceable from idea through prototype to production spec.
-**Current focus:** Planning next milestone
+**Current focus:** v1.2 Plugin Deployment
 
 ## Current Position
 
-Milestone: v1.1 complete (shipped 2026-04-03)
-Status: Between milestones
-Last activity: 2026-04-03 — Completed v1.1 Ambient Mode & Iteration
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-03 — Milestone v1.2 started
 
-Progress: [██████████] 100% (v1.1)
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 

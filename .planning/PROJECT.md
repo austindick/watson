@@ -130,6 +130,19 @@ Designers and PMs may do Understand/Explore work outside Watson (Notion PRDs, Fi
 | All git mechanics in watson-init.md | Keeps SKILL.md routing-only under 200-line budget | ✓ Good — v1.1 |
 | Interaction agent fetches Figma directly | Eliminates sequential dependency on layout+design for parallel dispatch | ✓ Good — v1.1 |
 
+## Current Milestone: v1.2 Plugin Deployment
+
+**Goal:** Package Watson as a Claude Code plugin so teammates can install with one command, receive automatic updates, and use Watson identically to how it works locally today.
+
+**Target features:**
+- Plugin manifest and directory structure conforming to Claude Code plugin spec
+- All internal paths portable (no hardcoded `~/.claude/skills/watson/` references)
+- Hooks migrated from settings.json to plugin hooks.json
+- Library books bundled with plugin (you regenerate, teammates auto-update)
+- Ambient rule handled within plugin boundary (or documented manual step)
+- Personal GitHub repo (austindick/watson) as distribution source
+- One-command install for teammates via `claude plugin install`
+
 ## Current State
 
 Watson 1.1 shipped 2026-04-03. The skill framework is fully operational with ambient activation, draft/commit amendments, session management, interaction agent, and 3-agent parallel dispatch. 20/20 v1.1 requirements satisfied. SKILL.md at 198 lines (2 under 200-line limit).
@@ -152,4 +165,4 @@ Watson 1.1 shipped 2026-04-03. The skill framework is fully operational with amb
 | Watson 2.0 | Advanced | Clone-from-prod, visual verification, design system abstraction |
 
 ---
-*Last updated: 2026-04-03 after v1.1 milestone — milestone map updated with 1.2 Plugin Deployment and 1.3 Discuss Refactor*
+*Last updated: 2026-04-03 after v1.2 milestone start*
