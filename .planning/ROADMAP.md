@@ -146,7 +146,7 @@ Plans:
   2. /watson off reads STATUS.md using git show (or equivalent) instead of relative path
   3. REQUIREMENTS.md coverage summary matches traceability table (no stale "Pending" text)
   4. SUMMARY frontmatter includes requirements_completed for phases 06-09
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
 - [ ] 12-01-PLAN.md — Integration fixes + milestone doc cleanup
