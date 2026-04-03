@@ -46,7 +46,7 @@ patterns-established:
   - "Subskill action tracking: Read state file, append action string, Write back — silently skip if no actions field"
   - "Session write sequence shared between /watson off and mid-session switch — SKILL.md uses cross-reference to avoid duplication"
 
-requirements-completed: [SESS-01, SESS-02, SESS-03, SESS-04]
+requirements_completed: [SESS-01, SESS-02, SESS-03, SESS-04]
 
 duration: 2min
 completed: 2026-04-03

@@ -42,9 +42,7 @@ patterns-established:
   - "SKILL.md line budget: 167 -> 179 lines (21 lines of buffer remaining for Phase 8)"
   - "Amendment filter rule documented in Critical Constraints — builder.md constraint 8"
 
-requirements-completed:
-  - DRFT-01
-  - DRFT-04
+requirements_completed: [DRFT-01, DRFT-02, DRFT-03]
 
 # Metrics
 duration: 5min

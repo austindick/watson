@@ -47,7 +47,7 @@ patterns-established:
   - "Session toggle via state file: write on load, delete on deactivate/session-end"
   - "Skill exclusivity enforced in SKILL.md — external brainstorming skills explicitly blocked when Watson is ON"
 
-requirements-completed: [AMBI-01, AMBI-02, AMBI-03]
+requirements_completed: [AMBI-01, AMBI-02, AMBI-03]
 
 duration: ~45min
 completed: 2026-04-01

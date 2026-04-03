@@ -48,7 +48,7 @@ patterns-established:
   - "Loupe sequential dispatch pattern: layout+design parallel -> wait -> interaction sequential"
   - "Optional artifact consolidation pattern: skip step if no source data + no prior + no injected params"
 
-requirements-completed: [INTR-01, INTR-03, INTR-04]
+requirements_completed: [INTR-01, INTR-02, INTR-03, INTR-04, INTR-05]
 
 # Metrics
 duration: 10min
