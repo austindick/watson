@@ -128,6 +128,6 @@ Plans:
 | 1-5. Watson 1.0 Foundation | v1.0 | 15/15 | Complete | 2026-04-01 |
 | 6. Ambient Activation + STATUS.md Schema | 2/2 | Complete   | 2026-04-02 | - |
 | 7. Draft/Commit Amendment Model | 2/2 | Complete   | 2026-04-02 | - |
-| 8. Session Management | v1.1 | 0/2 | Planning complete | - |
+| 8. Session Management | 1/2 | In Progress|  | - |
 | 9. Agent 3 (Interactions) | v1.1 | 0/? | Not started | - |
 | 10. 3-Agent Parallel Dispatch | v1.1 | 0/? | Not started | - |
