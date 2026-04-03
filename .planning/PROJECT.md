@@ -42,22 +42,24 @@ Every prototype decision — layout, interaction, component choice, copy, design
 
 ### Active
 
-- [ ] `understand` subskill (PRD building/ingestion → CONTEXT.md) — Watson 1.2
-- [ ] `explore` subskill (solution space, competitive analysis, pattern review) — Watson 1.2
+- [ ] Plugin deployment: manifest, portable paths, bundled library books, one-command teammate install — Watson 1.2
+- [ ] Discuss refactor: split 600-line discuss.md into ~200-line files (conversation, blueprint writes, handoff) — Watson 1.3
+- [ ] `understand` subskill (PRD building/ingestion → CONTEXT.md) — Watson 1.4
+- [ ] `explore` subskill (solution space, competitive analysis, pattern review) — Watson 1.4
 
 ### Out of Scope
 
 - Clone-from-prod (pull existing Faire frontend experience into prototype) — Watson 2.0
 - Visual verification/feedback loop (screenshot comparison) — Watson 2.0
 - Abstracted design system support beyond Slate — Watson 2.0
-- `prep-sdd-specs` subskill (prd.md + frd.md polishing for SDD handoff) — Watson 1.3
-- /sdd directory with prd.md and frd.md generation — Watson 1.3
-- /resources directory (mock data, feedback, archive) — Watson 1.3
-- `write` subskill (copywriting/content design) — Watson 1.4
-- `deduce` subskill (non-technical debugging, Sherlock-themed) — Watson 1.4
-- `research` subskill (open-ended outward research) — Watson 1.4
-- Additional library books (design principles, business context, users, content guidelines, research, SDD overview) — Watson 1.4+
-- Pipeline speed optimization (profiling, pre-warming, lazy loading) — Watson 1.5
+- `prep-sdd-specs` subskill (prd.md + frd.md polishing for SDD handoff) — Watson 1.5
+- /sdd directory with prd.md and frd.md generation — Watson 1.5
+- /resources directory (mock data, feedback, archive) — Watson 1.5
+- `write` subskill (copywriting/content design) — Watson 1.6
+- `deduce` subskill (non-technical debugging, Sherlock-themed) — Watson 1.6
+- `research` subskill (open-ended outward research) — Watson 1.6
+- Additional library books (design principles, business context, users, content guidelines, research, SDD overview) — Watson 1.6+
+- Pipeline speed optimization (profiling, pre-warming, lazy loading) — Watson 1.7
 - External tooling (scripts, CLIs) — Watson is purely Claude Code skill files
 
 ## Context
@@ -141,11 +143,13 @@ Watson 1.1 shipped 2026-04-03. The skill framework is fully operational with amb
 |-----------|-------|-----------------|
 | **Watson 1.0** | Foundation | Orchestrator, library system, blueprint, ported agents, discuss + loupe subskills |
 | **Watson 1.1** | Ambient Mode & Iteration | Ambient activation, draft/commit amendments, session management, Agent 3, 3-agent parallel |
-| Watson 1.2 | Core Workflows | understand, explore subskills |
-| Watson 1.3 | SDD Integration | prep-sdd-specs, /sdd directory, /resources, blueprint-to-SDD pipeline |
-| Watson 1.4 | Extended Capabilities | write, deduce, research subskills; additional library books |
-| Watson 1.5 | Speed | Pipeline profiling, background pre-warming, lazy loading, parallel optimization |
+| Watson 1.2 | Plugin Deployment | Plugin manifest, portable paths, bundled library books, one-command install for teammates |
+| Watson 1.3 | Discuss Refactor | Split 600-line discuss.md into conversation core + blueprint writes + handoff/gate utilities |
+| Watson 1.4 | Core Workflows | understand, explore subskills |
+| Watson 1.5 | SDD Integration | prep-sdd-specs, /sdd directory, /resources, blueprint-to-SDD pipeline |
+| Watson 1.6 | Extended Capabilities | write, deduce, research subskills; additional library books |
+| Watson 1.7 | Speed | Pipeline profiling, background pre-warming, lazy loading, parallel optimization |
 | Watson 2.0 | Advanced | Clone-from-prod, visual verification, design system abstraction |
 
 ---
-*Last updated: 2026-04-03 after v1.1 milestone*
+*Last updated: 2026-04-03 after v1.1 milestone — milestone map updated with 1.2 Plugin Deployment and 1.3 Discuss Refactor*

@@ -5,6 +5,8 @@
 - ✅ **v1.0 Loupe Pipeline** — Phases 1-5 (shipped 2026-03-26)
 - ✅ **Watson 1.0 Foundation** — Phases 1-5 (shipped 2026-04-01)
 - ✅ **Watson 1.1 Ambient Mode & Iteration** — Phases 6-12 (shipped 2026-04-03)
+- 📋 **Watson 1.2 Plugin Deployment** — (planned)
+- 📋 **Watson 1.3 Discuss Refactor** — (planned)
 
 ## Phases
 
