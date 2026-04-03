@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 09-01-PLAN.md
-last_updated: "2026-04-03T01:52:43.810Z"
+stopped_at: Completed 09-02-PLAN.md
+last_updated: "2026-04-03T01:58:17.015Z"
 last_activity: 2026-04-01 — Roadmap created; 5 phases defined for Watson 1.1
 progress:
   total_phases: 5
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 8
-  completed_plans: 7
+  completed_plans: 8
   percent: 0
 ---
 
@@ -70,6 +70,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 09-agent-3-interactions]: null and absent interactionContext treated identically — fallback to library-defaults-only mode (INTR-04)
 - [Phase 09-agent-3-interactions]: Discuss pre-categorizes interaction context into 4 keys; agent maps directly without re-categorization
 - [Phase 09-agent-3-interactions]: crossSectionFlows is top-level in discuss return status — consolidator consumes separately
+- [Phase 09-agent-3-interactions]: Discuss-only interactionPath resolves to blueprintPath/INTERACTION.md if it exists — discuss already populated it, no re-dispatch needed
+- [Phase 09-agent-3-interactions]: crossSectionFlows: null explicitly set in Tier 2 direct build — no discuss context available in direct build path
 
 ### Pending Todos
 
@@ -83,6 +85,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-03T01:52:43.806Z
-Stopped at: Completed 09-01-PLAN.md
+Last session: 2026-04-03T01:58:17.012Z
+Stopped at: Completed 09-02-PLAN.md
 Resume file: None
