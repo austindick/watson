@@ -18,7 +18,7 @@ Requirements for Watson 1.1: Ambient Mode & Iteration. Each maps to roadmap phas
 - [x] **DRFT-01**: Blueprint amendments from discuss default to a pending state rather than immediately committed
 - [x] **DRFT-02**: User can explicitly commit pending amendments via the existing "Ready?" confirmation gate
 - [x] **DRFT-03**: At commit gate, Watson shows a diff-style summary of which decisions will be locked in
-- [ ] **DRFT-04**: On session start, Watson surfaces any pending amendments from previous sessions
+- [x] **DRFT-04**: On session start, Watson surfaces any pending amendments from previous sessions
 
 ### Session Management
 
@@ -79,7 +79,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DRFT-01 | Phase 7 | Complete |
 | DRFT-02 | Phase 7 | Complete |
 | DRFT-03 | Phase 7 | Complete |
-| DRFT-04 | Phase 11 | Pending |
+| DRFT-04 | Phase 11 | Complete |
 | SESS-01 | Phase 8 | Complete |
 | SESS-02 | Phase 8 | Complete |
 | SESS-03 | Phase 8 | Complete |
