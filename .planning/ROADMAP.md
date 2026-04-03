@@ -44,6 +44,7 @@ Full details: `milestones/Watson 1.0-ROADMAP.md`
 - [x] **Phase 9: Agent 3 (Interactions)** - Interaction agent structures discuss context and library defaults into INTERACTION.md per section (completed 2026-04-03)
 - [x] **Phase 10: 3-Agent Parallel Dispatch** - loupe.md dispatches layout, design, and interaction agents simultaneously per section (completed 2026-04-03)
 - [x] **Phase 11: Restore DRFT-04 Review Gate + Doc Fixes** - Restore dropped amendment review gate in SKILL.md Path B and fix documentation mismatches (gap closure) (completed 2026-04-03)
+- [ ] **Phase 12: Integration Hardening + Milestone Cleanup** - Fix integration gaps (blueprintPath resolution, relative path robustness) and clean up stale milestone documentation
 
 ## Phase Details
 
@@ -60,7 +61,7 @@ Full details: `milestones/Watson 1.0-ROADMAP.md`
 
 Plans:
 - [x] 06-01-PLAN.md — STATUS.md schema (watson-init + artifact schema) and Activation section (blueprint gate, Tier 0, STATUS.md routing)
-- [ ] 06-02-PLAN.md — Gap closure: ambient trigger via path-specific rule (decoupled from SKILL.md frontmatter to preserve /watson slash command)
+- [x] 06-02-PLAN.md — Gap closure: ambient trigger via path-specific rule (decoupled from SKILL.md frontmatter to preserve /watson slash command)
 
 ### Phase 7: Draft/Commit Amendment Model
 **Goal**: Blueprint amendments are explicitly pending until the user confirms — no design decision is silently locked in, and every session start surfaces unfinished work
@@ -74,8 +75,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — [PENDING] amendment writes in discuss.md + commit gate diff + commit-all sequence + STATUS.md drafts management
-- [ ] 07-02-PLAN.md — Session-start pending surfacing in SKILL.md + soft build warning + builder.md [COMMITTED]-only filter
+- [x] 07-01-PLAN.md — [PENDING] amendment writes in discuss.md + commit gate diff + commit-all sequence + STATUS.md drafts management
+- [x] 07-02-PLAN.md — Session-start pending surfacing in SKILL.md + soft build warning + builder.md [COMMITTED]-only filter
 
 ### Phase 8: Session Management
 **Goal**: Watson manages prototype git branches on behalf of the user — new prototypes get a dedicated branch, returning sessions switch to the right branch, and orphaned branches are surfaced for cleanup
@@ -89,8 +90,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 08-01-PLAN.md — 2-path fork routing (replaces blueprint gate), watson-init branch creation, branch conflict/collaboration handling, status line branch display
-- [ ] 08-02-PLAN.md — Session history lifecycle: action tracking in subskills, SessionEnd hook extension, /watson off session write, loupe push-on-first-build
+- [x] 08-01-PLAN.md — 2-path fork routing (replaces blueprint gate), watson-init branch creation, branch conflict/collaboration handling, status line branch display
+- [x] 08-02-PLAN.md — Session history lifecycle: action tracking in subskills, SessionEnd hook extension, /watson off session write, loupe push-on-first-build
 
 ### Phase 9: Agent 3 (Interactions)
 **Goal**: A fully implemented interaction agent structures discuss-provided context and augments with library component defaults, producing INTERACTION.md output per section that the builder can consume — no Figma variant inference
@@ -104,8 +105,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 09-01-PLAN.md — Interaction agent implementation + discuss interactionContext emit
-- [ ] 09-02-PLAN.md — Loupe dispatch wiring + consolidator INTERACTION.md handling
+- [x] 09-01-PLAN.md — Interaction agent implementation + discuss interactionContext emit
+- [x] 09-02-PLAN.md — Loupe dispatch wiring + consolidator INTERACTION.md handling
 
 ### Phase 10: 3-Agent Parallel Dispatch
 **Goal**: The Loupe pipeline dispatches layout, design, and interaction agents simultaneously per section, with a wait gate that requires all three outputs before the builder proceeds — no increase in total build time
@@ -119,7 +120,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 10-01-PLAN.md — Interaction agent Figma fetch refactor + loupe.md parallel dispatch + wait gate extension + agent-contract.md update
+- [x] 10-01-PLAN.md — Interaction agent Figma fetch refactor + loupe.md parallel dispatch + wait gate extension + agent-contract.md update
 
 ### Phase 11: Restore DRFT-04 Review Gate + Doc Fixes
 **Goal**: Restore the amendment review gate that was dropped during Phase 8's SKILL.md rewrite, and fix documentation mismatches identified by milestone audit
@@ -133,11 +134,26 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 11-01-PLAN.md — Restore review gate in SKILL.md Path B + interaction.md frontmatter fix + SUMMARY frontmatter fix
+- [x] 11-01-PLAN.md — Restore review gate in SKILL.md Path B + interaction.md frontmatter fix + SUMMARY frontmatter fix
+
+### Phase 12: Integration Hardening + Milestone Cleanup
+**Goal**: Fix non-blocking integration gaps identified by v1.1 audit and clean up stale milestone documentation
+**Depends on**: Phase 11 (all prior phases complete)
+**Requirements**: DRFT-04, SESS-01, SESS-02
+**Gap Closure**: Closes integration gaps from v1.1 milestone audit
+**Success Criteria** (what must be TRUE):
+  1. SKILL.md Path B documents how blueprintPath is derived before the [PENDING] scan at session resume
+  2. /watson off reads STATUS.md using git show (or equivalent) instead of relative path
+  3. REQUIREMENTS.md coverage summary matches traceability table (no stale "Pending" text)
+  4. SUMMARY frontmatter includes requirements_completed for phases 06-09
+**Plans**: TBD
+
+Plans:
+- [ ] 12-01-PLAN.md — Integration fixes + milestone doc cleanup
 
 ## Progress
 
-**Execution Order:** 6 → 7 → 8 → 9 → 10
+**Execution Order:** 6 → 7 → 8 → 9 → 10 → 11 → 12
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -148,3 +164,4 @@ Plans:
 | 9. Agent 3 (Interactions) | 2/2 | Complete   | 2026-04-03 | - |
 | 10. 3-Agent Parallel Dispatch | 1/1 | Complete    | 2026-04-03 | - |
 | 11. Restore DRFT-04 Review Gate + Doc Fixes | 1/1 | Complete    | 2026-04-03 | - |
+| 12. Integration Hardening + Milestone Cleanup | 0/1 | Planned    | - | - |

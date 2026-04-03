@@ -97,8 +97,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 **Coverage:**
 - v1.1 requirements: 20 total
 - Mapped to phases: 20
-- Satisfied: 19
-- Pending (gap closure): 1 (DRFT-04)
+- Satisfied: 20
+- Pending: 0
 - Unmapped: 0
 
 ---
