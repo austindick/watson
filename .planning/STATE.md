@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 07-02-PLAN.md — SKILL.md pending surfacing + builder.md amendment filter
-last_updated: "2026-04-02T04:59:35.557Z"
+stopped_at: Completed 08-session-management-01-PLAN.md
+last_updated: "2026-04-03T00:38:59.590Z"
 last_activity: 2026-04-01 — Roadmap created; 5 phases defined for Watson 1.1
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 6
+  completed_plans: 5
   percent: 0
 ---
 
@@ -61,6 +61,9 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 07-draft-commit-amendment-model]: Soft build warning fires once per session via pendingWarningShown in /tmp/watson-active.json
 - [Phase 07-draft-commit-amendment-model]: Review pending amendments handler reuses commit-all sequence from discuss.md — one authoritative pattern
 - [Phase 07-draft-commit-amendment-model]: Pre-Phase-7 unmarked amendment lines treated as committed in builder — backwards compat, no migration needed
+- [Phase 08-session-management]: 2-path fork replaces blueprint gate entirely — new / continue is THE entry point after Watson is ON
+- [Phase 08-session-management]: All git mechanics live in watson-init.md, not SKILL.md — keeps SKILL.md routing-only under 200-line budget
+- [Phase 08-session-management]: Setup Flow no longer collects prototype name — name collected upstream in Path A before Setup Flow runs
 
 ### Pending Todos
 
@@ -74,6 +77,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-02T04:59:35.555Z
-Stopped at: Completed 07-02-PLAN.md — SKILL.md pending surfacing + builder.md amendment filter
+Last session: 2026-04-03T00:38:59.588Z
+Stopped at: Completed 08-session-management-01-PLAN.md
 Resume file: None
