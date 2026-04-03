@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-01)
 Phase: 6 of 10 (Ambient Activation + STATUS.md Schema)
 Plan: — (not yet planned)
 Status: Ready to plan
-Last activity: 2026-04-01 — Roadmap created; 5 phases defined for Watson 1.1
+Last activity: 2026-04-03 - Completed quick task 1: Fix sections_built, agent-contract.md, and targetFilePath gaps from v1.1 audit
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -90,6 +90,12 @@ Progress: [░░░░░░░░░░] 0%
 ### Blockers/Concerns
 
 - Phase 6 research flag: validate `paths` glob activation reliability in Faire Playground before writing SKILL.md frontmatter; document UserPromptSubmit hook fallback plan
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 1 | Fix sections_built, agent-contract.md, and targetFilePath gaps from v1.1 audit | 2026-04-03 | `cc54715` | [1-fix-sections-built-agent-contract-md-and](./quick/1-fix-sections-built-agent-contract-md-and/) |
 
 ## Session Continuity
 
