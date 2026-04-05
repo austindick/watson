@@ -24,10 +24,10 @@ Requirements for Watson 1.2: Plugin Deployment. Each maps to roadmap phases.
 
 ### Distribution
 
-- [ ] **DIST-01**: Teammates can install Watson with a single command from a GitHub repo (austindick/watson or equivalent)
-- [ ] **DIST-02**: Plugin auto-updates when author pushes new versions to the repo
-- [ ] **DIST-03**: Onboarding README documents all prerequisites (Figma MCP, GITHUB_TOKEN for private repo, ambient rule manual step)
-- [ ] **DIST-04**: Ambient rule (watson-ambient.md) is bundled as a reference file with documented manual copy step to ~/.claude/rules/
+- [x] **DIST-01**: Teammates can install Watson with a single command from a GitHub repo (austindick/watson or equivalent)
+- [x] **DIST-02**: Plugin auto-updates when author pushes new versions to the repo
+- [x] **DIST-03**: Onboarding README documents all prerequisites (Figma MCP, GITHUB_TOKEN for private repo, ambient rule manual step)
+- [x] **DIST-04**: Ambient rule (watson-ambient.md) is bundled as a reference file with documented manual copy step to ~/.claude/rules/
 
 ### Validation
 
@@ -72,10 +72,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HOOK-02 | Phase 14 | Complete |
 | HOOK-03 | Phase 14 | Complete |
 | HOOK-04 | Phase 14 | Complete |
-| DIST-01 | Phase 15 | Pending |
-| DIST-02 | Phase 15 | Pending |
-| DIST-03 | Phase 15 | Pending |
-| DIST-04 | Phase 15 | Pending |
+| DIST-01 | Phase 15 | Complete |
+| DIST-02 | Phase 15 | Complete |
+| DIST-03 | Phase 15 | Complete |
+| DIST-04 | Phase 15 | Complete |
 | VALD-01 | Phase 15 | Pending |
 | VALD-02 | Phase 15 | Pending |
 

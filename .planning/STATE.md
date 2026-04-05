@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 15 context gathered
-last_updated: "2026-04-05T18:10:00.800Z"
+stopped_at: Completed 15-01-PLAN.md
+last_updated: "2026-04-05T18:28:28.477Z"
 last_activity: 2026-04-04 — v1.2 roadmap created, 3 phases, 15 requirements mapped
 progress:
   total_phases: 3
   completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 5
+  completed_plans: 4
   percent: 0
 ---
 
@@ -54,6 +54,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 13]: ~/.claude/rules/watson-ambient.md preserved as-is — ambient rule lives in user personal config, not plugin bundle
 - [Phase 14]: hooks/ and scripts/ are plugin root siblings, not inside .claude-plugin/; use __dirname in scripts, not CLAUDE_PLUGIN_ROOT env
 - [Phase 14]: watson-statusline.js is a surgical fork: only the standalone dev server block removed; statusLine auto-write guards against overwriting existing custom scripts
+- [Phase 15]: marketplace.json source field must be an object {source: url, url: ...} not a plain string — plain strings fail claude plugin validate
+- [Phase 15]: README uses verified 3-step install sequence (marketplace add, plugin install, reload-plugins) per research — CONTEXT.md one-command install does not exist in Claude Code CLI
 
 ### Pending Todos
 
@@ -74,9 +76,10 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 13 P01 | 8 | 1 tasks | 71 files |
 | Phase 13 P01 | 525683 | 2 tasks | 71 files |
 | Phase 14-hook-migration-script-bundling P01 | 3min | 2 tasks | 6 files |
+| Phase 15-distribution-onboarding-validation P01 | 2min | 2 tasks | 2 files |
 
 ## Session Continuity
 
-Last session: 2026-04-05T18:10:00.797Z
-Stopped at: Phase 15 context gathered
-Resume file: .planning/phases/15-distribution-onboarding-validation/15-CONTEXT.md
+Last session: 2026-04-05T18:28:28.474Z
+Stopped at: Completed 15-01-PLAN.md
+Resume file: None
