@@ -74,8 +74,8 @@ Full details: `milestones/v1.1-ROADMAP.md`
 **Plans**: 2 plans
 
 Plans:
-- [ ] 13-01: Create plugin.json manifest, reorganize directory structure, resolve command namespace
-- [ ] 13-02: Replace all hardcoded paths with ${CLAUDE_PLUGIN_ROOT}, update @-dispatch references, bundle library books, validate locally
+- [x] 13-01: Create plugin.json manifest, reorganize directory structure, resolve command namespace
+- [x] 13-02: Replace all hardcoded paths with ${CLAUDE_PLUGIN_ROOT}, update @-dispatch references, bundle library books, validate locally
 
 ### Phase 14: Hook Migration + Script Bundling
 **Goal**: Watson's session lifecycle hooks fire exclusively from the plugin, not from the author's personal settings.json
@@ -86,10 +86,10 @@ Plans:
   2. SessionEnd branch+actions preservation fires correctly when a Watson session ends
   3. Author's settings.json contains no Watson hooks (GSD and share-proto hooks unaffected)
   4. `scripts/watson-statusline.js` exists in the plugin and contains no share-proto tunnel logic
-**Plans**: 2 plans
+**Plans**: 1 plan
 
 Plans:
-- [ ] 14-01: Write hooks/hooks.json, atomically remove Watson hooks from settings.json, fork statusline script, verify no double-firing
+- [ ] 14-01-PLAN.md — Create hooks.json + 3 lifecycle scripts, migrate author's settings.json, verify no double-firing
 
 ### Phase 15: Distribution + Onboarding + Validation
 **Goal**: A teammate starting from zero Watson experience can install and use Watson with two commands; a fresh install and author migration both work cleanly
@@ -114,6 +114,6 @@ Plans:
 | 1-5. Loupe Pipeline | v1.0 | 10/10 | Complete | 2026-03-26 |
 | 1-5. Watson Foundation | Watson 1.0 | 15/15 | Complete | 2026-04-01 |
 | 6-12. Ambient Mode & Iteration | v1.1 | 11/11 | Complete | 2026-04-03 |
-| 13. Plugin Scaffold + Path Portability | 2/2 | Complete    | 2026-04-05 | - |
+| 13. Plugin Scaffold + Path Portability | v1.2 | 2/2 | Complete | 2026-04-05 |
 | 14. Hook Migration + Script Bundling | v1.2 | 0/1 | Not started | - |
 | 15. Distribution + Onboarding + Validation | v1.2 | 0/2 | Not started | - |
