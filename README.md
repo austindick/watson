@@ -15,14 +15,14 @@ Run these three commands inside Claude Code:
 
 ```
 /plugin marketplace add austindick/watson
-/plugin install dear-watson@watson
+/plugin install elementary@watson
 /reload-plugins
 ```
 
 Then copy the ambient rule so Watson activates automatically when you open the Playground:
 
 ```bash
-cp ~/.claude/plugins/cache/watson/dear-watson/*/skills/watson/references/watson-ambient.md ~/.claude/rules/watson-ambient.md
+cp ~/.claude/plugins/cache/watson/elementary/*/skills/watson/references/watson-ambient.md ~/.claude/rules/watson-ambient.md
 ```
 
 > Note: the `*` in the path handles any version number in the cache directory.
