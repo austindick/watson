@@ -71,7 +71,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
   3. All agents successfully read library books — no "file not found" errors when agents access `${CLAUDE_PLUGIN_ROOT}/library/`
   4. Grepping the entire plugin directory for `~/.claude` returns zero hits
   5. Library books (design-system, playground-conventions) are present in the plugin directory and agents can access them via the portable path
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [ ] 13-01: Create plugin.json manifest, reorganize directory structure, resolve command namespace
@@ -86,7 +86,7 @@ Plans:
   2. SessionEnd branch+actions preservation fires correctly when a Watson session ends
   3. Author's settings.json contains no Watson hooks (GSD and share-proto hooks unaffected)
   4. `scripts/watson-statusline.js` exists in the plugin and contains no share-proto tunnel logic
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [ ] 14-01: Write hooks/hooks.json, atomically remove Watson hooks from settings.json, fork statusline script, verify no double-firing
@@ -101,7 +101,7 @@ Plans:
   3. The onboarding README lists all prerequisites (Figma MCP, GITHUB_TOKEN) before the install instructions
   4. A fresh install on a machine with no prior Watson produces a working Watson instance
   5. The author's existing install migrates without double-firing hooks or broken path references
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [ ] 15-01: Create marketplace.json, write plugin README with prerequisites + install flow + manual steps, establish version bump discipline
