@@ -1,0 +1,6 @@
+# GSD planning artifacts (development only)
+.planning/
+.archive/
+
+# OS files
+.DS_Store
