@@ -66,7 +66,7 @@ completed: 2026-04-05
 - **Duration:** ~8 min
 - **Started:** 2026-04-05T04:56:52Z
 - **Completed:** 2026-04-05T05:04:00Z
-- **Tasks:** 1 of 2 complete (Task 2 is checkpoint:human-verify — awaiting user verification)
+- **Tasks:** 2 of 2 complete (Task 2 checkpoint:human-verify approved by user)
 - **Files created:** 71 (1 manifest + 70 skill files)
 
 ## Accomplishments
@@ -80,8 +80,9 @@ completed: 2026-04-05
 Each task was committed atomically:
 
 1. **Task 1: Create plugin.json manifest and copy skill files into plugin structure** - `c29d8d3` (feat)
+2. **Task 2: Verify plugin loads and /watson:watson is invocable** - human-verify checkpoint approved (no code commit — verification only)
 
-**Plan metadata:** pending final commit after checkpoint verification
+**Plan metadata:** `74f2127` (docs: complete plugin scaffold plan)
 
 ## Files Created/Modified
 - `.claude-plugin/plugin.json` — Plugin manifest with name, version, description, author, repository
@@ -106,19 +107,13 @@ None.
 
 ## User Setup Required
 
-**Task 2 requires human verification (checkpoint:human-verify):**
-1. Run `claude --plugin-dir ~/watson` to start a test session
-2. Verify `/watson:watson` is available as a slash command
-3. Type `/watson:watson` and confirm Watson activates
-4. Run `claude plugin validate` from ~/watson/ to confirm no structural errors
-5. Report "approved" to continue to Plan 13-02
-
-Note: Library book access will fail in the test session because paths still point to `~/.claude/skills/watson/`. This is expected — path migration is Plan 13-02.
+None — Task 2 human verification completed. User confirmed `/watson` (shown with `(watson)` prefix) activates correctly when run via `claude --plugin-dir ~/watson` from ~/faire/frontend. Sub-skills `/watson:discuss` and `/watson:loupe` do not appear as standalone slash commands, which matches original behavior — they are invoked internally by Watson's routing logic. Plugin is working as expected.
 
 ## Next Phase Readiness
 - Plugin scaffold complete, structure verified identical to source
-- Plan 13-02 (path portability) is blocked on human verification of plugin loading
-- After verification: Plan 13-02 will replace all `~/.claude/skills/watson/` occurrences with `${CLAUDE_PLUGIN_ROOT}/skills/watson/` across ~20 file instances
+- Human verification confirmed plugin loads and /watson:watson is invocable — Plan 13-02 is unblocked
+- Plan 13-02 (path portability) will replace all `~/.claude/skills/watson/` occurrences with `${CLAUDE_PLUGIN_ROOT}/skills/watson/` across ~20 file instances
+- Confirmed: @-style dispatch references work as-is in the plugin context; sub-skills appearing only as internal routes (not top-level slash commands) is correct behavior
 
 ---
 *Phase: 13-plugin-scaffold-path-portability*

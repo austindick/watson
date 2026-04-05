@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: "13-01 Task 1 complete; checkpoint:human-verify Task 2 pending"
-last_updated: "2026-04-05T04:58:11.756Z"
+stopped_at: Completed 13-01-PLAN.md (both tasks complete, human verification approved)
+last_updated: "2026-04-05T05:13:45.031Z"
 last_activity: 2026-04-04 — v1.2 roadmap created, 3 phases, 15 requirements mapped
 progress:
   total_phases: 3
@@ -49,6 +49,7 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 08]: All git mechanics in watson-init.md, not SKILL.md — keeps SKILL.md under 200-line budget
 - [Phase 12]: blueprintPath derivation documented inline in Path B step 5
 - [Phase 13]: Plugin manifest at .claude-plugin/plugin.json with name=watson, version=1.2.0; skills nested under skills/watson/ preserving internal layout
+- [Phase 13]: Plugin loads correctly with --plugin-dir; sub-skills (/watson:discuss, /watson:loupe) are internal routes only, not top-level slash commands — confirmed matches original behavior
 
 ### Pending Todos
 
@@ -67,9 +68,10 @@ Progress: [░░░░░░░░░░] 0%
 |---|-------------|------|--------|-----------|
 | 1 | Fix sections_built, agent-contract.md, and targetFilePath gaps from v1.1 audit | 2026-04-03 | `cc54715` | [1-fix-sections-built-agent-contract-md-and](./quick/1-fix-sections-built-agent-contract-md-and/) |
 | Phase 13 P01 | 8 | 1 tasks | 71 files |
+| Phase 13 P01 | 525683 | 2 tasks | 71 files |
 
 ## Session Continuity
 
-Last session: 2026-04-05T04:58:11.754Z
-Stopped at: 13-01 Task 1 complete; checkpoint:human-verify Task 2 pending
+Last session: 2026-04-05T05:13:45.029Z
+Stopped at: Completed 13-01-PLAN.md (both tasks complete, human verification approved)
 Resume file: None
