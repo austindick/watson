@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 14 context gathered
-last_updated: "2026-04-05T16:57:59.008Z"
+stopped_at: "Completed 14-01 tasks 1+2; checkpoint:human-verify task 3 awaiting fresh session verification"
+last_updated: "2026-04-05T17:14:12.729Z"
 last_activity: 2026-04-04 — v1.2 roadmap created, 3 phases, 15 requirements mapped
 progress:
   total_phases: 3
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  completed_phases: 2
+  total_plans: 3
+  completed_plans: 3
   percent: 0
 ---
 
@@ -52,6 +52,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 13]: Plugin loads correctly with --plugin-dir; sub-skills (/watson:discuss, /watson:loupe) are internal routes only, not top-level slash commands — confirmed matches original behavior
 - [Phase 13]: @-dispatch references (@agents/builder.md etc.) resolve correctly in plugin context without  prefixing — verified in live --plugin-dir session
 - [Phase 13]: ~/.claude/rules/watson-ambient.md preserved as-is — ambient rule lives in user personal config, not plugin bundle
+- [Phase 14]: hooks/ and scripts/ are plugin root siblings, not inside .claude-plugin/; use __dirname in scripts, not CLAUDE_PLUGIN_ROOT env
+- [Phase 14]: watson-statusline.js is a surgical fork: only the standalone dev server block removed; statusLine auto-write guards against overwriting existing custom scripts
 
 ### Pending Todos
 
@@ -71,9 +73,10 @@ Progress: [░░░░░░░░░░] 0%
 | 1 | Fix sections_built, agent-contract.md, and targetFilePath gaps from v1.1 audit | 2026-04-03 | `cc54715` | [1-fix-sections-built-agent-contract-md-and](./quick/1-fix-sections-built-agent-contract-md-and/) |
 | Phase 13 P01 | 8 | 1 tasks | 71 files |
 | Phase 13 P01 | 525683 | 2 tasks | 71 files |
+| Phase 14-hook-migration-script-bundling P01 | 3min | 2 tasks | 6 files |
 
 ## Session Continuity
 
-Last session: 2026-04-05T16:57:59.005Z
-Stopped at: Phase 14 context gathered
-Resume file: .planning/phases/14-hook-migration-script-bundling/14-CONTEXT.md
+Last session: 2026-04-05T17:14:12.727Z
+Stopped at: Completed 14-01 tasks 1+2; checkpoint:human-verify task 3 awaiting fresh session verification
+Resume file: None

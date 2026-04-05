@@ -56,7 +56,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
 **Milestone Goal:** Package Watson as a Claude Code plugin so teammates can install with one command, receive automatic updates, and use Watson identically to how it works locally today.
 
 - [x] **Phase 13: Plugin Scaffold + Path Portability** - Valid plugin.json manifest, plugin directory structure, all paths portable via ${CLAUDE_PLUGIN_ROOT}, library books bundled, namespace resolved (completed 2026-04-05)
-- [ ] **Phase 14: Hook Migration + Script Bundling** - Watson session hooks moved from personal settings.json to plugin hooks/hooks.json; statusline script forked and bundled
+- [x] **Phase 14: Hook Migration + Script Bundling** - Watson session hooks moved from personal settings.json to plugin hooks/hooks.json; statusline script forked and bundled (completed 2026-04-05)
 - [ ] **Phase 15: Distribution + Onboarding + Validation** - GitHub marketplace live, one-command install working, onboarding README complete, fresh install and author migration verified
 
 ## Phase Details
@@ -115,5 +115,5 @@ Plans:
 | 1-5. Watson Foundation | Watson 1.0 | 15/15 | Complete | 2026-04-01 |
 | 6-12. Ambient Mode & Iteration | v1.1 | 11/11 | Complete | 2026-04-03 |
 | 13. Plugin Scaffold + Path Portability | v1.2 | 2/2 | Complete | 2026-04-05 |
-| 14. Hook Migration + Script Bundling | v1.2 | 0/1 | Not started | - |
+| 14. Hook Migration + Script Bundling | 1/1 | Complete   | 2026-04-05 | - |
 | 15. Distribution + Onboarding + Validation | v1.2 | 0/2 | Not started | - |

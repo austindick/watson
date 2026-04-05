@@ -17,10 +17,10 @@ Requirements for Watson 1.2: Plugin Deployment. Each maps to roadmap phases.
 
 ### Hook Migration
 
-- [ ] **HOOK-01**: Watson SessionStart hook (recovery notification) fires from plugin hooks/hooks.json, not personal settings.json
-- [ ] **HOOK-02**: Watson SessionEnd hook (branch+actions preservation) fires from plugin hooks/hooks.json, not personal settings.json
-- [ ] **HOOK-03**: Watson hooks are removed from author's settings.json without affecting non-Watson hooks (GSD, share-proto)
-- [ ] **HOOK-04**: StatusLine script is bundled in the plugin (forked from share-proto-statusline.js, Watson-only logic)
+- [x] **HOOK-01**: Watson SessionStart hook (recovery notification) fires from plugin hooks/hooks.json, not personal settings.json
+- [x] **HOOK-02**: Watson SessionEnd hook (branch+actions preservation) fires from plugin hooks/hooks.json, not personal settings.json
+- [x] **HOOK-03**: Watson hooks are removed from author's settings.json without affecting non-Watson hooks (GSD, share-proto)
+- [x] **HOOK-04**: StatusLine script is bundled in the plugin (forked from share-proto-statusline.js, Watson-only logic)
 
 ### Distribution
 
@@ -68,10 +68,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLUG-03 | Phase 13 | Complete |
 | PLUG-04 | Phase 13 | Complete |
 | PLUG-05 | Phase 13 | Complete |
-| HOOK-01 | Phase 14 | Pending |
-| HOOK-02 | Phase 14 | Pending |
-| HOOK-03 | Phase 14 | Pending |
-| HOOK-04 | Phase 14 | Pending |
+| HOOK-01 | Phase 14 | Complete |
+| HOOK-02 | Phase 14 | Complete |
+| HOOK-03 | Phase 14 | Complete |
+| HOOK-04 | Phase 14 | Complete |
 | DIST-01 | Phase 15 | Pending |
 | DIST-02 | Phase 15 | Pending |
 | DIST-03 | Phase 15 | Pending |
