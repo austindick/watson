@@ -13,7 +13,7 @@ All agents receive these parameters at dispatch time:
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | blueprintPath | string | Absolute path to prototype's blueprint/ directory |
-| libraryPaths | string[] | Pre-resolved chapter/page paths. Subskills read LIBRARY.md and BOOK.md manifests, select relevant chapters based on use_when guidance, and pass resolved paths to agents. Agents never navigate the book hierarchy themselves — they read each path directly. Example: `["${CLAUDE_PLUGIN_ROOT}/skills/watson/library/design-system/global-theme/CHAPTER.md", "${CLAUDE_PLUGIN_ROOT}/skills/watson/library/design-system/components/CHAPTER.md"]` |
+| libraryPaths | string[] | Pre-resolved chapter/page paths. Subskills read LIBRARY.md and BOOK.md manifests, select relevant chapters based on use_when guidance, and pass resolved paths to agents. Agents never navigate the book hierarchy themselves — they read each path directly. Example: `["${CLAUDE_PLUGIN_ROOT}/skills/core/library/design-system/global-theme/CHAPTER.md", "${CLAUDE_PLUGIN_ROOT}/skills/core/library/design-system/components/CHAPTER.md"]` |
 | watsonMode | boolean | Suppress interactive prompts when true |
 
 ---

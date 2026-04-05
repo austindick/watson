@@ -34,7 +34,7 @@ Before resolving library paths, append an action to the state file:
 3. Write updated JSON back via Edit tool
 If `/tmp/watson-active.json` does not exist or has no `actions` field, skip silently.
 
-1. Read `${CLAUDE_PLUGIN_ROOT}/skills/watson/library/LIBRARY.md` — this is the book index.
+1. Read `${CLAUDE_PLUGIN_ROOT}/skills/core/library/LIBRARY.md` — this is the book index.
 2. Select books needed for the build pipeline:
    - `design-system`: select chapters `components` and `global-theme`
    - `playground-conventions`: select the full book (all chapters needed for correct scaffolding). **Consult the scaffolding, dev-workflow, and project-structure chapters before any codebase exploration during the pipeline.** Route registration, dev server commands, type-check commands, and file layout are all documented there — do not grep the codebase when the conventions book has the answer.
@@ -42,15 +42,15 @@ If `/tmp/watson-active.json` does not exist or has no `actions` field, skip sile
 4. Build `libraryPaths[]` — an array of absolute paths to each selected chapter:
    ```
    libraryPaths = [
-     "${CLAUDE_PLUGIN_ROOT}/skills/watson/library/design-system/global-theme/CHAPTER.md",
-     "${CLAUDE_PLUGIN_ROOT}/skills/watson/library/design-system/components/CHAPTER.md",
-     "${CLAUDE_PLUGIN_ROOT}/skills/watson/library/playground-conventions/project-structure/CHAPTER.md",
-     "${CLAUDE_PLUGIN_ROOT}/skills/watson/library/playground-conventions/scaffolding/CHAPTER.md",
-     "${CLAUDE_PLUGIN_ROOT}/skills/watson/library/playground-conventions/components/CHAPTER.md",
-     "${CLAUDE_PLUGIN_ROOT}/skills/watson/library/playground-conventions/design-tokens/CHAPTER.md",
-     "${CLAUDE_PLUGIN_ROOT}/skills/watson/library/playground-conventions/dev-workflow/CHAPTER.md",
-     "${CLAUDE_PLUGIN_ROOT}/skills/watson/library/playground-conventions/multi-variant/CHAPTER.md",
-     "${CLAUDE_PLUGIN_ROOT}/skills/watson/library/playground-conventions/contributor-registration/CHAPTER.md"
+     "${CLAUDE_PLUGIN_ROOT}/skills/core/library/design-system/global-theme/CHAPTER.md",
+     "${CLAUDE_PLUGIN_ROOT}/skills/core/library/design-system/components/CHAPTER.md",
+     "${CLAUDE_PLUGIN_ROOT}/skills/core/library/playground-conventions/project-structure/CHAPTER.md",
+     "${CLAUDE_PLUGIN_ROOT}/skills/core/library/playground-conventions/scaffolding/CHAPTER.md",
+     "${CLAUDE_PLUGIN_ROOT}/skills/core/library/playground-conventions/components/CHAPTER.md",
+     "${CLAUDE_PLUGIN_ROOT}/skills/core/library/playground-conventions/design-tokens/CHAPTER.md",
+     "${CLAUDE_PLUGIN_ROOT}/skills/core/library/playground-conventions/dev-workflow/CHAPTER.md",
+     "${CLAUDE_PLUGIN_ROOT}/skills/core/library/playground-conventions/multi-variant/CHAPTER.md",
+     "${CLAUDE_PLUGIN_ROOT}/skills/core/library/playground-conventions/contributor-registration/CHAPTER.md"
    ]
    ```
 5. Pass this array to every agent dispatch below. **Never improvise paths.** All paths come from LIBRARY.md and BOOK.md manifests.

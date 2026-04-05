@@ -2,13 +2,13 @@
 
 Technical reference for engineers who maintain Watson -- updating library books, adding subskills, modifying agents.
 
-Watson lives at `${CLAUDE_PLUGIN_ROOT}/skills/watson/`. It is a Claude Code skill plugin with a library system, agent pipeline, and subskill routing layer.
+Watson lives at `${CLAUDE_PLUGIN_ROOT}/skills/core/`. It is a Claude Code skill plugin with a library system, agent pipeline, and subskill routing layer.
 
 ---
 
 ## 1. Library System Overview
 
-The library lives at `${CLAUDE_PLUGIN_ROOT}/skills/watson/library/`. It uses a 3-level hierarchy:
+The library lives at `${CLAUDE_PLUGIN_ROOT}/skills/core/library/`. It uses a 3-level hierarchy:
 
 ```
 LIBRARY.md              <- index of all books
@@ -49,7 +49,7 @@ Invoke the Librarian agent in generate mode with these parameters:
   - `@repo/packages/core/slate/src/components/`
   - `@repo/packages/core/slate/src/foundation/`
   - `@repo/packages/core/slate/src/icons/`
-- `outputBookPath: ${CLAUDE_PLUGIN_ROOT}/skills/watson/library/design-system/`
+- `outputBookPath: ${CLAUDE_PLUGIN_ROOT}/skills/core/library/design-system/`
 
 Or tell Claude: "Regenerate the design system book." The Librarian handles the rest.
 
@@ -144,7 +144,7 @@ The `source_paths` list in BOOK.md frontmatter tracks where the content was orig
 
 ## 5. Agent Maintenance
 
-Agents live at `${CLAUDE_PLUGIN_ROOT}/skills/watson/agents/`. Current agents:
+Agents live at `${CLAUDE_PLUGIN_ROOT}/skills/core/agents/`. Current agents:
 
 | Agent | File | Dispatch Mode |
 |-------|------|---------------|
@@ -183,7 +183,7 @@ The contract defines:
 
 ## 6. Adding a New Subskill
 
-Subskills live at `${CLAUDE_PLUGIN_ROOT}/skills/watson/skills/`. Current subskills: `discuss.md` (conversational design discussion) and `loupe.md` (Figma-to-code pipeline).
+Subskills live at `${CLAUDE_PLUGIN_ROOT}/skills/core/skills/`. Current subskills: `discuss.md` (conversational design discussion) and `loupe.md` (Figma-to-code pipeline).
 
 ### Subskill Structure
 

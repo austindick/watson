@@ -258,7 +258,7 @@ These constraints are load-bearing. Relaxing any of them degrades the system.
 Quick reference for navigating the skill directory:
 
 ```
-${CLAUDE_PLUGIN_ROOT}/skills/watson/
+${CLAUDE_PLUGIN_ROOT}/skills/core/
   SKILL.md                    ← Orchestrator (intent classification + routing)
   skills/
     discuss.md                ← Design conversation subskill
