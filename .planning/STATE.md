@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 13-01-PLAN.md (both tasks complete, human verification approved)
-last_updated: "2026-04-05T05:13:45.031Z"
+stopped_at: Completed 13-02-PLAN.md (both tasks complete, human verification approved)
+last_updated: "2026-04-05T16:23:01.729Z"
 last_activity: 2026-04-04 — v1.2 roadmap created, 3 phases, 15 requirements mapped
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -50,6 +50,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 12]: blueprintPath derivation documented inline in Path B step 5
 - [Phase 13]: Plugin manifest at .claude-plugin/plugin.json with name=watson, version=1.2.0; skills nested under skills/watson/ preserving internal layout
 - [Phase 13]: Plugin loads correctly with --plugin-dir; sub-skills (/watson:discuss, /watson:loupe) are internal routes only, not top-level slash commands — confirmed matches original behavior
+- [Phase 13]: @-dispatch references (@agents/builder.md etc.) resolve correctly in plugin context without  prefixing — verified in live --plugin-dir session
+- [Phase 13]: ~/.claude/rules/watson-ambient.md preserved as-is — ambient rule lives in user personal config, not plugin bundle
 
 ### Pending Todos
 
@@ -72,6 +74,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-05T05:13:45.029Z
-Stopped at: Completed 13-01-PLAN.md (both tasks complete, human verification approved)
+Last session: 2026-04-05T16:22:58.181Z
+Stopped at: Completed 13-02-PLAN.md (both tasks complete, human verification approved)
 Resume file: None
