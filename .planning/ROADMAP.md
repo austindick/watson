@@ -115,5 +115,5 @@ Plans:
 | 1-5. Watson Foundation | Watson 1.0 | 15/15 | Complete | 2026-04-01 |
 | 6-12. Ambient Mode & Iteration | v1.1 | 11/11 | Complete | 2026-04-03 |
 | 13. Plugin Scaffold + Path Portability | v1.2 | 2/2 | Complete | 2026-04-05 |
-| 14. Hook Migration + Script Bundling | 1/1 | Complete   | 2026-04-05 | - |
+| 14. Hook Migration + Script Bundling | 1/1 | Complete    | 2026-04-05 | - |
 | 15. Distribution + Onboarding + Validation | v1.2 | 0/2 | Not started | - |
