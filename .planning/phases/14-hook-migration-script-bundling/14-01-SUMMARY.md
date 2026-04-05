@@ -10,7 +10,7 @@ requires:
     provides: Plugin scaffold with .claude-plugin/plugin.json, skills/ directory, ${CLAUDE_PLUGIN_ROOT} path pattern
 provides:
   - hooks/hooks.json with SessionStart + SessionEnd declarations using ${CLAUDE_PLUGIN_ROOT}
-  - scripts/watson-session-start.js with recovery notification + first-run ambient copy + statusLine auto-write
+  - scripts/watson-session-start.js with recovery notification only (opt-in activation via /watson)
   - scripts/watson-session-end.js port of inline Node one-liner to readable script
   - scripts/watson-statusline.js fork of share-proto-statusline.js without dev server block
   - skills/watson/references/watson-ambient.md bundled as source for first-run auto-copy
@@ -63,7 +63,7 @@ completed: 2026-04-05
 - **Duration:** 3 min
 - **Started:** 2026-04-05T17:10:49Z
 - **Completed:** 2026-04-05T17:13:12Z
-- **Tasks:** 2 of 3 completed (Task 3 is a human-verify checkpoint)
+- **Tasks:** 3 of 3 completed
 - **Files modified:** 6
 
 ## Accomplishments
@@ -84,7 +84,7 @@ Each task was committed atomically:
 
 ## Files Created/Modified
 - `hooks/hooks.json` - Plugin hook declarations for SessionStart and SessionEnd
-- `scripts/watson-session-start.js` - Recovery notification + first-run ambient copy + statusLine auto-write
+- `scripts/watson-session-start.js` - Recovery notification only (ambient copy + statusLine removed — Watson is opt-in via /watson)
 - `scripts/watson-session-end.js` - Branch+actions preservation + watson-active.json cleanup
 - `scripts/watson-statusline.js` - Forked statusline with share-proto links, no standalone dev server block
 - `skills/watson/references/watson-ambient.md` - Source file for first-run ambient rule auto-copy
@@ -99,20 +99,19 @@ Each task was committed atomically:
 
 ## Deviations from Plan
 
-None - plan executed exactly as written.
+- **Session-start stripped to recovery-only:** During verification, user identified that auto-activating Watson on every session start was too aggressive. Ambient rule auto-copy and statusLine auto-write were removed from watson-session-start.js — Watson stays opt-in via `/watson`. Committed as `e155bcb`.
 
 ## Issues Encountered
 
 None — all scripts passed smoke tests on first attempt. watson-session-end.js correctly preserved branch+actions and cleaned up the active file. watson-statusline.js rendered correctly via stdin pipe test.
 
-## Checkpoint: Task 3 Awaiting Human Verify
+## Checkpoint: Task 3 — Verified ✓
 
-Task 3 requires starting a fresh Claude Code session to verify:
-- SessionStart fires exactly once (no double-firing from both plugin hooks.json and settings.json)
-- Statusline renders correctly
-- Settings.json has no Watson hooks
-
-Pre-checkpoint automated artifact checks all passed.
+Human verification confirmed:
+- No double-firing — session-end properly cleaned up active file, no stale recovery warning
+- No errors from session-start hook
+- `/watson` activated correctly via `--plugin-dir`
+- Session recovery flow picked up `watson-session-end.json` as designed
 
 ## Next Phase Readiness
 - Plugin is self-contained: hooks fire from plugin, statusLine configured by first-run logic
