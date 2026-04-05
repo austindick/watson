@@ -1,0 +1,16 @@
+{
+  "name": "watson",
+  "owner": {
+    "name": "Austin Dick"
+  },
+  "plugins": [
+    {
+      "name": "watson",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/austindick/watson.git"
+      },
+      "description": "Design discussion and prototype building for the Faire Prototype Playground"
+    }
+  ]
+}
