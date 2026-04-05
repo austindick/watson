@@ -10,9 +10,9 @@ Requirements for Watson 1.2: Plugin Deployment. Each maps to roadmap phases.
 ### Plugin Infrastructure
 
 - [x] **PLUG-01**: Watson loads as a Claude Code plugin with a valid plugin.json manifest (name, version, description)
-- [ ] **PLUG-02**: All internal file references use `${CLAUDE_PLUGIN_ROOT}` instead of hardcoded `~/.claude/skills/watson/` paths
+- [x] **PLUG-02**: All internal file references use `${CLAUDE_PLUGIN_ROOT}` instead of hardcoded `~/.claude/skills/watson/` paths
 - [x] **PLUG-03**: Plugin directory structure follows Claude Code plugin spec (skills/, agents/, commands/ as appropriate)
-- [ ] **PLUG-04**: Library books (design-system, playground-conventions) are bundled in the plugin and accessible to all agents via portable paths
+- [x] **PLUG-04**: Library books (design-system, playground-conventions) are bundled in the plugin and accessible to all agents via portable paths
 - [x] **PLUG-05**: The `/watson` slash command works after plugin install (namespace investigation determines whether via commands/ or skills/ with accepted namespace)
 
 ### Hook Migration
@@ -64,9 +64,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | PLUG-01 | Phase 13 | Complete |
-| PLUG-02 | Phase 13 | Pending |
+| PLUG-02 | Phase 13 | Complete |
 | PLUG-03 | Phase 13 | Complete |
-| PLUG-04 | Phase 13 | Pending |
+| PLUG-04 | Phase 13 | Complete |
 | PLUG-05 | Phase 13 | Complete |
 | HOOK-01 | Phase 14 | Pending |
 | HOOK-02 | Phase 14 | Pending |
