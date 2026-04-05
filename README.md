@@ -14,7 +14,7 @@ Watson helps you design and prototype UI components in the Faire Prototype Playg
 Run these three commands inside Claude Code:
 
 ```
-/plugin marketplace add austindick/watson-marketplace
+/plugin marketplace add austindick/austindick-skills
 /plugin install watson@austindick-skills
 /reload-plugins
 ```
