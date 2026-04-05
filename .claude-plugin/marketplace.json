@@ -5,7 +5,7 @@
   },
   "plugins": [
     {
-      "name": "watson",
+      "name": "dear-watson",
       "source": {
         "source": "url",
         "url": "https://github.com/austindick/watson.git"
