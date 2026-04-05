@@ -14,8 +14,8 @@ Watson helps you design and prototype UI components in the Faire Prototype Playg
 Run these three commands inside Claude Code:
 
 ```
-/plugin marketplace add austindick/austindick-skills
-/plugin install watson@austindick-skills
+/plugin marketplace add austindick/austins-stuff
+/plugin install watson@austins-stuff
 /reload-plugins
 ```
 
@@ -24,7 +24,7 @@ Then restart Claude Code for the skill to appear.
 Copy the ambient rule so Watson activates automatically when you open the Playground:
 
 ```bash
-cp ~/.claude/plugins/cache/austindick-skills/watson/*/skills/core/references/watson-ambient.md ~/.claude/rules/watson-ambient.md
+cp ~/.claude/plugins/cache/austins-stuff/watson/*/skills/core/references/watson-ambient.md ~/.claude/rules/watson-ambient.md
 ```
 
 > Note: the `*` in the path handles any version number in the cache directory.
