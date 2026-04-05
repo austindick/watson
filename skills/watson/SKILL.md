@@ -1,7 +1,6 @@
 ---
 name: watson
 description: Design discussion and prototype building for the Faire Prototype Playground. Use when the user says "/watson", "build a prototype", "design discussion", or any design prototyping request for a frontend UI.
-version: 1.2.0
 ---
 
 # Watson
