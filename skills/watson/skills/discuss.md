@@ -34,7 +34,7 @@ If `/tmp/watson-active.json` does not exist or has no `actions` field, skip sile
 
 ## Phase 0: Library Loading (before anything else)
 
-Read `~/.claude/skills/watson/library/LIBRARY.md` immediately when discuss is invoked. This is the book index — it lists every available book with a `use_when` field.
+Read `${CLAUDE_PLUGIN_ROOT}/skills/watson/library/LIBRARY.md` immediately when discuss is invoked. This is the book index — it lists every available book with a `use_when` field.
 
 **Load immediately:**
 - `playground-conventions` — scaffolding rules and component conventions apply throughout the entire conversation. Load the full book at the start. **Consult the scaffolding, dev-workflow, and project-structure chapters before any codebase exploration.** If a question about build commands, route registration, or project layout can be answered from these chapters, use that answer — do not grep or scan the codebase.

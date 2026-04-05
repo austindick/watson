@@ -5,7 +5,7 @@ last_updated: "2026-03-31"
 book_type: foundational
 use_when: "Agent needs prototype scaffolding steps, component imports, design tokens, dev workflow, or multi-variant patterns"
 source_paths:
-  - "~/.claude/skills/watson-lite/references/playground-conventions.md"
+  - "${CLAUDE_PLUGIN_ROOT}/skills/watson/references/playground-conventions.md"
   - "@repo/packages/design/prototype-playground/CLAUDE.md"
   - "@repo/packages/design/prototype-playground/README.md"
   - "@repo/packages/design/prototype-playground/SHARING_GUIDE.md"
