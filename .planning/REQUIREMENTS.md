@@ -63,27 +63,27 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PLUG-01 | — | Pending |
-| PLUG-02 | — | Pending |
-| PLUG-03 | — | Pending |
-| PLUG-04 | — | Pending |
-| PLUG-05 | — | Pending |
-| HOOK-01 | — | Pending |
-| HOOK-02 | — | Pending |
-| HOOK-03 | — | Pending |
-| HOOK-04 | — | Pending |
-| DIST-01 | — | Pending |
-| DIST-02 | — | Pending |
-| DIST-03 | — | Pending |
-| DIST-04 | — | Pending |
-| VALD-01 | — | Pending |
-| VALD-02 | — | Pending |
+| PLUG-01 | Phase 13 | Pending |
+| PLUG-02 | Phase 13 | Pending |
+| PLUG-03 | Phase 13 | Pending |
+| PLUG-04 | Phase 13 | Pending |
+| PLUG-05 | Phase 13 | Pending |
+| HOOK-01 | Phase 14 | Pending |
+| HOOK-02 | Phase 14 | Pending |
+| HOOK-03 | Phase 14 | Pending |
+| HOOK-04 | Phase 14 | Pending |
+| DIST-01 | Phase 15 | Pending |
+| DIST-02 | Phase 15 | Pending |
+| DIST-03 | Phase 15 | Pending |
+| DIST-04 | Phase 15 | Pending |
+| VALD-01 | Phase 15 | Pending |
+| VALD-02 | Phase 15 | Pending |
 
 **Coverage:**
 - v1.2 requirements: 15 total
-- Mapped to phases: 0
-- Unmapped: 15
+- Mapped to phases: 15
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-04*
-*Last updated: 2026-04-04 after initial definition*
+*Last updated: 2026-04-04 after roadmap creation — all 15 requirements mapped*
