@@ -240,7 +240,7 @@ Never use `--allow-empty`. If `git status --porcelain` returns empty, skip the c
 Receives `prototype_name` and `slug` from SKILL.md Path A.
 
 1. Run Auto-Commit Guard
-2. `git checkout main && git pull origin main`
+2. **CRITICAL — pull latest main before branching:** `git checkout main && git pull origin main`. This ensures the new branch includes all upstream changes (e.g., dependency updates, design system additions). Skipping this step causes the new branch to miss recent changes to main. **Do not proceed to step 3 until the pull completes successfully.** If pull fails (e.g., merge conflicts on main), surface the error to the user before continuing.
 3. Check if branch already exists: `git branch --list "watson/{slug}"`
 4. **If branch exists:** AskUserQuestion — header: "Branch exists", question: "watson/{slug} already exists.", options: ["Switch to existing branch", "Create watson/{slug}-2"]
    - "Switch to existing branch": run `git show watson/{slug}:blueprint/STATUS.md` and display `prototype_name` field for confirmation, then `git checkout watson/{slug}`. Skip blueprint scaffold (blueprint already exists).
