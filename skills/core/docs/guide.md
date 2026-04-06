@@ -2,9 +2,31 @@
 
 ## What is Watson?
 
-Watson is a design prototyping companion that lives inside Claude Code. It helps you go from a design idea or Figma frame to a working, interactive prototype in the Faire Prototype Playground. Whether you want to explore a concept through conversation, translate a Figma comp into code, or do both at once, Watson handles the full journey.
+Watson is a design prototyping companion that lives inside Claude Code as a plugin. It helps you go from a design idea or Figma frame to a working, interactive prototype in the Faire Prototype Playground. Whether you want to explore a concept through conversation, translate a Figma comp into code, or do both at once, Watson handles the full journey.
 
 Everything Watson builds is grounded in Faire's Slate design system. When it suggests a component, that component actually exists with the exact props, variants, and tokens available to you. Watson does not invent components or guess at design patterns -- it works with the real system.
+
+---
+
+## Installing Watson
+
+Watson is distributed as a Claude Code plugin. Run these commands inside Claude Code:
+
+```
+/plugin marketplace add austindick/austins-stuff
+/plugin install watson@austins-stuff
+/reload-plugins
+```
+
+Then restart Claude Code for the skill to appear.
+
+To enable ambient activation (Watson suggests itself when you open the Playground), copy the ambient rule:
+
+```bash
+cp ~/.claude/plugins/cache/austins-stuff/watson/*/skills/core/references/watson-ambient.md ~/.claude/rules/watson-ambient.md
+```
+
+Watson also requires the Figma MCP for Figma-to-code builds. See the README for setup instructions.
 
 ---
 
@@ -17,9 +39,14 @@ Open Claude Code in your Prototype Playground repo and type:
 | `/watson` | Start Watson. It figures out what you need based on context. |
 | `/watson discuss` | Jump straight into a design conversation. |
 | `/watson loupe` | Jump straight into building from a Figma frame or prior conversation. |
+| `/watson off` | Deactivate Watson for this session. |
 | `/watson help` | Quick overview of what Watson can do. |
 
 You can also describe what you want naturally -- "I want to prototype a bulk order flow" or "build this Figma frame" -- and Watson will pick up on the intent.
+
+### Ambient activation
+
+If you have the ambient rule installed, Watson will suggest itself automatically when you open the Playground. It checks whether you are in the Prototype Playground directory and asks if you want to activate -- it never auto-activates without your confirmation.
 
 ### New prototypes
 
@@ -30,11 +57,11 @@ The first time you start a prototype, Watson asks a few quick setup questions:
 - **Your name and GitHub username** -- for contributor attribution
 - **Brief description** -- one sentence on what this prototype explores
 
-This takes about 30 seconds and only happens once per prototype.
+This takes about 30 seconds and only happens once per prototype. Watson creates a git branch (`watson/{slug}`) to isolate your work.
 
 ### Returning to an existing prototype
 
-Watson detects when you already have a prototype in progress. It reads your current decisions and build state, then summarizes where things stand so you can pick up where you left off. No need to re-explain anything.
+Watson detects when you already have a prototype in progress. It reads your current decisions, build state, and session history, then summarizes where things stand so you can pick up where you left off. No need to re-explain anything.
 
 ---
 
@@ -68,10 +95,11 @@ Best for: translating a polished (or rough) Figma frame into a working prototype
 Provide a Figma frame URL when you invoke Watson, or use `/watson loupe` with the link. Here is what happens:
 
 1. Watson analyzes your Figma frame and breaks it into logical sections
-2. For each section, it extracts the layout and identifies spacing, colors, typography, and components
+2. For each section, it extracts layout, design specs, and interaction states in parallel
 3. It builds each section using Slate components and playground conventions
 4. A review pass checks the result against your Figma frame
-5. Everything is assembled into a working prototype
+5. Section specs are consolidated into your blueprint for future reference
+6. Everything is assembled into a working prototype
 
 The result is a prototype built with real components and proper design tokens -- not a screenshot recreation or raw HTML.
 
@@ -83,7 +111,7 @@ Best for: prototypes where some sections come from Figma and others are explorat
 
 During a design conversation, you can mark some sections as Figma-backed (with URLs) and others as conversation-driven. When Watson builds:
 
-- **Figma sections** go through the full visual pipeline -- layout extraction, design mapping, component matching
+- **Figma sections** go through the full visual pipeline -- layout extraction, design mapping, component matching, interaction analysis
 - **Conversation sections** are built from the decisions you made during the discussion -- the components you chose, the layout you described, the interactions you defined
 
 This means you can prototype a screen where the header comes from a polished Figma comp and the body is an idea you talked through, all assembled in the same build.
@@ -110,6 +138,23 @@ When a design conversation reaches a natural stopping point, Watson transitions 
 
 During the build, Watson shares progress in plain language -- "Analyzing your Figma frame," "Building the header section," "Reviewing against your decisions." You do not need to do anything during the build; Watson will surface the result when it is ready.
 
+### Sessions
+
+Watson tracks your sessions automatically. When you activate Watson, it creates a state file. When you deactivate (via `/watson off` or `/clear`), it saves your branch name and what you worked on. Next time you return, Watson reads this history and can summarize your prior session.
+
+Session history is stored in your prototype's `STATUS.md` (up to 10 sessions, rolling window).
+
+---
+
+## Pending and Committed Decisions
+
+When you make design decisions through the discuss flow, they start as **pending** -- exploratory, not yet locked in. When you are ready to build, Watson asks whether to commit pending decisions or build without them.
+
+- **Pending** decisions are saved to the blueprint but the builder skips them
+- **Committed** decisions are locked in and the builder applies them
+
+This lets you explore multiple ideas in conversation without accidentally building something you have not finalized. You can commit all pending decisions at once when you are ready.
+
 ---
 
 ## Mid-Build Changes
@@ -123,6 +168,12 @@ Watson reads the current state -- what has been decided, what has been built -- 
 - **Refine interactions** -- "The modal should close on outside click"
 
 Watson only asks about what is actually changing. It skips anything that has already been decided and built, so you are not starting from scratch.
+
+---
+
+## Switching Prototypes
+
+To work on a different prototype in the same session, just tell Watson: "switch to {name}" or "work on something else." Watson saves the current session, commits outstanding work, and re-enters the setup flow for the new prototype. Watson stays active throughout -- no need to deactivate and reactivate.
 
 ---
 
@@ -149,6 +200,17 @@ Watson only asks about what is actually changing. It skips anything that has alr
 
 ### About blueprints
 
-Every Watson prototype has a blueprint -- a small set of files that capture your design decisions: the scenario, layout, component choices, and interactions. The blueprint persists across sessions. If you close Claude Code and come back tomorrow, Watson reads the blueprint and picks up exactly where you left off.
+Every Watson prototype has a blueprint -- a small set of files that capture your design decisions: the scenario, layout, component choices, interactions, and session history. The blueprint persists across sessions. If you close Claude Code and come back tomorrow, Watson reads the blueprint and picks up exactly where you left off.
 
 You generally do not need to touch the blueprint directly. Watson maintains it as you make decisions through the conversation. But it is plain Markdown in your prototype's `blueprint/` folder if you want to review or hand-edit anything.
+
+### Troubleshooting
+
+**`/watson` not found after install**
+Run `/reload-plugins`. If Watson is still missing, restart Claude Code entirely.
+
+**Watson does not suggest itself in the Playground**
+Check that `~/.claude/rules/watson-ambient.md` exists. If missing, re-run the `cp` command from the Install section above.
+
+**Figma MCP errors**
+Make sure the Figma MCP server is running. Ask Claude "can you access Figma?" to diagnose.

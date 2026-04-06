@@ -1,12 +1,78 @@
 # Watson Maintainer Documentation
 
-Technical reference for engineers who maintain Watson -- updating library books, adding subskills, modifying agents.
+Technical reference for engineers who maintain Watson -- updating library books, adding subskills, modifying agents, managing the plugin distribution.
 
-Watson lives at `${CLAUDE_PLUGIN_ROOT}/skills/core/`. It is a Claude Code skill plugin with a library system, agent pipeline, and subskill routing layer.
+Watson is a Claude Code plugin. The plugin repo lives at `github.com/austindick/watson`. The skill directory is at `skills/core/` within the plugin. All internal paths use `${CLAUDE_PLUGIN_ROOT}` which Claude Code resolves at runtime.
 
 ---
 
-## 1. Library System Overview
+## 1. Plugin Structure
+
+```
+watson/                           ← Plugin repo root
+  .claude-plugin/
+    plugin.json                   ← Plugin metadata (name, description, author)
+  hooks/
+    hooks.json                    ← Hook declarations (SessionStart, SessionEnd)
+  scripts/
+    watson-session-start.js       ← Recovery prompt on session start
+    watson-session-end.js         ← Persist session state on end
+    watson-statusline.js          ← Terminal statusline display
+  skills/
+    core/                         ← Main skill (name: watson in SKILL.md)
+      SKILL.md                    ← Orchestrator
+      skills/                     ← Subskills
+      agents/                     ← All agent contracts
+      library/                    ← Reference books
+      references/                 ← Schemas, contracts, ambient rule
+      utilities/                  ← Blueprint scaffolding
+      docs/                       ← Documentation
+  README.md
+  .gitignore                      ← Excludes .planning/, .archive/
+```
+
+**Important:** The skill directory is `skills/core/`, not `skills/watson/`. The plugin name is "watson" but the skill directory must not match the plugin name — Claude Code's plugin cache recurses infinitely if they match.
+
+### Distribution
+
+- **Plugin repo:** `austindick/watson`
+- **Marketplace repo:** `austindick/austins-stuff` (contains only `.claude-plugin/marketplace.json`)
+- **Install:** `/plugin marketplace add austindick/austins-stuff` → `/plugin install watson@austins-stuff`
+- **Plugin cache location:** `~/.claude/plugins/cache/austins-stuff/watson/{sha}/`
+
+The marketplace repo exists solely because Claude Code's `/plugin install` only works from registered marketplaces. The marketplace name (`austins-stuff`) must differ from the plugin name (`watson`) to prevent recursive caching.
+
+### Versioning
+
+Version bumps happen on every push to main. Patch for fixes, minor for features. Users with auto-update enabled receive changes automatically. Manual update: `/plugin marketplace update watson@austins-stuff`.
+
+---
+
+## 2. Hooks and Scripts
+
+Hooks are declared in `hooks/hooks.json` and executed by the Claude Code harness (not by Watson itself).
+
+| Hook | Script | When it fires |
+|------|--------|---------------|
+| SessionStart | `scripts/watson-session-start.js` | Every Claude Code session start |
+| SessionEnd | `scripts/watson-session-end.js` | Every Claude Code session end |
+
+**watson-session-start.js:** Checks for `/tmp/watson-session-end.json` (leftover from prior session). If found, suggests Watson reactivation with context from the prior session.
+
+**watson-session-end.js:** If `/tmp/watson-active.json` exists (Watson is ON), writes `{branch, actions, timestamp}` to `/tmp/watson-session-end.json` for recovery, then deletes `/tmp/watson-active.json`.
+
+**watson-statusline.js:** Configured in the user's `settings.json` (not in hooks.json). Reads `/tmp/watson-active.json` and renders Watson status in the terminal statusline.
+
+### Temp file protocol
+
+| File | Created by | Read by | Deleted by |
+|------|-----------|---------|------------|
+| `/tmp/watson-active.json` | SKILL.md on `/watson` | statusline, ambient rule, hooks | session-end script |
+| `/tmp/watson-session-end.json` | session-end script | session-start script, SKILL.md recovery | SKILL.md after recovery |
+
+---
+
+## 3. Library System Overview
 
 The library lives at `${CLAUDE_PLUGIN_ROOT}/skills/core/library/`. It uses a 3-level hierarchy:
 
@@ -32,7 +98,7 @@ The `book_type` field is a safety guard. The Librarian has a hard stop: if it re
 
 ---
 
-## 2. Updating the Design System Book
+## 4. Updating the Design System Book
 
 The design system book (`library/design-system/`) is source-derived. The Librarian generates it by scanning Slate source files.
 
@@ -73,7 +139,7 @@ If Slate's directory structure changes (paths move, new source directories appea
 
 ---
 
-## 3. Updating the Conventions Book
+## 5. Updating the Conventions Book
 
 The playground conventions book (`library/playground-conventions/`) is foundational. The Librarian refuses to touch it.
 
@@ -112,7 +178,7 @@ The `source_paths` list in BOOK.md frontmatter tracks where the content was orig
 
 ---
 
-## 4. Adding a New Book
+## 6. Adding a New Book
 
 1. **Choose `book_type`.** Use `source-derived` if content can be scanned from source files. Use `foundational` if it requires human authoring or consolidation from multiple docs.
 
@@ -142,7 +208,7 @@ The `source_paths` list in BOOK.md frontmatter tracks where the content was orig
 
 ---
 
-## 5. Agent Maintenance
+## 7. Agent Maintenance
 
 Agents live at `${CLAUDE_PLUGIN_ROOT}/skills/core/agents/`. Current agents:
 
@@ -151,7 +217,7 @@ Agents live at `${CLAUDE_PLUGIN_ROOT}/skills/core/agents/`. Current agents:
 | decomposer | `agents/decomposer.md` | foreground |
 | layout | `agents/layout.md` | background |
 | design | `agents/design.md` | background |
-| interaction | `agents/interaction.md` | foreground* |
+| interaction | `agents/interaction.md` | background |
 | builder | `agents/builder.md` | background |
 | reviewer | `agents/reviewer.md` | background |
 | consolidator | `agents/consolidator.md` | background |
@@ -167,6 +233,10 @@ The contract defines:
 - **Agent-specific parameters** per agent (e.g., `figmaUrl` for decomposer, `mode` for librarian)
 - **Dispatch mode**: foreground (may prompt user) or background (must run silently). Binary and permanent per agent.
 
+### Path Resolution in Agents
+
+All agents that write to `.watson/sections/` must derive `protoDir` from `blueprintPath` (remove trailing `/blueprint` segment) and use absolute paths. This is critical for plugin operation — relative paths resolve to the wrong location when running from the plugin cache.
+
 ### Modifying an Agent
 
 1. Edit the agent file at `agents/{name}.md`.
@@ -181,7 +251,7 @@ The contract defines:
 
 ---
 
-## 6. Adding a New Subskill
+## 8. Adding a New Subskill
 
 Subskills live at `${CLAUDE_PLUGIN_ROOT}/skills/core/skills/`. Current subskills: `discuss.md` (conversational design discussion) and `loupe.md` (Figma-to-code pipeline).
 
@@ -189,7 +259,7 @@ Subskills live at `${CLAUDE_PLUGIN_ROOT}/skills/core/skills/`. Current subskills
 
 Each subskill file has:
 - **YAML frontmatter**: `name`, `type: subskill`, `purpose`
-- **Phase 0 -- Library Resolution**: reads `LIBRARY.md`, selects relevant books by `use_when`, resolves `libraryPaths[]`
+- **Phase 0 -- Library Resolution**: reads `LIBRARY.md`, selects relevant books by `use_when`, derives `protoDir` from `blueprintPath`, resolves `libraryPaths[]`
 - **Execution phases**: the subskill's core logic
 - **Return contract**: structured JSON returned to `SKILL.md`
 
@@ -207,7 +277,7 @@ Subskills are responsible for library resolution. They read `LIBRARY.md` and `BO
    purpose: One-line description
    ---
    ```
-2. Implement Phase 0 (library loading) -- follow the pattern in `skills/loupe.md`.
+2. Implement Phase 0 (library loading + protoDir derivation) -- follow the pattern in `skills/loupe.md`.
 3. Define the return contract -- structured JSON that `SKILL.md` consumes to route next steps.
 4. Register routing in `SKILL.md`:
    - Add a shortcut in Intent Classification (e.g., `/watson {name}`)
@@ -216,7 +286,7 @@ Subskills are responsible for library resolution. They read `LIBRARY.md` and `BO
 
 ---
 
-## 7. Common Tasks
+## 9. Common Tasks
 
 ### Checking Book Freshness
 
@@ -234,10 +304,26 @@ If source directories move or are renamed:
 ### Regenerating After Slate Updates
 
 1. Confirm which source paths changed.
-2. Run the Librarian in generate mode (see section 2).
+2. Run the Librarian in generate mode (see section 4).
 3. Review the diff for new/removed components, changed props.
 4. Commit the regenerated book.
 
 ### Debugging a Missing Component
 
 If a component exists in Slate source but is missing from the book, the book is stale -- regenerate. If the component does not exist in Slate source yet, wait for it to land before regenerating. Do not manually add entries to source-derived books; the next Librarian run overwrites them.
+
+### Testing the Plugin Locally
+
+During development, use `--plugin-dir` to load your local copy instead of the cached version:
+
+```bash
+claude --plugin-dir ~/watson
+```
+
+This is per-session only and does not affect the installed plugin. Useful for testing changes before pushing.
+
+### Pushing Updates
+
+Push to `main` on `austindick/watson`. Users with auto-update enabled will receive the changes on their next Claude Code session. Users without auto-update can run `/plugin marketplace update watson@austins-stuff`.
+
+The marketplace repo (`austindick/austins-stuff`) rarely needs updates — only when the plugin source URL or description changes.
