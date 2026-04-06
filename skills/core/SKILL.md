@@ -64,7 +64,16 @@ Check for existing `watson/*` branches: `git branch --list 'watson/*'`
    - "Keep pending and continue": proceed to Intent Classification unchanged
 6. Proceed to Intent Classification
 
-**Welcome (first invocation only):** Briefly confirm Watson is active and invite the user to share what they'd like to work on. Keep to 2–3 lines.
+**Welcome (first invocation only):** Display the Watson banner, then briefly invite the user to share what they'd like to work on. Keep the text after the banner to 1–2 lines.
+
+```
+██╗    ██╗ █████╗ ████████╗███████╗ ██████╗ ███╗   ██╗
+██║    ██║██╔══██╗╚══██╔══╝██╔════╝██╔═══██╗████╗  ██║
+██║ █╗ ██║███████║   ██║   ███████╗██║   ██║██╔██╗ ██║
+██║███╗██║██╔══██║   ██║   ╚════██║██║   ██║██║╚██╗██║
+╚███╔███╔╝██║  ██║   ██║   ███████║╚██████╔╝██║ ╚████║
+ ╚══╝╚══╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝
+```
 
 ---
 
