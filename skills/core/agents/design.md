@@ -30,10 +30,14 @@ Map Figma visual styles for a section to design system components, props, and to
 
 ## Outputs
 
-- `.watson/sections/{sectionName}/DESIGN.md` — design spec, under 80 lines
+- `{protoDir}/.watson/sections/{sectionName}/DESIGN.md` — design spec, under 80 lines
 - Sections: Component Mapping, Typography, Color Tokens, Unmapped Values
 
 ## Execution
+
+### Path Resolution
+
+Derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` (or `blueprint/`) segment. Example: if `blueprintPath` is `/path/to/MyPage/blueprint`, then `protoDir` is `/path/to/MyPage`. All `.watson/sections/` paths below use this absolute `protoDir` prefix.
 
 ### Step 1: Load reference data from library books
 
@@ -128,7 +132,7 @@ Count lines in the draft output. If over 80:
 
 ### Step 11: Write output
 
-Write to `.watson/sections/{sectionName}/DESIGN.md`. Create parent directories if needed. The file heading must be `# DESIGN: {sectionName}`.
+Write to `{protoDir}/.watson/sections/{sectionName}/DESIGN.md`. Create parent directories if needed. The file heading must be `# DESIGN: {sectionName}`.
 
 ## Output Format
 

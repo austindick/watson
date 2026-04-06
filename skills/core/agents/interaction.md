@@ -30,9 +30,13 @@ Extract component interaction states from the design system library and structur
 
 ## Outputs
 
-- `.watson/sections/{sectionName}/INTERACTION.md` — interaction spec (under 50 lines)
+- `{protoDir}/.watson/sections/{sectionName}/INTERACTION.md` — interaction spec (under 50 lines)
 
 ## Execution
+
+### Path Resolution
+
+Derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` (or `blueprint/`) segment. Example: if `blueprintPath` is `/path/to/MyPage/blueprint`, then `protoDir` is `/path/to/MyPage`. All `.watson/sections/` paths below use this absolute `protoDir` prefix.
 
 ### Step 1: Fetch Figma node and extract component names
 
@@ -91,7 +95,7 @@ For each matched component, create one table row:
 
 ### Step 5: Write INTERACTION.md
 
-Write to `.watson/sections/{sectionName}/INTERACTION.md` using the Write tool. Structure (section headers must match INTERACTION-EXAMPLE.md exactly):
+Write to `{protoDir}/.watson/sections/{sectionName}/INTERACTION.md` using the Write tool. Structure (section headers must match INTERACTION-EXAMPLE.md exactly):
 
 ```
 # INTERACTION: {sectionName}

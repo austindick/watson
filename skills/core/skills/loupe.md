@@ -26,7 +26,9 @@ You are the pipeline orchestrator for Watson. You wire decomposer → layout + d
 
 ## Phase 0: Library Resolution
 
-**Before dispatching any agent**, resolve `libraryPaths[]` from the library index.
+**Before dispatching any agent**, derive `protoDir` and resolve `libraryPaths[]`.
+
+Derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` (or `blueprint/`) segment. Example: if `blueprintPath` is `/path/to/MyPage/blueprint`, then `protoDir` is `/path/to/MyPage`. Use `protoDir` for all `.watson/sections/` paths throughout the pipeline.
 
 Before resolving library paths, append an action to the state file:
 1. Read `/tmp/watson-active.json`
@@ -144,8 +146,8 @@ Builder and reviewer accept null paths — they fall back to available specs aut
 **Determine paths before dispatching:**
 
 For **figma** sections:
-- `layoutPath` = `.watson/sections/{section.name}/LAYOUT.md` (set to null if file is missing after agents completed)
-- `designPath` = `.watson/sections/{section.name}/DESIGN.md` (set to null if file is missing after agents completed)
+- `layoutPath` = `{protoDir}/.watson/sections/{section.name}/LAYOUT.md` (set to null if file is missing after agents completed)
+- `designPath` = `{protoDir}/.watson/sections/{section.name}/DESIGN.md` (set to null if file is missing after agents completed)
 
 For **discuss-only** sections:
 - `layoutPath` = `{blueprintPath}/LAYOUT.md`

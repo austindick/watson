@@ -142,9 +142,9 @@ Read `{blueprintPath}/DESIGN.md` — confirm the file exists and has at least 5 
 
 If INTERACTION.md was produced in Step 4b: Read `{blueprintPath}/INTERACTION.md` — confirm the file exists and has at least 5 lines. INTERACTION.md verification failure is reported but does NOT block cleanup (LAYOUT.md and DESIGN.md gating is sufficient).
 
-If BOTH LAYOUT.md and DESIGN.md are verified: run `rm -rf .watson/sections/` via the Bash tool. Report: "Staging cleaned: .watson/sections/ deleted."
+If BOTH LAYOUT.md and DESIGN.md are verified: derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` segment, then run `rm -rf {protoDir}/.watson/sections/` via the Bash tool. Report: "Staging cleaned: {protoDir}/.watson/sections/ deleted."
 
-If EITHER LAYOUT.md or DESIGN.md is missing or has fewer than 5 lines: HALT. Do NOT delete `.watson/sections/`. Report exactly which file failed and why (e.g., "Write tool returned empty content for blueprint/LAYOUT.md"). Leave staging intact for debugging.
+If EITHER LAYOUT.md or DESIGN.md is missing or has fewer than 5 lines: HALT. Do NOT delete the staging directory. Report exactly which file failed and why (e.g., "Write tool returned empty content for blueprint/LAYOUT.md"). Leave staging intact for debugging.
 
 Report final output:
 
