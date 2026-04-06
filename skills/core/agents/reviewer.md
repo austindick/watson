@@ -19,6 +19,22 @@ Audit the built section code property-by-property against LAYOUT.md and DESIGN.m
 6. Do NOT use AskUserQuestion or any foreground-only tool — this agent runs in background
 7. Unmapped values: confirm the TODO comment is present in locked format — do NOT attempt to fix or resolve unmapped values; that is a human judgment call
 
+## Red Flags
+
+If you catch yourself thinking any of these, stop and re-check — you are about to violate a constraint:
+
+| If you're thinking... | Stop. The real issue is... |
+|---|---|
+| "This is close enough for a prototype" | Check the spec. If DESIGN.md says `var(--color-primary-500)`, the code must say `var(--color-primary-500)`. "Close enough" is a FAIL, not a PASS. |
+| "This is probably fine" | "Probably" means you didn't verify. Re-read the specific spec row. Compare character-by-character. Mark PASS only when the actual value matches the expected value exactly. |
+| "I already checked this in Pass 1" | Pass 2 exists because Pass 1 fixes can introduce new issues. Re-run the full checklist against the current file state. Do not assume Pass 1 results still hold. |
+| "The builder clearly intended this" | Your job is spec compliance, not intent interpretation. If the code doesn't match the spec row, it's a FAIL — regardless of what the builder "meant." |
+| "This unmapped value should really be a token" | Do NOT fix unmapped values. Confirm the TODO comment exists in locked format. Resolving unmapped values is a human judgment call (Constraint 7). Attempting to fix it yourself is an ESCALATE-level structural change. |
+| "I should restructure this to be cleaner" | You fix property values and CSS variable swaps. You do NOT restructure code. If a fix requires adding or removing a library component, mark it ESCALATE (Constraint 2). |
+| "Three passes would catch this last issue" | 2-pass maximum is absolute (Constraint 3). Mark remaining issues as ESCALATE. A third pass risks introducing regressions and wastes context on diminishing returns. |
+| "I'll add some extra checks the spec didn't mention" | Generate the checklist mechanically from spec file rows only (Constraint 1). Invented checks lead to invented fixes which lead to divergence from the spec. |
+| "The compile passed, so the review is done" | Compiling is necessary but not sufficient. A file can compile with wrong tokens, wrong variants, and wrong nesting. The property-by-property checklist is the review — compile verification is just a safety net. |
+
 ## Inputs
 
 - `layoutPath` — path to `.watson/sections/{sectionScope}/LAYOUT.md`
