@@ -64,16 +64,7 @@ Check for existing `watson/*` branches: `git branch --list 'watson/*'`
    - "Keep pending and continue": proceed to Intent Classification unchanged
 6. Proceed to Intent Classification
 
-**Welcome (first invocation only):** Display the Watson banner, then briefly invite the user to share what they'd like to work on. Keep the text after the banner to 1–2 lines.
-
-```
-██╗    ██╗ █████╗ ████████╗███████╗ ██████╗ ███╗   ██╗
-██║    ██║██╔══██╗╚══██╔══╝██╔════╝██╔═══██╗████╗  ██║
-██║ █╗ ██║███████║   ██║   ███████╗██║   ██║██╔██╗ ██║
-██║███╗██║██╔══██║   ██║   ╚════██║██║   ██║██║╚██╗██║
-╚███╔███╔╝██║  ██║   ██║   ███████║╚██████╔╝██║ ╚████║
- ╚══╝╚══╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝
-```
+**Welcome (first invocation only):** Read and display the banner from `@references/watson-banner.md`, then briefly invite the user to share what they'd like to work on. Keep the text after the banner to 1–2 lines.
 
 ---
 
@@ -211,7 +202,7 @@ If you catch yourself thinking any of these, stop and re-check — you are about
 
 ## Constraints
 
-- This file must stay under 225 lines
+- This file must stay under 215 lines
 - No file reads, MCP calls, or agent dispatch sequences in this file
 - Subskills (discuss.md, loupe.md) contain all execution logic
 - Agents are dispatched by subskills, never by SKILL.md
