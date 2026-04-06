@@ -119,6 +119,7 @@ After collecting answers:
 **Defaults:**
 - Bare or ambiguous invocation with no signal → Tier 1 (discuss). Starting a conversation gathers context either way.
 - Figma URL + clear scope + populated blueprint → Tier 2 (build)
+- **Never answer design questions inline.** If a message is design-related (feedback, improvements, exploration, critique, "what if" questions), it MUST route to Tier 1 (discuss) or Tier 3 (ask) — never handle it with an inline response. Inline responses are only for Help and non-design passthrough. When in doubt, dispatch discuss.
 
 **Session calibration (within-session only):**
 Maintain a mental count of how many times the user has chosen "just build." If they have chosen it more than once this session, shift Tier 3 cases toward Tier 2. Cross-session preference learning is deferred to Watson 1.1+.
