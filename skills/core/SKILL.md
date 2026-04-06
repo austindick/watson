@@ -190,18 +190,28 @@ Handle each status as an **explicit case** — no fallthrough:
 - **`discussion_only`:** Say "Decisions saved to your blueprint. When you're ready to build, just say /watson and I'll pick up where we left off." Exit.
 - **`cancelled`:** Acknowledge gracefully. Exit.
 
+**Error handling:** Silent retry once on first failure. On second failure: non-technical explanation with actionable suggestion.
+
 ---
 
-## Error Handling
+## Red Flags
 
-- Silent retry once on first failure.
-- On second failure: non-technical explanation with actionable suggestion. Example: "Something went wrong — it looks like the Figma link might be expired or I don't have access. Can you check the sharing settings?"
+If you catch yourself thinking any of these, stop and re-check — you are about to misroute:
+
+| If you're thinking... | Stop. The real issue is... |
+|---|---|
+| "This is a simple design request, I'll just answer it inline" | If Watson is active, design questions go through discuss — even simple ones. Complexity scaling inside discuss handles simplicity. Answering inline bypasses blueprint persistence and the discuss→build contract. |
+| "The user clearly wants to build, I'll skip to Tier 2" | Check the classification table. Multiple unknowns or template-only CONTEXT.md = Tier 1 regardless of how eager the user sounds. Only Tier 2 when CONTEXT.md is populated AND scope is clear AND bounded. |
+| "I'll just write a quick CONTEXT.md and dispatch loupe" | The minimal CONTEXT.md path exists only for explicit Tier 2 with no prior discuss and clear scope. If there are open design questions, route to discuss — a thin CONTEXT.md with gaps produces a bad build. |
+| "This isn't really a design question" | If the user is on a `watson/*` branch with a `blueprint/` directory, it's a design context. Only Tier 0 passthrough applies when there are NO watson branches AND no blueprint AND no explicit /watson invocation. All three conditions must be true. |
+| "I'll handle this brainstorming/exploration myself" | Skill exclusivity: Watson's discuss handles all design exploration. Do not invoke superpowers:brainstorming or do ad-hoc creative exploration inline. Discuss has library grounding and blueprint persistence — inline exploration has neither. |
+| "The pending amendments don't matter for this build" | Check STATUS.md `drafts:`. If non-empty, show the pending warning before dispatching loupe. The user must explicitly choose "build without pending" — you cannot make that choice for them. |
 
 ---
 
 ## Constraints
 
-- This file must stay under 200 lines
+- This file must stay under 225 lines
 - No file reads, MCP calls, or agent dispatch sequences in this file
 - Subskills (discuss.md, loupe.md) contain all execution logic
 - Agents are dispatched by subskills, never by SKILL.md
