@@ -132,7 +132,7 @@ For sections where `referenceType = "discuss-only"`: **skip Phase 2 entirely.** 
 
 ## Phase 3: Build + Review (sequential per section)
 
-Process all sections — both "figma" and "discuss-only" types.
+**MANDATORY: Every section MUST go through both builder AND reviewer.** The reviewer is not optional — it catches color, spacing, and component errors that the builder misses. Never build all sections in one pass or skip the review step. The pipeline is: builder → wait → reviewer → wait, repeated for each section individually.
 
 **Verify research agent output before dispatching builder:**
 
@@ -192,7 +192,7 @@ libraryPaths: {libraryPaths}
 watsonMode: true
 ```
 
-Wait for reviewer to complete. Record result.
+Wait for reviewer to complete. Record result. **Do not proceed to the next section or to Phase 4 until the reviewer has completed for the current section.**
 
 ---
 
