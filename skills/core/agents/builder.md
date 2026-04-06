@@ -77,7 +77,7 @@ Record all file content before `startLine` as `protectedBefore` and all content 
 
 Build the replacement code for the captured region:
 
-- **Import Resolution:** Always use the import paths from the library books (e.g., `import { Button } from "@faire/slate/components/button"`). Do NOT copy import paths from existing code in the target file — existing imports may use local wrappers or outdated paths. If the target file has imports from a different path for the same component, replace them with the library book path. The library book `**Import:**` line is the source of truth.
+- **Import Resolution:** Use the import paths from the library books (e.g., `import { Button } from "@faire/slate/components/button"`). If the library import fails to compile (Step 9), fall back to the import path used in the existing target file for that component. The library book `**Import:**` line is the preferred source of truth, but compilability wins.
 - **Component Mapping (DESIGN.md):** For each row, use the exact library component, variant, and props listed — no substitutions
 - **Component Tree (LAYOUT.md):** Follow the exact nesting structure shown in the ASCII tree
 - **Annotated CSS (LAYOUT.md):** Use the exact `var(--token-*)` token references with `/* Figma: Xpx */` comments
