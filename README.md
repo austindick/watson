@@ -11,15 +11,14 @@ Watson helps you design and prototype UI components in the Faire Prototype Playg
 
 ## Install
 
-Run these three commands inside Claude Code:
+Run these commands inside Claude Code:
 
 ```
 /plugin marketplace add austindick/austins-stuff
 /plugin install watson@austins-stuff
-/reload-plugins
 ```
 
-Then restart Claude Code for the skill to appear.
+Then **quit and restart Claude Code**. `/watson` will not appear until after a full restart — `/reload-plugins` alone is not enough.
 
 Copy the ambient rule so Watson activates automatically when you open the Playground:
 
