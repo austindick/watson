@@ -36,6 +36,8 @@ On load, write state file: `echo '{}' > /tmp/watson-active.json`
 
 **Tier 0 passthrough (before fork):** If the message is pure coding/git/config with no design intent AND the current directory has no `watson/*` branches (`git branch --list 'watson/*'` returns empty) AND no `blueprint/` directory AND `/watson` was not explicitly invoked — **stay silent.** Defer to default Claude.
 
+**Session greeting:** Read and display the banner from `@references/watson-banner.md`. Display it once at the start of every `/watson` session, before the fork below.
+
 **Entry point: 2-path fork**
 
 Check for existing `watson/*` branches: `git branch --list 'watson/*'`
@@ -63,8 +65,6 @@ Check for existing `watson/*` branches: `git branch --list 'watson/*'`
    - "Discard all": delete all [PENDING] lines from blueprint files (Edit), set `drafts: []` (Edit), confirm discarded, proceed
    - "Keep pending and continue": proceed to Intent Classification unchanged
 6. Proceed to Intent Classification
-
-**Welcome (first invocation only):** Read and display the banner from `@references/watson-banner.md`, then briefly invite the user to share what they'd like to work on. Keep the text after the banner to 1–2 lines.
 
 ---
 
