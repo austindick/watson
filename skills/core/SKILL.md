@@ -9,7 +9,7 @@ Watson is a session-level toggle — ON or OFF for the entire Claude Code sessio
 
 On load, write state file: `echo '{}' > /tmp/watson-active.json`
 
-**Session recovery:** After writing the state file, check if `/tmp/watson-session-end.json` exists. If yes, read `{branch, actions, timestamp}`, find STATUS.md via `git show {branch}:blueprint/STATUS.md`, compile actions into summary (join with ", ", truncate at 80 chars), prepend new session entry to STATUS.md `sessions:` array (drop oldest if count >= 10), delete `/tmp/watson-session-end.json`. Then continue with normal activation flow.
+**Session recovery:** After writing the state file, check if `/tmp/watson-session-end.json` exists. If yes, read `{branch, actions, timestamp}`, discover the blueprint path (`git ls-tree -r --name-only {branch} | grep 'blueprint/STATUS.md$' | head -1`, strip `/STATUS.md`), read STATUS.md via `git show {branch}:{blueprintPath}/STATUS.md`, compile actions into summary (join with ", ", truncate at 80 chars), prepend new session entry to STATUS.md `sessions:` array (drop oldest if count >= 10), delete `/tmp/watson-session-end.json`. Then continue with normal activation flow.
 
 **Skill exclusivity:** When Watson is active, do NOT invoke `superpowers:brainstorming` or any external brainstorming/creative-exploration skills. Watson's discuss subskill handles all design exploration, variant ideation, and creative discussion. Invoking external brainstorming skills alongside Watson creates conflicting workflows.
 
@@ -21,7 +21,7 @@ On load, write state file: `echo '{}' > /tmp/watson-active.json`
 1. Read `/tmp/watson-active.json`. If `branch` and `actions` fields exist:
    a. Get current user: `git config --get user.name`
    b. Compile actions: join array with ", ", truncate at 80 chars
-   c. Read `git show {branch}:blueprint/STATUS.md` `sessions:` array
+   c. Discover blueprint path, then read `git show {branch}:{blueprintPath}/STATUS.md` `sessions:` array
    d. Prepend new entry: `{timestamp: <ISO string>, summary: <compiled>, who: <username>}`
    e. If sessions count >= 10, drop the oldest entry
    f. Update STATUS.md `sessions:` via Edit tool — if `sessions: []` (compact empty), replace with block sequence format:
@@ -57,7 +57,7 @@ Check for existing `watson/*` branches: `git branch --list 'watson/*'`
 2. User selects branch; watson-init handles: inactive-branch options (continue / delete / reset timer), auto-commit guard, `git checkout watson/{slug}`, missing-branch recovery (try remote, else offer fresh branch or return to list), health check
 3. Watson-init updates `/tmp/watson-active.json` with `"branch": "watson/{slug}"`
 4. Load STATUS.md frontmatter; display: "[name] — [N] section(s) built. [M] pending amendment(s). Last session: [date] by [user] — [summary]."
-5. If `drafts:` non-empty (`blueprintPath` = `{slug}/blueprint/` derived from checked-out branch `watson/{slug}`):
+5. If `drafts:` non-empty (use `blueprintPath` discovered by watson-init during branch switch):
    Scan {blueprintPath}/LAYOUT.md, DESIGN.md, INTERACTION.md for [PENDING] lines; render grouped by file.
    AskUserQuestion — header: "Pending", question: "[diff]\n\nWhat would you like to do?",
    options: ["Commit all", "Discard all", "Keep pending and continue"]

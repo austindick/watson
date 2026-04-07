@@ -243,7 +243,7 @@ Receives `prototype_name` and `slug` from SKILL.md Path A.
 2. **CRITICAL — pull latest main before branching:** `git checkout main && git pull origin main`. This ensures the new branch includes all upstream changes (e.g., dependency updates, design system additions). Skipping this step causes the new branch to miss recent changes to main. **Do not proceed to step 3 until the pull completes successfully.** If pull fails (e.g., merge conflicts on main), surface the error to the user before continuing.
 3. Check if branch already exists: `git branch --list "watson/{slug}"`
 4. **If branch exists:** AskUserQuestion — header: "Branch exists", question: "watson/{slug} already exists.", options: ["Switch to existing branch", "Create watson/{slug}-2"]
-   - "Switch to existing branch": run `git show watson/{slug}:blueprint/STATUS.md` and display `prototype_name` field for confirmation, then `git checkout watson/{slug}`. Skip blueprint scaffold (blueprint already exists).
+   - "Switch to existing branch": discover blueprint path via Blueprint Discovery, run `git show watson/{slug}:{blueprintPath}/STATUS.md` and display `prototype_name` field for confirmation, then `git checkout watson/{slug}`. Skip blueprint scaffold (blueprint already exists).
    - "Create watson/{slug}-2": use `{slug}-2` as the new slug, continue branch creation below.
 5. **If branch does not exist:** `git checkout -b watson/{slug}`
 6. Continue to blueprint scaffold (Single-File Detection + Template Content sections)
@@ -253,11 +253,24 @@ Receives `prototype_name` and `slug` from SKILL.md Path A.
 
 ---
 
+### Blueprint Discovery
+
+To find the blueprint path on a branch, run: `git ls-tree -r --name-only {branch} | grep 'blueprint/STATUS.md$' | head -1`. Strip the `/STATUS.md` suffix to get the blueprint directory path. Store this as `blueprintPath` for the branch.
+
+If the grep returns empty, the branch has no blueprint. This is expected for fresh branches — fall back to branch name for display.
+
+For the checked-out branch, use the filesystem instead: `find . -path '*/blueprint/STATUS.md' -not -path './.git/*' | head -1`.
+
+**All references to `blueprint/STATUS.md`, `blueprint/CONTEXT.md`, etc. below must use the discovered `blueprintPath`, not a hardcoded root-relative path.**
+
+---
+
 ### Branch List and Switching (continue existing prototype)
 
 1. Run `git branch --list 'watson/*'` to get local branches
 2. For each branch:
-   - Read context: `git show watson/{slug}:blueprint/STATUS.md` (graceful fallback to branch name if git show fails)
+   - Discover blueprint path: run `git ls-tree -r --name-only watson/{slug} | grep 'blueprint/STATUS.md$' | head -1` — strip `/STATUS.md` to get `blueprintPath`. If empty, no blueprint exists for this branch.
+   - Read context: `git show watson/{slug}:{blueprintPath}/STATUS.md` using the discovered path (graceful fallback to branch name if discovery or git show fails)
    - Get last commit date: `git log watson/{slug} --max-count=1 --format="%cd" --date=short`
    - Determine ownership: use STATUS.md `owner_github` field as primary, fall back to `git config --get user.name`
    - Tag inactive branches (30+ days since last commit) with [INACTIVE] prefix
@@ -276,7 +289,7 @@ Receives `prototype_name` and `slug` from SKILL.md Path A.
    - **If recovery also fails (gone from both local and remote):** inform user: "{slug} no longer exists locally or on the remote." AskUserQuestion — header: "Branch Missing", question: "watson/{slug} is no longer available.", options: ["Create a fresh branch with this name", "Return to branch list"]
      - "Create a fresh branch with this name": `git checkout main && git checkout -b watson/{slug}`, then re-scaffold via Phase 0 branch creation + blueprint scaffold
      - "Return to branch list": re-enter Branch List and Switching from step 1
-   - **Health check after switch:** verify `blueprint/` and `blueprint/STATUS.md` exist on the checked-out branch. If missing, inform user and offer to re-scaffold via watson-init.
+   - **Health check after switch:** discover blueprint path via Blueprint Discovery (filesystem variant since branch is now checked out). Verify `{blueprintPath}/STATUS.md` exists. If missing, inform user and offer to re-scaffold via watson-init.
 7. Update `/tmp/watson-active.json` via Edit tool: add `"branch": "watson/{slug}"` (and `"actions": []` if not present)
 
 ---
