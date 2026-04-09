@@ -40,6 +40,7 @@ Same as discuss.md Phase -1 Step 2:
 **Step 5: Set pipeline inputs and proceed to Phase 0**
 Set the standard loupe inputs from what was gathered:
 - `blueprintPath`: resolved from Step 2
+- `targetFilePath`: derived from blueprintPath — strip `/blueprint` to get protoDir, then resolve: (1) `{protoDir}/index.tsx` if it exists, (2) the sole `.tsx` file in protoDir if exactly one exists, (3) STATUS.md recorded target file, (4) null (Phase 3 fallback asks user)
 - `sections`: null (standalone doesn't have pre-built sections unless returning from a prior discuss)
 - `hasFullFrame`: true if Figma URL detected, false otherwise
 - `fullFrameUrl`: extracted Figma URL or null
@@ -192,9 +193,10 @@ For **discuss-only** sections:
 - `interactionPath` = `{blueprintPath}/INTERACTION.md` if that file exists (populated by discuss), otherwise null
 
 **Resolve targetFilePath:**
+- If `targetFilePath` was already set by Phase -1 (standalone) or the caller, use it.
 - If blueprint already records a target file (from prior build), use it.
 - Otherwise, ask the user once: "Where should I write the code? Share the prototype file path." Use that path for all sections.
-- Derive `sectionScope` from the section name (e.g., section "hero" → sectionScope "hero").
+- Derive `sectionScope` from the section name (e.g., section "hero" -> sectionScope "hero").
 
 **Build step:**
 

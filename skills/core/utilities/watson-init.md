@@ -63,9 +63,16 @@ Parse `userInput` to determine its type. Check in this order:
 **Step 2: Resolve blueprint path based on type**
 
 - **watson-branch:** Run Auto-Commit Guard. `git checkout watson/{slug}` (or the full branch name). Discover blueprint path via Blueprint Discovery (filesystem variant). If found, set `blueprintPath` and return. If not found, offer scaffold.
-- **url:** Extract slug from URL. Resolve via slug logic below.
+- **url:** Extract slug from URL path (last path segment, strip query params). Then:
+  1. Search all local branches for the slug: `git branch --list "*${slug}*" 2>/dev/null`. Filter results to branches that contain the slug as a path segment (not substring noise).
+  2. If exactly one branch matches: Run Auto-Commit Guard. `git checkout {matched_branch}`. Discover blueprint path via Blueprint Discovery (filesystem variant). If found, set `blueprintPath` and proceed to Step 3. If no blueprint, offer scaffold (same as directory handler pattern).
+  3. If multiple branches match: AskUserQuestion — header: "Multiple matches", question: "Found multiple branches matching '{slug}':", options: [list of matching branch names, "None of these"]. On selection, checkout and discover blueprint. On "None of these", fall through to filesystem.
+  4. If no branch matches: fall through to slug filesystem resolution below.
 - **directory:** Check `{userInput}/blueprint/STATUS.md` exists. If yes, set `blueprintPath = {userInput}/blueprint`. If no, check `{userInput}` itself for STATUS.md patterns. If no blueprint found: AskUserQuestion — header: "Blueprint", question: "No blueprint found at {userInput}. Create one here?", options: ["Yes, create blueprint", "Cancel"]. If yes, scaffold 5 template files in `{userInput}/blueprint/`, set `blueprintPath`.
-- **slug:** Use the resolved directory from `find`. Then follow directory logic above.
+- **slug:** First search git branches: `git branch --list "*${userInput}*" 2>/dev/null`. Filter to branches containing the slug as a path segment.
+  1. If exactly one branch matches: checkout and discover blueprint (same as url handler step 2).
+  2. If multiple matches: present selection (same as url handler step 3).
+  3. If no branch matches: attempt filesystem resolution: `find src/pages/ -maxdepth 1 -iname "{userInput}" -type d 2>/dev/null | head -1`. If found, follow directory logic. If not found, fall through to unknown handler.
 - **unknown:** AskUserQuestion — header: "Not Found", question: "I couldn't resolve '{userInput}' to a prototype. What would you like to do?", options: ["Try a different input", "Show the branch list", "Cancel"]. "Show the branch list" → fall back to branch-list operation. "Try a different input" → ask for new input. "Cancel" → exit.
 
 **Step 3: Conversion offer (full Watson flow only)**
