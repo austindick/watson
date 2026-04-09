@@ -1,5 +1,5 @@
 ---
-name: watson:discuss
+name: discuss
 description: "Design discussion for prototyping — think through layout, components, and interactions before building. Use /watson:discuss."
 ---
 

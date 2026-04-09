@@ -1,5 +1,5 @@
 ---
-name: watson:status
+name: status
 description: "Check the status of your Watson prototype — sections built, pending amendments, session history. Use /watson:status."
 ---
 

@@ -6,21 +6,9 @@
     "url": "https://github.com/austindick"
   },
   "repository": "https://github.com/austindick/watson",
-  "skills": [
-    {
-      "name": "watson:status",
-      "path": "skills/core/skills/status.md",
-      "description": "Check the status of your Watson prototype — sections built, pending amendments, session history."
-    },
-    {
-      "name": "watson:discuss",
-      "path": "skills/core/skills/discuss.md",
-      "description": "Design discussion for prototyping — think through layout, components, and interactions before building."
-    },
-    {
-      "name": "watson:loupe",
-      "path": "skills/core/skills/loupe.md",
-      "description": "Build a prototype from Figma frames or design decisions — runs the full decompose, research, build, review pipeline."
-    }
+  "commands": [
+    "./skills/core/skills/status.md",
+    "./skills/core/skills/discuss.md",
+    "./skills/core/skills/loupe.md"
   ]
 }

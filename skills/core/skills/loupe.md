@@ -1,5 +1,5 @@
 ---
-name: watson:loupe
+name: loupe
 description: "Build a prototype from Figma frames or design decisions — runs the full decompose, research, build, review pipeline. Use /watson:loupe."
 ---
 
