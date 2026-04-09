@@ -46,9 +46,9 @@ Requirements for Watson 1.3: User Experience & Commands. Each maps to roadmap ph
 
 ### Commands — Standalone Entry Points
 
-- [ ] **STND-01**: `/watson:discuss` is callable without prior `/watson` activation — starts a discuss session directly with minimal setup (branch detection + blueprint path resolution only)
-- [ ] **STND-02**: `/watson:loupe` is callable without prior `/watson` activation — starts a build pipeline directly with minimal setup
-- [ ] **STND-03**: Standalone commands still write to blueprint files and update STATUS.md — they produce the same persistent artifacts as the full Watson flow
+- [x] **STND-01**: `/watson:discuss` is callable without prior `/watson` activation — starts a discuss session directly with minimal setup (branch detection + blueprint path resolution only)
+- [x] **STND-02**: `/watson:loupe` is callable without prior `/watson` activation — starts a build pipeline directly with minimal setup
+- [x] **STND-03**: Standalone commands still write to blueprint files and update STATUS.md — they produce the same persistent artifacts as the full Watson flow
 
 ### Flexible Navigation
 
@@ -95,9 +95,9 @@ Deferred to next milestone (Discuss Refactor). Tracked but not in current roadma
 | RESM-02 | Phase 18 | Complete |
 | SESS-01 | Phase 18 | Complete |
 | SESS-02 | Phase 18 | Complete |
-| STND-01 | Phase 19 | Pending |
-| STND-02 | Phase 19 | Pending |
-| STND-03 | Phase 19 | Pending |
+| STND-01 | Phase 19 | Complete |
+| STND-02 | Phase 19 | Complete |
+| STND-03 | Phase 19 | Complete |
 | FLEX-01 | Phase 19 | Pending |
 | FLEX-02 | Phase 19 | Pending |
 

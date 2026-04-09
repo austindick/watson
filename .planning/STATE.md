@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 19 context gathered
-last_updated: "2026-04-09T16:35:31.958Z"
+stopped_at: Completed 19-01-PLAN.md
+last_updated: "2026-04-09T17:02:39.134Z"
 last_activity: 2026-04-09 — v1.3 roadmap written, 21 requirements mapped across 4 phases
 progress:
   total_phases: 7
   completed_phases: 6
-  total_plans: 11
-  completed_plans: 11
+  total_plans: 13
+  completed_plans: 12
   percent: 0
 ---
 
@@ -52,6 +52,9 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 18-recovery-lifecycle-commands]: watson:status is an independent skill (own frontmatter + plugin.json entry) — not dispatched from SKILL.md, ensuring STAT-02 (no Watson activation) by design
 - [Phase 18-recovery-lifecycle-commands]: Plugin manifest gains skills array pattern for independently-discoverable skill entries; watson:status is first entry
 - [Phase 18-recovery-lifecycle-commands]: Resume always writes watson-active.json (activates Watson) unlike status which is read-only; off flow is silent on checkpoint commit; save-blueprint prompt uses _Not yet defined._ as template-only signal
+- [Phase 19-standalone-commands-flexible-entry]: discuss and loupe gain Phase -1 preambles; standalone detection is presence/absence of blueprintPath parameter from caller
+- [Phase 19-standalone-commands-flexible-entry]: Conditional activation: only write watson-active.json on watson/* branches; off watson/* branches run capability without session tracking
+- [Phase 19-standalone-commands-flexible-entry]: Standalone chain in discuss.md surfaces /watson:loupe pointer instead of auto-dispatching; SKILL.md continues to own the discuss->loupe chain
 
 ### Pending Todos
 
@@ -68,6 +71,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-09T16:35:31.947Z
-Stopped at: Phase 19 context gathered
+Last session: 2026-04-09T17:02:39.131Z
+Stopped at: Completed 19-01-PLAN.md
 Resume: Run `/gsd:plan-phase 16` to begin planning Phase 16 (Opt-in Activation Model)

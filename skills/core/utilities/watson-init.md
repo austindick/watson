@@ -22,7 +22,9 @@ Also provides branch operations for session management: branch creation, branch 
 | targetFilePath | string | Path to prototype file or directory (e.g., `src/pages/MyPrototype/` or `src/pages/MyPrototype.tsx`) |
 | prototype_name | string | Human-readable prototype name (collected by SKILL.md before invocation) |
 | slug | string | Kebab-case slug derived from prototype_name by SKILL.md |
-| operation | string | Optional. "branch-list" for Path B (continue existing) flow. Omit for Path A (new prototype) flow. |
+| operation | string | Optional. "branch-list" for Path B (continue existing) flow. "direct-input" for flexible continue. Omit for Path A (new prototype) flow. |
+| userInput | string | Optional. Raw text the user pasted — a branch name, Playground URL, slug, or directory path. Used with operation: "direct-input". |
+| offerConversion | boolean | Optional. If true, offer watson/* branch conversion for non-watson inputs. Used by SKILL.md Path B. Default: false. |
 
 ---
 
@@ -41,6 +43,43 @@ Execute Branch Creation (see Branch Operations — Branch Creation). Then contin
 Invoked when `operation` is "branch-list" — i.e., SKILL.md Path B dispatched watson-init.
 
 Execute Branch List and Switching sequence from Branch Operations. After successful branch switch, return control to SKILL.md for context summary display and intent classification.
+
+---
+
+## Phase 0C: Direct Input (flexible continue)
+
+Invoked when `operation` is "direct-input" — the user pasted a branch name, URL, slug, or path instead of selecting from the branch list.
+
+**Step 1: Classify the input**
+
+Parse `userInput` to determine its type. Check in this order:
+
+1. **watson/* branch name:** Input starts with `watson/` or matches a known watson/* branch (`git branch --list "watson/${userInput}" 2>/dev/null`). → Type: `watson-branch`
+2. **Playground URL:** Input contains `playground` or matches a URL pattern (contains `://` or starts with `http`). Extract the slug from the URL path — typically the last path segment after `/pages/` or the prototype identifier. → Type: `url`
+3. **Directory path:** Input starts with `/`, `./`, `../`, or `~`, OR input contains `/` and resolves to an existing directory (`test -d "{userInput}"`). → Type: `directory`
+4. **Prototype slug:** Input is a simple string (no slashes, no protocol). Attempt case-insensitive resolution: `find src/pages/ -maxdepth 1 -iname "{userInput}" -type d 2>/dev/null | head -1`. → Type: `slug` if found, `unknown` if not.
+5. **Unknown:** None of the above matched. → Type: `unknown`
+
+**Step 2: Resolve blueprint path based on type**
+
+- **watson-branch:** Run Auto-Commit Guard. `git checkout watson/{slug}` (or the full branch name). Discover blueprint path via Blueprint Discovery (filesystem variant). If found, set `blueprintPath` and return. If not found, offer scaffold.
+- **url:** Extract slug from URL. Resolve via slug logic below.
+- **directory:** Check `{userInput}/blueprint/STATUS.md` exists. If yes, set `blueprintPath = {userInput}/blueprint`. If no, check `{userInput}` itself for STATUS.md patterns. If no blueprint found: AskUserQuestion — header: "Blueprint", question: "No blueprint found at {userInput}. Create one here?", options: ["Yes, create blueprint", "Cancel"]. If yes, scaffold 5 template files in `{userInput}/blueprint/`, set `blueprintPath`.
+- **slug:** Use the resolved directory from `find`. Then follow directory logic above.
+- **unknown:** AskUserQuestion — header: "Not Found", question: "I couldn't resolve '{userInput}' to a prototype. What would you like to do?", options: ["Try a different input", "Show the branch list", "Cancel"]. "Show the branch list" → fall back to branch-list operation. "Try a different input" → ask for new input. "Cancel" → exit.
+
+**Step 3: Conversion offer (full Watson flow only)**
+
+If the caller passed `offerConversion: true` AND the resolved prototype is NOT on a watson/* branch:
+- AskUserQuestion — header: "Convert?", question: "This prototype isn't tracked by Watson yet. Want to convert it to a Watson prototype for full tracking?", options: ["Yes, convert to watson/* branch", "No, work in place"]
+- "Yes, convert": Infer prototype name from directory name or STATUS.md `prototype_name`. Derive slug. Run Branch Creation (Phase 0) to create watson/{slug} from main, then copy the existing blueprint/ content to the new branch. Set `blueprintPath` on the new branch.
+- "No, work in place": Use `blueprintPath` as-is. No branch switch.
+
+**Step 4: Update state and return**
+
+- Set `blueprintPath` as the resolved path
+- If on a watson/* branch: update `/tmp/watson-active.json` with `"branch": "{branch}"` and `"actions": []` if not present
+- Return to caller with `blueprintPath`
 
 ---
 
