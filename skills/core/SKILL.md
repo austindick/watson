@@ -52,7 +52,11 @@ AskUserQuestion — header: "Watson", question: "What would you like to work on?
 
 **Path B — Continue working on an existing prototype:**
 1. Session recovery: if `/tmp/watson-session-end.json` exists, run session recovery first (same steps as Path A step 1) before proceeding.
-2. Invoke `@utilities/watson-init.md` branch-list operation — watson-init gathers all branch data (branch list, STATUS.md reads, last commit dates) in a single batched bash script to minimize visible terminal blocks, groups into "Your prototypes" (by ownership) and expandable "Browse other prototypes", tags inactive branches (30+ days) with [INACTIVE] prefix
+2. If the user's "Continue" message includes additional text (a pasted branch name, URL, slug, or path — not just bare selection):
+   Invoke `@utilities/watson-init.md` with `operation: "direct-input"`, `userInput: {pasted text}`, `offerConversion: true`
+   Skip to step 5 (watson-init returns with blueprintPath resolved).
+   Otherwise (bare "Continue existing" selection):
+   Invoke `@utilities/watson-init.md` branch-list operation — watson-init gathers all branch data in a single batched bash script, groups into "Your prototypes" and expandable "Browse other prototypes", tags inactive branches (30+ days) with [INACTIVE] prefix
 3. User selects branch; watson-init handles: inactive-branch options (continue / delete / reset timer), auto-commit guard, `git checkout watson/{slug}`, missing-branch recovery (try remote, else offer fresh branch or return to list), health check
 4. Watson-init updates `/tmp/watson-active.json` with `"branch": "watson/{slug}"`
 5. Load STATUS.md frontmatter; display: "[name] — [N] section(s) built. [M] pending amendment(s). Last session: [date] by [user] — [summary]."
@@ -99,6 +103,7 @@ After collecting answers:
 **Check explicit shortcuts first:**
 - `/watson discuss` → Tier 1 (discuss)
 - `/watson loupe` → Tier 2 (build)
+- `/watson:discuss` or `/watson:loupe` (colon variants) → handled by Claude Code as independent skills — SKILL.md is not involved
 - `/watson help` → Help response (see Routing below)
 - `/watson save-blueprint` → Dispatch `@skills/save-blueprint.md` with `blueprintPath` (resolved via Blueprint Discovery if Watson is active, or let save-blueprint handle detection if not)
 - `/watson resume` or `/watson:resume` → Dispatch `@skills/resume.md` with `blueprintPath`
