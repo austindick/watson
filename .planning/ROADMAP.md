@@ -132,8 +132,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 16-01-PLAN.md — Add opt-in gate logic and ambient rule cleanup (ACTV-01, ACTV-02)
-- [ ] 16-02-PLAN.md — Reorder startup sequence, defer scaffold commit, batch operations (ACTV-03, ACTV-04, ACTV-05, ACTV-06)
+- [x] 16-01-PLAN.md — Add opt-in gate logic and ambient rule cleanup (ACTV-01, ACTV-02)
+- [x] 16-02-PLAN.md — Reorder startup sequence, defer scaffold commit, batch operations (ACTV-03, ACTV-04, ACTV-05, ACTV-06)
 
 ### Phase 17: Save Blueprint Command
 **Goal**: Users can retroactively capture context from any prototyping session — with or without Watson formally activated — into a complete, gap-analyzed blueprint
@@ -144,10 +144,11 @@ Plans:
   2. After writing, Watson presents a readable summary of what was captured and explicitly lists gaps — decisions that are missing, ambiguous, or unresolved
   3. Watson asks whether the user wants to discuss the gaps; accepting bridges into the discuss flow, declining keeps the blueprint as written
   4. `/watson:save-blueprint` works when Watson was never formally activated — it captures context from any session, not just Watson-managed ones
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 17-01: TBD
+- [ ] 17-01-PLAN.md — Create save-blueprint.md subskill with extraction, blueprint writing, gap analysis, discuss bridge, and non-Watson session handling (SAVE-01, SAVE-02, SAVE-03, SAVE-04)
+- [ ] 17-02-PLAN.md — Register /watson:save-blueprint in SKILL.md routing, add [INFERRED] skip logic to builder.md (SAVE-01, SAVE-02)
 
 ### Phase 18: Recovery & Lifecycle Commands
 **Goal**: Users can inspect prototype state without activating Watson, reconstruct context after a reset, and exit sessions cleanly with a summary and a save prompt
@@ -187,7 +188,7 @@ Plans:
 | 13. Plugin Scaffold + Path Portability | v1.2 | 2/2 | Complete | 2026-04-05 |
 | 14. Hook Migration + Script Bundling | v1.2 | 1/1 | Complete | 2026-04-05 |
 | 15. Distribution + Onboarding + Validation | v1.2 | 2/2 | Complete | 2026-04-07 |
-| 16. Opt-in Activation Model | 2/2 | Complete   | 2026-04-09 | - |
-| 17. Save Blueprint Command | v1.3 | 0/? | Not started | - |
+| 16. Opt-in Activation Model | 2/2 | Complete    | 2026-04-09 | - |
+| 17. Save Blueprint Command | v1.3 | 0/2 | Planning | - |
 | 18. Recovery & Lifecycle Commands | v1.3 | 0/? | Not started | - |
 | 19. Standalone Commands & Flexible Entry | v1.3 | 0/? | Not started | - |
