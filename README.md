@@ -20,13 +20,11 @@ Run these commands inside Claude Code:
 
 Then **quit and restart Claude Code**. `/watson` will not appear until after a full restart — `/reload-plugins` alone is not enough.
 
-Copy the ambient rule so Watson activates automatically when you open the Playground:
+## Usage
 
-```bash
-cp ~/.claude/plugins/cache/austins-stuff/watson/*/skills/core/references/watson-ambient.md ~/.claude/rules/watson-ambient.md
-```
+Type `/watson` in Claude Code to start. Watson will ask whether you're starting a new prototype or continuing an existing one.
 
-> Note: the `*` in the path handles any version number in the cache directory.
+Other commands: `/watson:discuss`, `/watson:loupe`, `/watson:status`, `/watson:resume`, `/watson:off`.
 
 ## Figma MCP Setup
 
@@ -57,8 +55,8 @@ Watson version bumps on every push to main — patch for fixes (1.2.0 → 1.2.1)
 **`/watson` not found after install**
 Run `/reload-plugins`. If Watson is still missing, restart Claude Code and try `/reload-plugins` again.
 
-**Watson does not suggest itself in the Playground**
-Check that `~/.claude/rules/watson-ambient.md` exists. If missing, re-run the `cp` command from the Install section above.
+**Watson does not respond to `/watson`**
+Run `/reload-plugins`. If Watson is still missing, restart Claude Code completely.
 
 **Figma MCP errors**
 Make sure the Figma MCP server is running. Ask Claude "can you access Figma?" to diagnose — the response will indicate whether the MCP connection is live.
