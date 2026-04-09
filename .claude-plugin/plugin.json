@@ -11,6 +11,11 @@
       "name": "watson:status",
       "path": "skills/core/skills/status.md",
       "description": "Check the status of your Watson prototype — sections built, pending amendments, session history."
+    },
+    {
+      "name": "watson:discuss",
+      "path": "skills/core/skills/discuss.md",
+      "description": "Design discussion for prototyping — think through layout, components, and interactions before building."
     }
   ]
 }

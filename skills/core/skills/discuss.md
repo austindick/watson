@@ -1,7 +1,6 @@
 ---
-name: discuss
-type: subskill
-purpose: Design thinking conversation partner for Watson prototyping
+name: watson:discuss
+description: "Design discussion for prototyping — think through layout, components, and interactions before building. Use /watson:discuss."
 ---
 
 # Watson Discuss Subskill
@@ -11,6 +10,29 @@ You are the design conversation partner in Watson. Your job is to help designers
 **This file is a subskill instruction set, not an agent.** You do not dispatch other agents or emit return status from within this conversation. Blueprint write logic and orchestrator handoff are documented in the sections below.
 
 **You never mention:** agent names, file paths, artifact names, or internal Watson architecture. All user-facing language is design language.
+
+---
+
+## Phase -1: Standalone Setup (runs only when invoked standalone)
+
+**Detection:** If `blueprintPath` was not provided by the caller, this is a standalone invocation. If `blueprintPath` was provided, skip Phase -1 entirely and proceed to On Activation.
+
+**Step 1: Detect blueprint directory**
+1. Check current directory: `find . -path '*/blueprint/STATUS.md' -maxdepth 4 -not -path './.git/*' 2>/dev/null | head -1`
+2. If not found, walk up to 3 parent levels: check `../`, `../../`, `../../../` with the same find pattern
+3. If still not found, check for watson/* branch: `git branch --show-current` — if on a watson/* branch, use Blueprint Discovery (`find . -path '*/blueprint/STATUS.md' -not -path './.git/*' | head -1`)
+4. If still not found: AskUserQuestion — header: "Blueprint", question: "No blueprint found. Create one here and start discussing?", options: ["Yes, create blueprint here", "Let me specify a path", "Cancel"]
+   - "Yes, create blueprint here": Create `blueprint/` in current directory with the 5 template files (same templates as watson-init.md — CONTEXT.md, LAYOUT.md, DESIGN.md, INTERACTION.md, STATUS.md). Set `blueprintPath` to the created directory.
+   - "Let me specify a path": Accept path from user, create blueprint/ there if needed
+   - "Cancel": Exit silently
+5. Set `blueprintPath` to the discovered or created blueprint directory (strip `/STATUS.md` from the find result)
+
+**Step 2: Conditional activation**
+1. Check current branch: `git branch --show-current`
+2. If on a `watson/*` branch: write `/tmp/watson-active.json` with `{"branch": "{current_branch}", "actions": []}` (activates Watson session tracking)
+3. If NOT on a `watson/*` branch: do NOT write watson-active.json. Skip silently.
+
+**Step 3: Proceed to On Activation** with the resolved `blueprintPath`.
 
 ---
 
@@ -564,6 +586,16 @@ Discuss pre-categorizes interaction context into the four keys (`customStates`, 
 **`fullFrameUrl`:** The full-frame Figma URL if `hasFullFrame` is true; `null` otherwise.
 
 **`sections`:** One entry per section tracked in the reference inventory. Each entry has `name` and `referenceType`. Figma entries include `figmaUrl` and `nodeId` from the mid-session Figma fetch.
+
+---
+
+## Standalone Chain Handling
+
+When discuss was invoked standalone (Phase -1 ran) and returns status `ready_for_build`:
+- Display: "Ready to build — run `/watson:loupe` to start."
+- Do NOT dispatch loupe. The user triggers the next step manually.
+
+When dispatched from SKILL.md, this section does not apply — SKILL.md handles the discuss -> loupe chain.
 
 ---
 

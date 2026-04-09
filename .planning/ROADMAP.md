@@ -162,8 +162,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 18-01-PLAN.md — Create watson:status independent skill with dashboard display, state-machine suggested action, no-activation guarantee (STAT-01, STAT-02)
-- [ ] 18-02-PLAN.md — Create resume.md subskill, enhance /watson:off with summary + save prompt, register shortcuts in SKILL.md (RESM-01, RESM-02, SESS-01, SESS-02)
+- [x] 18-01-PLAN.md — Create watson:status independent skill with dashboard display, state-machine suggested action, no-activation guarantee (STAT-01, STAT-02)
+- [x] 18-02-PLAN.md — Create resume.md subskill, enhance /watson:off with summary + save prompt, register shortcuts in SKILL.md (RESM-01, RESM-02, SESS-01, SESS-02)
 
 ### Phase 19: Standalone Commands & Flexible Entry
 **Goal**: Users can start a discuss or build session directly without a full Watson session, and continue existing work by pasting any branch name, URL, or directory path
@@ -174,10 +174,11 @@ Plans:
   2. `/watson:loupe` invoked without a prior `/watson` session starts the build pipeline directly
   3. Discuss and loupe standalone sessions write blueprint files and update STATUS.md identically to the full Watson flow
   4. "Continue existing" accepts a pasted branch name, Playground URL, or directory path and resolves the correct blueprint — not just the watson/* branch list
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 19-01: TBD
+- [ ] 19-01-PLAN.md — Add standalone preambles to discuss.md and loupe.md, register watson:discuss and watson:loupe in plugin manifest (STND-01, STND-02, STND-03)
+- [ ] 19-02-PLAN.md — Add direct-input mode to watson-init for flexible continue, refactor SKILL.md routing (FLEX-01, FLEX-02, STND-01, STND-02)
 
 ## Progress
 
@@ -191,5 +192,5 @@ Plans:
 | 15. Distribution + Onboarding + Validation | v1.2 | 2/2 | Complete | 2026-04-07 |
 | 16. Opt-in Activation Model | v1.3 | 2/2 | Complete | 2026-04-09 |
 | 17. Save Blueprint Command | v1.3 | 2/2 | Complete | 2026-04-09 |
-| 18. Recovery & Lifecycle Commands | 2/2 | Complete   | 2026-04-09 | - |
-| 19. Standalone Commands & Flexible Entry | v1.3 | 0/? | Not started | - |
+| 18. Recovery & Lifecycle Commands | v1.3 | 2/2 | Complete | 2026-04-09 |
+| 19. Standalone Commands & Flexible Entry | v1.3 | 0/2 | Not started | - |
