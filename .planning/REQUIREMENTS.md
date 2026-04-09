@@ -27,10 +27,10 @@ Requirements for Watson 1.3: User Experience & Commands. Each maps to roadmap ph
 
 ### Commands — Save Blueprint
 
-- [ ] **SAVE-01**: `/watson:save-blueprint` reads the current session conversation and prototype state, then immediately writes blueprint files (CONTEXT.md, LAYOUT.md, DESIGN.md, INTERACTION.md) based on Watson's interpretation
-- [ ] **SAVE-02**: After writing, Watson presents a summary of what was captured and identifies gaps (missing decisions, ambiguous choices, unresolved design questions)
-- [ ] **SAVE-03**: Watson offers to discuss gaps via the discuss flow — user can accept (bridge into discuss) or decline (keep the blueprint as-is)
-- [ ] **SAVE-04**: `/watson:save-blueprint` works regardless of whether Watson was formally activated — captures context from any freestyle prototyping session
+- [x] **SAVE-01**: `/watson:save-blueprint` reads the current session conversation and prototype state, then immediately writes blueprint files (CONTEXT.md, LAYOUT.md, DESIGN.md, INTERACTION.md) based on Watson's interpretation
+- [x] **SAVE-02**: After writing, Watson presents a summary of what was captured and identifies gaps (missing decisions, ambiguous choices, unresolved design questions)
+- [x] **SAVE-03**: Watson offers to discuss gaps via the discuss flow — user can accept (bridge into discuss) or decline (keep the blueprint as-is)
+- [x] **SAVE-04**: `/watson:save-blueprint` works regardless of whether Watson was formally activated — captures context from any freestyle prototyping session
 
 ### Commands — Status & Resume
 
@@ -85,10 +85,10 @@ Deferred to next milestone (Discuss Refactor). Tracked but not in current roadma
 | ACTV-04 | Phase 16 | Complete |
 | ACTV-05 | Phase 16 | Complete |
 | ACTV-06 | Phase 16 | Complete |
-| SAVE-01 | Phase 17 | Pending |
-| SAVE-02 | Phase 17 | Pending |
-| SAVE-03 | Phase 17 | Pending |
-| SAVE-04 | Phase 17 | Pending |
+| SAVE-01 | Phase 17 | Complete |
+| SAVE-02 | Phase 17 | Complete |
+| SAVE-03 | Phase 17 | Complete |
+| SAVE-04 | Phase 17 | Complete |
 | STAT-01 | Phase 18 | Pending |
 | STAT-02 | Phase 18 | Pending |
 | RESM-01 | Phase 18 | Pending |

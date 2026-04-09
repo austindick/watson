@@ -189,6 +189,6 @@ Plans:
 | 14. Hook Migration + Script Bundling | v1.2 | 1/1 | Complete | 2026-04-05 |
 | 15. Distribution + Onboarding + Validation | v1.2 | 2/2 | Complete | 2026-04-07 |
 | 16. Opt-in Activation Model | 2/2 | Complete    | 2026-04-09 | - |
-| 17. Save Blueprint Command | v1.3 | 0/2 | Planning | - |
+| 17. Save Blueprint Command | 1/2 | In Progress|  | - |
 | 18. Recovery & Lifecycle Commands | v1.3 | 0/? | Not started | - |
 | 19. Standalone Commands & Flexible Entry | v1.3 | 0/? | Not started | - |
