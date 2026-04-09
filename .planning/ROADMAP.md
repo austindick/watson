@@ -147,8 +147,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 17-01-PLAN.md — Create save-blueprint.md subskill with extraction, blueprint writing, gap analysis, discuss bridge, and non-Watson session handling (SAVE-01, SAVE-02, SAVE-03, SAVE-04)
-- [ ] 17-02-PLAN.md — Register /watson:save-blueprint in SKILL.md routing, add [INFERRED] skip logic to builder.md (SAVE-01, SAVE-02)
+- [x] 17-01-PLAN.md — Create save-blueprint.md subskill with extraction, blueprint writing, gap analysis, discuss bridge, and non-Watson session handling (SAVE-01, SAVE-02, SAVE-03, SAVE-04)
+- [x] 17-02-PLAN.md — Register /watson:save-blueprint in SKILL.md routing, add [INFERRED] skip logic to builder.md (SAVE-01, SAVE-02)
 
 ### Phase 18: Recovery & Lifecycle Commands
 **Goal**: Users can inspect prototype state without activating Watson, reconstruct context after a reset, and exit sessions cleanly with a summary and a save prompt
@@ -159,10 +159,11 @@ Plans:
   2. `/watson:resume` reads STATUS.md and blueprint files and offers the right next action based on actual state (build, rebuild, or continue discussion)
   3. `/watson:off` prints a session summary (discussed, built, pending) before deactivating
   4. If blueprint files are empty or template-only at `/watson:off` time, Watson prompts the user to run `/watson:save-blueprint` before closing
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 18-01: TBD
+- [ ] 18-01-PLAN.md — Create watson:status independent skill with dashboard display, state-machine suggested action, no-activation guarantee (STAT-01, STAT-02)
+- [ ] 18-02-PLAN.md — Create resume.md subskill, enhance /watson:off with summary + save prompt, register shortcuts in SKILL.md (RESM-01, RESM-02, SESS-01, SESS-02)
 
 ### Phase 19: Standalone Commands & Flexible Entry
 **Goal**: Users can start a discuss or build session directly without a full Watson session, and continue existing work by pasting any branch name, URL, or directory path
@@ -188,7 +189,7 @@ Plans:
 | 13. Plugin Scaffold + Path Portability | v1.2 | 2/2 | Complete | 2026-04-05 |
 | 14. Hook Migration + Script Bundling | v1.2 | 1/1 | Complete | 2026-04-05 |
 | 15. Distribution + Onboarding + Validation | v1.2 | 2/2 | Complete | 2026-04-07 |
-| 16. Opt-in Activation Model | 2/2 | Complete    | 2026-04-09 | - |
-| 17. Save Blueprint Command | 2/2 | Complete   | 2026-04-09 | - |
-| 18. Recovery & Lifecycle Commands | v1.3 | 0/? | Not started | - |
+| 16. Opt-in Activation Model | v1.3 | 2/2 | Complete | 2026-04-09 |
+| 17. Save Blueprint Command | v1.3 | 2/2 | Complete | 2026-04-09 |
+| 18. Recovery & Lifecycle Commands | v1.3 | 0/2 | Planning | - |
 | 19. Standalone Commands & Flexible Entry | v1.3 | 0/? | Not started | - |
