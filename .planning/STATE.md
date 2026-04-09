@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 16 context gathered
-last_updated: "2026-04-09T12:11:59.897Z"
+stopped_at: Completed 16-01-PLAN.md
+last_updated: "2026-04-09T13:21:25.208Z"
 last_activity: 2026-04-09 — v1.3 roadmap written, 21 requirements mapped across 4 phases
 progress:
   total_phases: 7
   completed_phases: 3
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 7
+  completed_plans: 6
   percent: 0
 ---
 
@@ -42,6 +42,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 15]: marketplace.json in separate repo (austindick/austins-stuff); marketplace name must differ from plugin name
 - [Phase 15]: Plugin version field removed from plugin.json — causes recursive caching
 - [Phase 15]: Agents use absolute paths derived from blueprintPath for .watson/sections/ staging
+- [Phase 16-opt-in-activation-model]: Gate uses /tmp/watson-declined.json as session-scoped decline marker (not persistent)
+- [Phase 16-opt-in-activation-model]: Tier 0 passthrough narrowed to active-session-only; gate now handles ambient suppression
 
 ### Pending Todos
 
@@ -58,6 +60,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-09T12:11:59.886Z
-Stopped at: Phase 16 context gathered
+Last session: 2026-04-09T13:21:25.205Z
+Stopped at: Completed 16-01-PLAN.md
 Resume: Run `/gsd:plan-phase 16` to begin planning Phase 16 (Opt-in Activation Model)
