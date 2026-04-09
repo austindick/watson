@@ -21,22 +21,18 @@ Write state file: `echo '{}' > /tmp/watson-active.json`
 
 ## Routing
 
-**If the user's message is `/watson off`:** Write session entry, then deactivate:
+**If the user's message is `/watson off` or `/watson:off`:** Auto-commit, summarize, then deactivate:
+0. Auto-commit: run `git status --porcelain`. If dirty, `git add -A && git commit -m "watson: checkpoint"` silently (do not mention to user).
 1. Read `/tmp/watson-active.json`. If `branch` and `actions` fields exist:
-   a. Get current user: `git config --get user.name`
-   b. Compile actions: join array with ", ", truncate at 80 chars
-   c. Discover blueprint path, then read `git show {branch}:{blueprintPath}/STATUS.md` `sessions:` array
-   d. Prepend new entry: `{timestamp: <ISO string>, summary: <compiled>, who: <username>}`
-   e. If sessions count >= 10, drop the oldest entry
-   f. Update STATUS.md `sessions:` via Edit tool — if `sessions: []` (compact empty), replace with block sequence format:
-      ```yaml
-      sessions:
-        - timestamp: "..."
-          summary: "..."
-          who: "..."
-      ```
-2. Delete `/tmp/watson-active.json` (bash: `rm -f /tmp/watson-active.json`)
-3. Respond "Watson deactivated for this session.", then exit. Do not proceed to 2-path fork.
+   a. Discover blueprint path, read STATUS.md frontmatter
+   b. Display summary: "Discussed: [actions joined or 'nothing']", "Built: [sections_built joined or 'nothing']", "Pending: [drafts length] amendment(s)"
+   c. Write session entry to STATUS.md `sessions:` array: get user via `git config --get user.name`, compile actions (join with ", ", truncate at 80 chars), prepend `{timestamp, summary, who}`, drop oldest if count >= 10; if `sessions: []` compact empty, replace with block sequence format
+2. Save-blueprint prompt: read CONTEXT.md. If Problem Statement contains `_Not yet defined._`:
+   AskUserQuestion — header: "Save?", question: "You haven't saved any design decisions yet. Run /watson:save-blueprint before closing?", options: ["Save now", "Skip"]
+   - "Save now": dispatch `@skills/save-blueprint.md` with `blueprintPath`, wait for completion
+   - "Skip": continue
+3. Delete `/tmp/watson-active.json` (bash: `rm -f /tmp/watson-active.json`)
+4. Respond "Watson deactivated." and exit.
 
 **Tier 0 passthrough (active session only):** If Watson is already active and the message is pure coding/git/config with no design intent — stay silent. Defer to default Claude.
 
@@ -105,6 +101,7 @@ After collecting answers:
 - `/watson loupe` → Tier 2 (build)
 - `/watson help` → Help response (see Routing below)
 - `/watson save-blueprint` → Dispatch `@skills/save-blueprint.md` with `blueprintPath` (resolved via Blueprint Discovery if Watson is active, or let save-blueprint handle detection if not)
+- `/watson resume` or `/watson:resume` → Dispatch `@skills/resume.md` with `blueprintPath`
 - "switch prototype / work on something else / open {name}" → write session entry (same sequence as `/watson off` steps 1a–1f above), then auto-commit (`watson: checkpoint`), re-enter 2-path fork. Watson stays ON throughout.
 
 **Check for Figma URL in the message** → flag as a build signal (figmaUrl detected)
