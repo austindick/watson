@@ -247,7 +247,9 @@ Receives `prototype_name` and `slug` from SKILL.md Path A.
    - "Create watson/{slug}-2": use `{slug}-2` as the new slug, continue branch creation below.
 5. **If branch does not exist:** `git checkout -b watson/{slug}`
 6. Continue to blueprint scaffold (Single-File Detection + Template Content sections)
-7. After scaffold: `git add blueprint/ && git commit -m "watson: initialize {prototype_name} blueprint"`
+7. After scaffold: Do NOT commit. The scaffold files remain uncommitted. The first commit happens organically when discuss, loupe, or save-blueprint writes and commits their changes — those commits sweep up the scaffold files via `git add blueprint/`.
+
+   Exception: If `src/config/contributors.ts` was modified (new user added during Setup Flow), commit it immediately: `git add src/config/contributors.ts && git commit -m "watson: add contributor {github_username}"`. This is shared state, not blueprint scaffolding.
 8. Update STATUS.md `branch:` field via Edit tool: replace `branch: ""` with `branch: "watson/{slug}"`
 9. Update `/tmp/watson-active.json` via Edit tool: add `"branch": "watson/{slug}"` and `"actions": []`
 
@@ -268,6 +270,8 @@ For the checked-out branch, use the filesystem instead: `find . -path '*/bluepri
 ### Branch List and Switching (continue existing prototype)
 
 1. Run `git branch --list 'watson/*'` to get local branches
+
+   Performance: Gather all branch data in a single bash script where possible. Combine `git branch --list`, per-branch `git show` for STATUS.md, and `git log` for last commit dates into one bash invocation to minimize visible terminal blocks (ACTV-06).
 2. For each branch:
    - Discover blueprint path: run `git ls-tree -r --name-only watson/{slug} | grep 'blueprint/STATUS.md$' | head -1` — strip `/STATUS.md` to get `blueprintPath`. If empty, no blueprint exists for this branch.
    - Read context: `git show watson/{slug}:{blueprintPath}/STATUS.md` using the discovered path (graceful fallback to branch name if discovery or git show fails)
