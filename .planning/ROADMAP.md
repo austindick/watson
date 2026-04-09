@@ -70,7 +70,7 @@ Full details: see Phase Details below (archived inline).
 - [x] **Phase 17: Save Blueprint Command** - `/watson:save-blueprint` retroactively captures session context into blueprint files with gap analysis (completed 2026-04-09)
 - [x] **Phase 18: Recovery & Lifecycle Commands** - `/watson:status`, `/watson:resume`, and `/watson:off` give users visibility and control over session state (completed 2026-04-09)
 - [x] **Phase 19: Standalone Commands & Flexible Entry** - `/watson:discuss` and `/watson:loupe` callable without full session; continue accepts branch, URL, or directory (completed 2026-04-09)
-- [ ] **Phase 20: Audit Gap Closure** - Retroactive Phase 15 verification + README/resume.md integration fixes (gap closure)
+- [x] **Phase 20: Audit Gap Closure** - Retroactive Phase 15 verification + README/resume.md integration fixes (gap closure) (completed 2026-04-09)
 
 ## Phase Details
 
@@ -212,4 +212,4 @@ Plans:
 | 17. Save Blueprint Command | v1.3 | 2/2 | Complete | 2026-04-09 |
 | 18. Recovery & Lifecycle Commands | v1.3 | 2/2 | Complete | 2026-04-09 |
 | 19. Standalone Commands & Flexible Entry | v1.3 | 3/3 | Complete | 2026-04-09 |
-| 20. Audit Gap Closure | v1.3 | 0/1 | Pending | — |
+| 20. Audit Gap Closure | 1/1 | Complete   | 2026-04-09 | — |

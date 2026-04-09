@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 19-03-PLAN.md
-last_updated: "2026-04-09T20:17:12.830Z"
+stopped_at: Completed 20-01-PLAN.md
+last_updated: "2026-04-09T20:52:24.914Z"
 last_activity: 2026-04-09 — v1.3 roadmap written, 21 requirements mapped across 4 phases
 progress:
-  total_phases: 7
-  completed_phases: 7
-  total_plans: 14
-  completed_plans: 14
+  total_phases: 8
+  completed_phases: 8
+  total_plans: 15
+  completed_plans: 15
   percent: 0
 ---
 
@@ -59,6 +59,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 19-standalone-commands-flexible-entry]: targetFilePath auto-resolved in Phase -1 via protoDir probe (index.tsx -> sole .tsx -> STATUS.md -> null); Phase 3 consumes it if set
 - [Phase 19-standalone-commands-flexible-entry]: Branch search in url/slug handlers is unrestricted (all branches, not just watson/*) enabling prototype/* and other naming conventions
 - [Phase 19-standalone-commands-flexible-entry]: Health check scaffold offer uses AskUserQuestion with Yes/Cancel — explicit pattern matches Phase 0C directory handler
+- [Phase 20-audit-gap-closure]: re_verification: true frontmatter marks retroactive VERIFICATION.md files — distinguishes gap-closure from initial verification
+- [Phase 20-audit-gap-closure]: resume.md Start fresh invokes watson-init with operation: new after activation — not a SKILL.md 2-path fork re-entry
 
 ### Pending Todos
 
@@ -75,6 +77,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-09T20:12:55.422Z
-Stopped at: Completed 19-03-PLAN.md
+Last session: 2026-04-09T20:52:24.911Z
+Stopped at: Completed 20-01-PLAN.md
 Resume: Run `/gsd:plan-phase 16` to begin planning Phase 16 (Opt-in Activation Model)

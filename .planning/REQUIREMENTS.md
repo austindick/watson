@@ -79,12 +79,12 @@ Deferred to next milestone (Discuss Refactor). Tracked but not in current roadma
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DIST-01 | Phase 20 | Pending |
-| DIST-02 | Phase 20 | Pending |
-| DIST-03 | Phase 20 | Pending |
-| DIST-04 | Phase 20 | Pending |
-| VALD-01 | Phase 20 | Pending |
-| VALD-02 | Phase 20 | Pending |
+| DIST-01 | Phase 20 | Complete |
+| DIST-02 | Phase 20 | Complete |
+| DIST-03 | Phase 20 | Complete |
+| DIST-04 | Phase 20 | Complete |
+| VALD-01 | Phase 20 | Complete |
+| VALD-02 | Phase 20 | Complete |
 | ACTV-01 | Phase 16 | Complete |
 | ACTV-02 | Phase 16 | Complete |
 | ACTV-03 | Phase 16 | Complete |
