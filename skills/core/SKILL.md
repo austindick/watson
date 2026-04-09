@@ -15,8 +15,6 @@ Watson is a session-level toggle — ON or OFF for the entire Claude Code sessio
 
 Write state file: `echo '{}' > /tmp/watson-active.json`
 
-**Session recovery:** After writing the state file, check if `/tmp/watson-session-end.json` exists. If yes, read `{branch, actions, timestamp}`, discover the blueprint path (`git ls-tree -r --name-only {branch} | grep 'blueprint/STATUS.md$' | head -1`, strip `/STATUS.md`), read STATUS.md via `git show {branch}:{blueprintPath}/STATUS.md`, compile actions into summary (join with ", ", truncate at 80 chars), prepend new session entry to STATUS.md `sessions:` array (drop oldest if count >= 10), delete `/tmp/watson-session-end.json`. Then continue with normal activation flow.
-
 **Skill exclusivity:** When Watson is active, do NOT invoke `superpowers:brainstorming` or any external brainstorming/creative-exploration skills. Watson's discuss subskill handles all design exploration, variant ideation, and creative discussion. Invoking external brainstorming skills alongside Watson creates conflicting workflows.
 
 ---
@@ -46,31 +44,30 @@ Write state file: `echo '{}' > /tmp/watson-active.json`
 
 **Entry point: 2-path fork**
 
-Check for existing `watson/*` branches: `git branch --list 'watson/*'`
-
-- **If branches exist:** AskUserQuestion — header: "Watson", question: "What would you like to work on?", options: ["Start a new prototype", "Continue working on an existing prototype"]
-- **If no branches exist:** AskUserQuestion — header: "Watson", question: "What would you like to work on?", options: ["Start a new prototype"]
+AskUserQuestion — header: "Watson", question: "What would you like to work on?", options: ["Start a new prototype", "Continue working on an existing prototype"]
 
 **Path A — Start a new prototype:**
-1. Ask prototype name (plain text question, not AskUserQuestion)
-2. Derive slug: `name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')`
-3. Run Setup Flow (surface area, owner, GitHub username, description)
-4. Invoke `@utilities/watson-init.md` with `prototype_name` and `slug` parameters — watson-init handles branch creation and blueprint scaffold
-5. Proceed to Intent Classification
+1. Session recovery: if `/tmp/watson-session-end.json` exists, read `{branch, actions, timestamp}`, discover blueprint path, read STATUS.md via `git show {branch}:{blueprintPath}/STATUS.md`, compile actions into summary (join with ", ", truncate at 80 chars), prepend new session entry to STATUS.md `sessions:` array (drop oldest if count >= 10), delete `/tmp/watson-session-end.json`.
+2. Ask prototype name (plain text question, not AskUserQuestion)
+3. Derive slug: `name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')`
+4. Run Setup Flow (surface area, owner, GitHub username, description)
+5. Invoke `@utilities/watson-init.md` with `prototype_name` and `slug` parameters — watson-init handles branch creation and blueprint scaffold
+6. Proceed to Intent Classification
 
 **Path B — Continue working on an existing prototype:**
-1. Invoke `@utilities/watson-init.md` branch-list operation — watson-init runs `git branch --list 'watson/*'`, reads STATUS.md and last commit date per branch, groups into "Your prototypes" (by ownership) and expandable "Browse other prototypes", tags inactive branches (30+ days) with [INACTIVE] prefix
-2. User selects branch; watson-init handles: inactive-branch options (continue / delete / reset timer), auto-commit guard, `git checkout watson/{slug}`, missing-branch recovery (try remote, else offer fresh branch or return to list), health check
-3. Watson-init updates `/tmp/watson-active.json` with `"branch": "watson/{slug}"`
-4. Load STATUS.md frontmatter; display: "[name] — [N] section(s) built. [M] pending amendment(s). Last session: [date] by [user] — [summary]."
-5. If `drafts:` non-empty (use `blueprintPath` discovered by watson-init during branch switch):
+1. Session recovery: if `/tmp/watson-session-end.json` exists, run session recovery first (same steps as Path A step 1) before proceeding.
+2. Invoke `@utilities/watson-init.md` branch-list operation — watson-init gathers all branch data (branch list, STATUS.md reads, last commit dates) in a single batched bash script to minimize visible terminal blocks, groups into "Your prototypes" (by ownership) and expandable "Browse other prototypes", tags inactive branches (30+ days) with [INACTIVE] prefix
+3. User selects branch; watson-init handles: inactive-branch options (continue / delete / reset timer), auto-commit guard, `git checkout watson/{slug}`, missing-branch recovery (try remote, else offer fresh branch or return to list), health check
+4. Watson-init updates `/tmp/watson-active.json` with `"branch": "watson/{slug}"`
+5. Load STATUS.md frontmatter; display: "[name] — [N] section(s) built. [M] pending amendment(s). Last session: [date] by [user] — [summary]."
+6. If `drafts:` non-empty (use `blueprintPath` discovered by watson-init during branch switch):
    Scan {blueprintPath}/LAYOUT.md, DESIGN.md, INTERACTION.md for [PENDING] lines; render grouped by file.
    AskUserQuestion — header: "Pending", question: "[diff]\n\nWhat would you like to do?",
    options: ["Commit all", "Discard all", "Keep pending and continue"]
    - "Commit all": replace all [PENDING]→[COMMITTED] in blueprint files (Edit), set `drafts: []` (Edit), proceed
    - "Discard all": delete all [PENDING] lines from blueprint files (Edit), set `drafts: []` (Edit), confirm discarded, proceed
    - "Keep pending and continue": proceed to Intent Classification unchanged
-6. Proceed to Intent Classification
+7. Proceed to Intent Classification
 
 ---
 
