@@ -339,7 +339,10 @@ For the checked-out branch, use the filesystem instead: `find . -path '*/bluepri
    - **If recovery also fails (gone from both local and remote):** inform user: "{slug} no longer exists locally or on the remote." AskUserQuestion — header: "Branch Missing", question: "watson/{slug} is no longer available.", options: ["Create a fresh branch with this name", "Return to branch list"]
      - "Create a fresh branch with this name": `git checkout main && git checkout -b watson/{slug}`, then re-scaffold via Phase 0 branch creation + blueprint scaffold
      - "Return to branch list": re-enter Branch List and Switching from step 1
-   - **Health check after switch:** discover blueprint path via Blueprint Discovery (filesystem variant since branch is now checked out). Verify `{blueprintPath}/STATUS.md` exists. If missing, inform user and offer to re-scaffold via watson-init.
+   - **Health check after switch:** discover blueprint path via Blueprint Discovery (filesystem variant since branch is now checked out). Verify `{blueprintPath}/STATUS.md` exists. If STATUS.md is missing or blueprint path could not be discovered:
+     AskUserQuestion — header: "Missing Blueprint", question: "This branch doesn't have a blueprint yet. Would you like to create one?", options: ["Yes, create blueprint", "Cancel"]
+     - "Yes, create blueprint": determine prototype directory from branch name (strip `watson/` prefix, find matching directory in `src/pages/`). If directory found, scaffold 5 template files in `{protoDir}/blueprint/` using the Template Content section. Set `blueprintPath`. If no matching directory, ask user for the prototype path.
+     - "Cancel": return to branch list.
 7. Update `/tmp/watson-active.json` via Edit tool: add `"branch": "watson/{slug}"` (and `"actions": []` if not present)
 
 ---
