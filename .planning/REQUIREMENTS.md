@@ -36,13 +36,13 @@ Requirements for Watson 1.3: User Experience & Commands. Each maps to roadmap ph
 
 - [x] **STAT-01**: `/watson:status` displays current prototype state: name, branch, sections built, pending amendments count, session history (last 3), and suggested next action
 - [x] **STAT-02**: `/watson:status` does not require or trigger full Watson activation — it's a read-only inspection command
-- [ ] **RESM-01**: `/watson:resume` reconstructs Watson context from persistent state (STATUS.md + blueprint files) after a context reset
-- [ ] **RESM-02**: `/watson:resume` offers the appropriate next action based on state: if CONTEXT.md populated but nothing built → offer build; if sections built but amendments pending → offer rebuild; if mid-discussion → summarize and continue
+- [x] **RESM-01**: `/watson:resume` reconstructs Watson context from persistent state (STATUS.md + blueprint files) after a context reset
+- [x] **RESM-02**: `/watson:resume` offers the appropriate next action based on state: if CONTEXT.md populated but nothing built → offer build; if sections built but amendments pending → offer rebuild; if mid-discussion → summarize and continue
 
 ### Commands — Session Lifecycle
 
-- [ ] **SESS-01**: `/watson:off` displays a session summary before deactivating (what was discussed, what was built, pending amendments)
-- [ ] **SESS-02**: If blueprint files are empty or template-only when `/watson:off` runs, Watson prompts the user to run `/watson:save-blueprint` before deactivating
+- [x] **SESS-01**: `/watson:off` displays a session summary before deactivating (what was discussed, what was built, pending amendments)
+- [x] **SESS-02**: If blueprint files are empty or template-only when `/watson:off` runs, Watson prompts the user to run `/watson:save-blueprint` before deactivating
 
 ### Commands — Standalone Entry Points
 
@@ -91,10 +91,10 @@ Deferred to next milestone (Discuss Refactor). Tracked but not in current roadma
 | SAVE-04 | Phase 17 | Complete |
 | STAT-01 | Phase 18 | Complete |
 | STAT-02 | Phase 18 | Complete |
-| RESM-01 | Phase 18 | Pending |
-| RESM-02 | Phase 18 | Pending |
-| SESS-01 | Phase 18 | Pending |
-| SESS-02 | Phase 18 | Pending |
+| RESM-01 | Phase 18 | Complete |
+| RESM-02 | Phase 18 | Complete |
+| SESS-01 | Phase 18 | Complete |
+| SESS-02 | Phase 18 | Complete |
 | STND-01 | Phase 19 | Pending |
 | STND-02 | Phase 19 | Pending |
 | STND-03 | Phase 19 | Pending |
