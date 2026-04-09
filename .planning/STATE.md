@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 17-save-blueprint-command plan 01
-last_updated: "2026-04-09T14:50:33.322Z"
+stopped_at: Completed 17-save-blueprint-command plan 02
+last_updated: "2026-04-09T14:53:33.303Z"
 last_activity: 2026-04-09 — v1.3 roadmap written, 21 requirements mapped across 4 phases
 progress:
   total_phases: 7
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 9
-  completed_plans: 8
+  completed_plans: 9
   percent: 0
 ---
 
@@ -48,6 +48,7 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 16-opt-in-activation-model]: Scaffold commit removed from Branch Creation step 7 — first commit deferred to meaningful work (discuss/loupe/save-blueprint)
 - [Phase 17-save-blueprint-command]: save-blueprint runs as single-pass analysis (not agent dispatch) because full conversation context is required
 - [Phase 17-save-blueprint-command]: [INFERRED] markers removed on user confirmation during discuss bridge — no [CONFIRMED] marker; Watson stays inactive after non-Watson path (no watson-active.json written)
+- [Phase 17-save-blueprint-command]: save-blueprint added as explicit shortcut only (not tier-classified); [INFERRED] skip parity with [PENDING] in builder amendment filter
 
 ### Pending Todos
 
@@ -64,6 +65,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-09T14:50:33.320Z
-Stopped at: Completed 17-save-blueprint-command plan 01
+Last session: 2026-04-09T14:53:33.300Z
+Stopped at: Completed 17-save-blueprint-command plan 02
 Resume: Run `/gsd:plan-phase 16` to begin planning Phase 16 (Opt-in Activation Model)
