@@ -18,7 +18,7 @@ Translate LAYOUT.md and DESIGN.md spec files for an assigned section into compil
 5. Do NOT fetch Figma data — work entirely from spec files; no MCP Figma calls
 6. Do NOT use AskUserQuestion or any foreground-only tool — this agent runs in background
 7. INTERACTION.md is optional — if absent, proceed with library component built-in states only; do not generate custom interaction code
-8. Only apply `[COMMITTED]` amendments from blueprint files — skip `[PENDING]` lines entirely. Lines without a marker prefix (pre-Phase-7) are treated as committed for backwards compatibility
+8. Only apply `[COMMITTED]` amendments from blueprint files — skip `[PENDING]` and `[INFERRED]` lines entirely. Lines without a marker prefix (pre-Phase-7) are treated as committed for backwards compatibility
 
 ## Red Flags
 
@@ -27,13 +27,13 @@ If you catch yourself thinking any of these, stop and re-check — you are about
 | If you're thinking... | Stop. The real issue is... |
 |---|---|
 | "This hex color is close enough to the token" | Look up the exact token name in DESIGN.md. "Close enough" means you didn't look it up. If no token maps, use the raw value with a TODO comment — never a "close enough" token. |
-| "The amendment is obviously what the user wants" | Check for the `[COMMITTED]` prefix. `[PENDING]` means the user has NOT confirmed this decision. Skip it regardless of how obvious it seems. |
+| "The amendment is obviously what the user wants" | Check for the `[COMMITTED]` prefix. `[PENDING]` means the user has NOT confirmed this decision. `[INFERRED]` means Watson guessed — even less confirmed. Skip both regardless of how obvious it seems. |
 | "I'll just hardcode this one spacing value" | Find the token in LAYOUT.md or the library. If truly unmapped, use the raw value with `/* TODO: unmapped */`. One hardcoded value becomes ten. |
 | "This component is basically the same as what the spec says" | Use the exact component name + variant from DESIGN.md. "Basically the same" means a different component. If DESIGN.md says `Button variant="secondary"`, do not use `Button variant="outline"` even if they look similar. |
 | "The nesting is too deep, I'll flatten this" | Match the LAYOUT.md ASCII tree exactly. Nesting depth is a design decision made during discuss or extracted from Figma — not a build-time optimization. |
 | "I'll clean up the surrounding code while I'm here" | Your scope is between `startLine` and `endLine`. Everything outside is a protected zone. Cleaning up adjacent code violates Constraint 3. |
 | "This import path looks wrong, let me use a better one" | Use the library book import path first (Step 6, Import Resolution). Only fall back to the existing file's import if the library path fails to compile. Do not invent import paths. |
-| "I don't need to check the amendments, they probably don't affect this section" | Read the amendments. Filter mechanically: skip `[PENDING]`, apply `[COMMITTED]`. The word "probably" means you skipped Step 1's amendment filter. |
+| "I don't need to check the amendments, they probably don't affect this section" | Read the amendments. Filter mechanically: skip `[PENDING]` and `[INFERRED]`, apply `[COMMITTED]`. The word "probably" means you skipped Step 1's amendment filter. |
 | "This section is simple enough to do from memory" | Read the spec files. Every section, regardless of complexity, follows the same Step 1-9 sequence. "From memory" means you're generating from training data, not from the spec. |
 | "The TODO comment format doesn't matter that much" | Use the exact locked format: `{/* TODO: unmapped — closest library: [Name] (gap: [reason]); raw: prop="value" */}`. The reviewer checks for this exact format. Deviation = reviewer FAIL. |
 
@@ -61,6 +61,7 @@ Read `layoutPath` (LAYOUT.md) and `designPath` (DESIGN.md). Check if INTERACTION
 
 **Amendment filter:** Read `{blueprintPath}/LAYOUT.md`, `{blueprintPath}/DESIGN.md`, and `{blueprintPath}/INTERACTION.md` (if it exists). Locate the `## Discuss Amendments` section in each. Filter each amendment line:
 - Lines starting with `[PENDING] `: **skip entirely** — uncommitted decisions, not ready for build
+- Lines starting with `[INFERRED] `: **skip entirely** — unconfirmed decisions from save-blueprint extraction, not ready for build
 - Lines starting with `[COMMITTED] `: **apply** — strip the `[COMMITTED] ` prefix before using
 - Lines with no marker prefix (pre-Phase-7 format): **apply as-is** — backwards compatibility
 
