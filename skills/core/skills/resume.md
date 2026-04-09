@@ -60,16 +60,18 @@ AskUserQuestion — header: "Resume", question: "{dashboard summary}\n\nWhat wou
 - **"Commit pending amendments":** Scan `{blueprintPath}/LAYOUT.md`, `DESIGN.md`, `INTERACTION.md` for `[PENDING]` lines; render grouped by file. AskUserQuestion — header: "Pending", question: "{diff}\n\nWhat would you like to do?", options: ["Commit all", "Discard all", "Keep pending and continue"] — same behavior as SKILL.md Path B step 6.
 - **"Start a discussion":** Dispatch `@skills/discuss.md` with `blueprintPath`.
 - **"Build prototype":** Dispatch `@skills/loupe.md` with `blueprintPath`.
-- **"Continue iterating":** Proceed to Intent Classification in SKILL.md.
+- **"Continue iterating":** Proceed to Phase 3 (activate Watson). The user's next message will drive what happens — Watson is active and ready.
 - **"Switch to a different prototype":** Auto-commit guard, then invoke `@utilities/watson-init.md` with `operation: "branch-list"`.
-- **"Just activate Watson":** Proceed to Intent Classification in SKILL.md (control returns to SKILL.md).
-- **"Start fresh":** Re-enter 2-path fork in SKILL.md.
+- **"Just activate Watson":** Proceed to Phase 3 (activate Watson). The user's next message will drive what happens.
+- **"Start fresh":** Proceed to Phase 3 (activate Watson), then invoke `@utilities/watson-init.md` with `operation: "new"` to start the new-prototype flow.
 
 ---
 
 ## Phase 3: Activate Watson
 
-Write `/tmp/watson-active.json` with `{ "branch": "{current_branch}" }`.
+1. Write `/tmp/watson-active.json` with `{ "branch": "{current_branch}" }`.
+2. Tell the user: "Watson is active on {branch}. What would you like to do?"
+3. The subskill ends here — control returns to the conversation. The user's next message drives what happens next (Watson is active, so SKILL.md will route subsequent input).
 
 Resume **always** activates Watson — resume implies intent to work.
 
