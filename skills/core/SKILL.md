@@ -5,9 +5,15 @@ description: Design discussion and prototype building for the Faire Prototype Pl
 
 # Watson
 
-Watson is a session-level toggle — ON or OFF for the entire Claude Code session. Activate with /watson, deactivate with /watson off. When ON, Watson handles all design-related messages; Tier 0 passthrough still catches non-design work. When OFF, Watson is completely silent.
+**Gate (runs before everything else):**
+1. If the user's message contains `/watson` as a standalone word or at message start — explicit invocation. Skip gate, proceed to activation below.
+2. If `/tmp/watson-declined.json` exists — Watson was declined this session. Exit silently.
+3. Otherwise this is a description-match activation. Show AskUserQuestion — header: "Watson", question: "Want Watson's help with this?", options: ["Yes, activate Watson", "Not right now", "No, don't ask again this session"]. "Yes" → proceed to activation. "Not right now" → exit silently (may ask again on future matches). "No, don't ask again this session" → write `/tmp/watson-declined.json` `{"declined": true}`, exit silently.
 
-On load, write state file: `echo '{}' > /tmp/watson-active.json`
+**Activation (after gate passes — explicit /watson or user said "Yes"):**
+Watson is a session-level toggle — ON or OFF for the entire Claude Code session. Activate with /watson, deactivate with /watson off. When ON, Watson handles all design-related messages; Tier 0 passthrough (active session only) catches non-design work. When OFF, Watson is completely silent.
+
+Write state file: `echo '{}' > /tmp/watson-active.json`
 
 **Session recovery:** After writing the state file, check if `/tmp/watson-session-end.json` exists. If yes, read `{branch, actions, timestamp}`, discover the blueprint path (`git ls-tree -r --name-only {branch} | grep 'blueprint/STATUS.md$' | head -1`, strip `/STATUS.md`), read STATUS.md via `git show {branch}:{blueprintPath}/STATUS.md`, compile actions into summary (join with ", ", truncate at 80 chars), prepend new session entry to STATUS.md `sessions:` array (drop oldest if count >= 10), delete `/tmp/watson-session-end.json`. Then continue with normal activation flow.
 
@@ -34,7 +40,7 @@ On load, write state file: `echo '{}' > /tmp/watson-active.json`
 2. Delete `/tmp/watson-active.json` (bash: `rm -f /tmp/watson-active.json`)
 3. Respond "Watson deactivated for this session.", then exit. Do not proceed to 2-path fork.
 
-**Tier 0 passthrough (before fork):** If the message is pure coding/git/config with no design intent AND the current directory has no `watson/*` branches (`git branch --list 'watson/*'` returns empty) AND no `blueprint/` directory AND `/watson` was not explicitly invoked — **stay silent.** Defer to default Claude.
+**Tier 0 passthrough (active session only):** If Watson is already active and the message is pure coding/git/config with no design intent — stay silent. Defer to default Claude.
 
 **Session greeting:** Read and display the banner from `@references/watson-banner.md`. Display it once at the start of every `/watson` session, before the fork below.
 
@@ -187,16 +193,14 @@ Handle each status as an **explicit case** — no fallthrough:
 
 ## Red Flags
 
-If you catch yourself thinking any of these, stop and re-check — you are about to misroute:
-
 | If you're thinking... | Stop. The real issue is... |
 |---|---|
-| "This is a simple design request, I'll just answer it inline" | If Watson is active, design questions go through discuss — even simple ones. Complexity scaling inside discuss handles simplicity. Answering inline bypasses blueprint persistence and the discuss→build contract. |
+| "This is a simple design request, I'll just answer it inline" | If Watson is active, design questions go through discuss — even simple ones. Answering inline bypasses blueprint persistence and the discuss→build contract. |
 | "The user clearly wants to build, I'll skip to Tier 2" | Check the classification table. Multiple unknowns or template-only CONTEXT.md = Tier 1 regardless of how eager the user sounds. Only Tier 2 when CONTEXT.md is populated AND scope is clear AND bounded. |
 | "I'll just write a quick CONTEXT.md and dispatch loupe" | The minimal CONTEXT.md path exists only for explicit Tier 2 with no prior discuss and clear scope. If there are open design questions, route to discuss — a thin CONTEXT.md with gaps produces a bad build. |
-| "This isn't really a design question" | If the user is on a `watson/*` branch with a `blueprint/` directory, it's a design context. Only Tier 0 passthrough applies when there are NO watson branches AND no blueprint AND no explicit /watson invocation. All three conditions must be true. |
-| "I'll handle this brainstorming/exploration myself" | Skill exclusivity: Watson's discuss handles all design exploration. Do not invoke superpowers:brainstorming or do ad-hoc creative exploration inline. Discuss has library grounding and blueprint persistence — inline exploration has neither. |
-| "The pending amendments don't matter for this build" | Check STATUS.md `drafts:`. If non-empty, show the pending warning before dispatching loupe. The user must explicitly choose "build without pending" — you cannot make that choice for them. |
+| "This isn't really a design question" | If Watson is active and the user is on a `watson/*` branch with a `blueprint/` directory, it's a design context. Route to discuss or Tier 0 passthrough as appropriate. |
+| "I'll handle this brainstorming/exploration myself" | Skill exclusivity: Watson's discuss handles all design exploration. Do not invoke superpowers:brainstorming or do ad-hoc exploration inline. |
+| "The pending amendments don't matter for this build" | Check STATUS.md `drafts:`. If non-empty, show the pending warning before dispatching loupe. The user must explicitly choose "build without pending." |
 
 ---
 
