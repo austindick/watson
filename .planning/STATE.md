@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 19-01-PLAN.md
-last_updated: "2026-04-09T17:02:39.134Z"
+stopped_at: Completed 19-02-PLAN.md
+last_updated: "2026-04-09T17:05:49.790Z"
 last_activity: 2026-04-09 — v1.3 roadmap written, 21 requirements mapped across 4 phases
 progress:
   total_phases: 7
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 13
-  completed_plans: 12
+  completed_plans: 13
   percent: 0
 ---
 
@@ -55,6 +55,7 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 19-standalone-commands-flexible-entry]: discuss and loupe gain Phase -1 preambles; standalone detection is presence/absence of blueprintPath parameter from caller
 - [Phase 19-standalone-commands-flexible-entry]: Conditional activation: only write watson-active.json on watson/* branches; off watson/* branches run capability without session tracking
 - [Phase 19-standalone-commands-flexible-entry]: Standalone chain in discuss.md surfaces /watson:loupe pointer instead of auto-dispatching; SKILL.md continues to own the discuss->loupe chain
+- [Phase 19-standalone-commands-flexible-entry]: direct-input mode added to watson-init as Phase 0C; SKILL.md Path B routes pasted flexible input to direct-input with offerConversion: true; colon-variants documented as bypassing SKILL.md
 
 ### Pending Todos
 
@@ -71,6 +72,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-09T17:02:39.131Z
-Stopped at: Completed 19-01-PLAN.md
+Last session: 2026-04-09T17:05:49.787Z
+Stopped at: Completed 19-02-PLAN.md
 Resume: Run `/gsd:plan-phase 16` to begin planning Phase 16 (Opt-in Activation Model)

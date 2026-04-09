@@ -52,8 +52,8 @@ Requirements for Watson 1.3: User Experience & Commands. Each maps to roadmap ph
 
 ### Flexible Navigation
 
-- [ ] **FLEX-01**: "Continue existing" accepts a pasted branch name, Playground URL, or directory path in addition to the watson/* branch list
-- [ ] **FLEX-02**: When a user pastes a non-watson/* branch or directory, Watson discovers the blueprint path dynamically and adapts
+- [x] **FLEX-01**: "Continue existing" accepts a pasted branch name, Playground URL, or directory path in addition to the watson/* branch list
+- [x] **FLEX-02**: When a user pastes a non-watson/* branch or directory, Watson discovers the blueprint path dynamically and adapts
 
 ## v1.4 Requirements
 
@@ -98,8 +98,8 @@ Deferred to next milestone (Discuss Refactor). Tracked but not in current roadma
 | STND-01 | Phase 19 | Complete |
 | STND-02 | Phase 19 | Complete |
 | STND-03 | Phase 19 | Complete |
-| FLEX-01 | Phase 19 | Pending |
-| FLEX-02 | Phase 19 | Pending |
+| FLEX-01 | Phase 19 | Complete |
+| FLEX-02 | Phase 19 | Complete |
 
 **Coverage:**
 - v1.3 requirements: 21 total
