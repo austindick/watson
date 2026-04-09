@@ -20,10 +20,10 @@ Requirements for Watson 1.3: User Experience & Commands. Each maps to roadmap ph
 
 - [x] **ACTV-01**: Watson never auto-activates — skill description matching does not trigger a full Watson session without user confirmation
 - [x] **ACTV-02**: When Watson detects a potential design context, it asks "Want Watson's help?" via AskUserQuestion before activating
-- [ ] **ACTV-03**: "New prototype or continue existing?" is the first question presented after `/watson` invocation — before any branch detection, session recovery, or status checks
-- [ ] **ACTV-04**: Branch detection, session recovery, and status checks run after the user's initial choice, ideally batched or backgrounded to minimize visible tool calls
-- [ ] **ACTV-05**: Blueprint scaffold files are not committed until the first meaningful change (discuss write, build output, or manual save) — no 20-second empty commit on startup
-- [ ] **ACTV-06**: Startup tool calls are consolidated into fewer visible terminal blocks (batch bash commands into a single script where possible)
+- [x] **ACTV-03**: "New prototype or continue existing?" is the first question presented after `/watson` invocation — before any branch detection, session recovery, or status checks
+- [x] **ACTV-04**: Branch detection, session recovery, and status checks run after the user's initial choice, ideally batched or backgrounded to minimize visible tool calls
+- [x] **ACTV-05**: Blueprint scaffold files are not committed until the first meaningful change (discuss write, build output, or manual save) — no 20-second empty commit on startup
+- [x] **ACTV-06**: Startup tool calls are consolidated into fewer visible terminal blocks (batch bash commands into a single script where possible)
 
 ### Commands — Save Blueprint
 
@@ -81,10 +81,10 @@ Deferred to next milestone (Discuss Refactor). Tracked but not in current roadma
 |-------------|-------|--------|
 | ACTV-01 | Phase 16 | Complete |
 | ACTV-02 | Phase 16 | Complete |
-| ACTV-03 | Phase 16 | Pending |
-| ACTV-04 | Phase 16 | Pending |
-| ACTV-05 | Phase 16 | Pending |
-| ACTV-06 | Phase 16 | Pending |
+| ACTV-03 | Phase 16 | Complete |
+| ACTV-04 | Phase 16 | Complete |
+| ACTV-05 | Phase 16 | Complete |
+| ACTV-06 | Phase 16 | Complete |
 | SAVE-01 | Phase 17 | Pending |
 | SAVE-02 | Phase 17 | Pending |
 | SAVE-03 | Phase 17 | Pending |

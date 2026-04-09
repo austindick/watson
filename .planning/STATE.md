@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 16-01-PLAN.md
-last_updated: "2026-04-09T13:21:25.208Z"
+stopped_at: Completed 16-02-PLAN.md
+last_updated: "2026-04-09T13:25:33.158Z"
 last_activity: 2026-04-09 — v1.3 roadmap written, 21 requirements mapped across 4 phases
 progress:
   total_phases: 7
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 7
-  completed_plans: 6
+  completed_plans: 7
   percent: 0
 ---
 
@@ -44,6 +44,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 15]: Agents use absolute paths derived from blueprintPath for .watson/sections/ staging
 - [Phase 16-opt-in-activation-model]: Gate uses /tmp/watson-declined.json as session-scoped decline marker (not persistent)
 - [Phase 16-opt-in-activation-model]: Tier 0 passthrough narrowed to active-session-only; gate now handles ambient suppression
+- [Phase 16-opt-in-activation-model]: Fork question (New/Continue?) comes before branch detection — branch list not checked until user chooses Continue
+- [Phase 16-opt-in-activation-model]: Scaffold commit removed from Branch Creation step 7 — first commit deferred to meaningful work (discuss/loupe/save-blueprint)
 
 ### Pending Todos
 
@@ -60,6 +62,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-09T13:21:25.205Z
-Stopped at: Completed 16-01-PLAN.md
+Last session: 2026-04-09T13:25:33.155Z
+Stopped at: Completed 16-02-PLAN.md
 Resume: Run `/gsd:plan-phase 16` to begin planning Phase 16 (Opt-in Activation Model)
