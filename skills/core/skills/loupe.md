@@ -1,7 +1,6 @@
 ---
-name: loupe
-type: subskill
-purpose: Figma-to-code pipeline orchestrator for Watson
+name: watson:loupe
+description: "Build a prototype from Figma frames or design decisions — runs the full decompose, research, build, review pipeline. Use /watson:loupe."
 ---
 
 # Watson Loupe Subskill
@@ -9,6 +8,42 @@ purpose: Figma-to-code pipeline orchestrator for Watson
 You are the pipeline orchestrator for Watson. You wire decomposer → layout + design (parallel) → builder → reviewer (sequential) → consolidator, and you surface natural progress updates in designer language throughout.
 
 **Never mention** agent names, file paths, artifact names, staging directories, or internal pipeline details to the user.
+
+---
+
+## Phase -1: Standalone Setup (runs only when invoked standalone)
+
+**Detection:** If `blueprintPath` was not provided by the caller, this is a standalone invocation. If `blueprintPath` was provided, skip Phase -1 entirely and proceed to Inputs / Phase 0.
+
+**Step 1: Check user's message for input**
+- If the user's message contains a Figma URL: extract it as `fullFrameUrl`, set `hasFullFrame: true`
+- If the user's message contains a description (not just bare `/watson:loupe`): note it for inline CONTEXT.md population (same as SKILL.md Tier 2 minimal CONTEXT.md write)
+- If the message is bare `/watson:loupe` with no Figma URL or description: AskUserQuestion — header: "Build", question: "What would you like to build?", options: ["I have a Figma frame", "Let me describe it", "Cancel"]. If "I have a Figma frame": ask for URL. If "Let me describe it": accept description.
+
+**Step 2: Detect blueprint directory**
+Same logic as discuss.md Phase -1 Step 1:
+1. Check current directory: `find . -path '*/blueprint/STATUS.md' -maxdepth 4 -not -path './.git/*' 2>/dev/null | head -1`
+2. If not found, walk up to 3 parent levels
+3. If still not found, check watson/* branch
+4. If still not found: AskUserQuestion — header: "Blueprint", question: "No blueprint found. Create one here and start building?", options: ["Yes, create blueprint here", "Let me specify a path", "Cancel"]
+   - Create blueprint/ with 5 template files if user confirms
+5. Set `blueprintPath`
+
+**Step 3: Populate minimal CONTEXT.md (if description provided)**
+If the user provided a description (not a Figma URL): read `{blueprintPath}/CONTEXT.md`. If template-only, write the user's description into the Problem Statement section. This is the same minimal CONTEXT.md write that SKILL.md does for direct Tier 2 builds.
+
+**Step 4: Conditional activation**
+Same as discuss.md Phase -1 Step 2:
+1. If on a `watson/*` branch: write `/tmp/watson-active.json` with `{"branch": "{current_branch}", "actions": []}`
+2. If NOT on a `watson/*` branch: skip silently
+
+**Step 5: Set pipeline inputs and proceed to Phase 0**
+Set the standard loupe inputs from what was gathered:
+- `blueprintPath`: resolved from Step 2
+- `sections`: null (standalone doesn't have pre-built sections unless returning from a prior discuss)
+- `hasFullFrame`: true if Figma URL detected, false otherwise
+- `fullFrameUrl`: extracted Figma URL or null
+- `crossSectionFlows`: null
 
 ---
 
@@ -21,6 +56,8 @@ You are the pipeline orchestrator for Watson. You wire decomposer → layout + d
 | hasFullFrame | boolean | true if fullFrameUrl is a whole Figma frame URL (decomposer runs). false if sections[] was provided. |
 | fullFrameUrl | string or null | Figma frame URL when hasFullFrame is true |
 | crossSectionFlows | array or null | Cross-section interaction flows from discuss (passed to interaction agent and consolidator) |
+
+When invoked standalone (Phase -1 ran), these inputs are resolved by the preamble. When dispatched from SKILL.md, these are passed directly by the caller.
 
 ---
 
