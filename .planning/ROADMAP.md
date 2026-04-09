@@ -174,11 +174,12 @@ Plans:
   2. `/watson:loupe` invoked without a prior `/watson` session starts the build pipeline directly
   3. Discuss and loupe standalone sessions write blueprint files and update STATUS.md identically to the full Watson flow
   4. "Continue existing" accepts a pasted branch name, Playground URL, or directory path and resolves the correct blueprint — not just the watson/* branch list
-**Plans**: 2 plans
+**Plans**: 3 plans
 
 Plans:
-- [ ] 19-01-PLAN.md — Add standalone preambles to discuss.md and loupe.md, register watson:discuss and watson:loupe in plugin manifest (STND-01, STND-02, STND-03)
-- [ ] 19-02-PLAN.md — Add direct-input mode to watson-init for flexible continue, refactor SKILL.md routing (FLEX-01, FLEX-02, STND-01, STND-02)
+- [x] 19-01-PLAN.md — Add standalone preambles to discuss.md and loupe.md, register watson:discuss and watson:loupe in plugin manifest (STND-01, STND-02, STND-03)
+- [x] 19-02-PLAN.md — Add direct-input mode to watson-init for flexible continue, refactor SKILL.md routing (FLEX-01, FLEX-02, STND-01, STND-02)
+- [ ] 19-03-PLAN.md — UAT gap closure: loupe targetFilePath auto-resolve, URL/slug branch search, scaffold offer (STND-02, FLEX-01, FLEX-02)
 
 ## Progress
 
@@ -193,4 +194,4 @@ Plans:
 | 16. Opt-in Activation Model | v1.3 | 2/2 | Complete | 2026-04-09 |
 | 17. Save Blueprint Command | v1.3 | 2/2 | Complete | 2026-04-09 |
 | 18. Recovery & Lifecycle Commands | v1.3 | 2/2 | Complete | 2026-04-09 |
-| 19. Standalone Commands & Flexible Entry | 2/2 | Complete    | 2026-04-09 | - |
+| 19. Standalone Commands & Flexible Entry | v1.3 | 2/3 | In Progress | - |
