@@ -5,5 +5,12 @@
     "name": "Austin Dick",
     "url": "https://github.com/austindick"
   },
-  "repository": "https://github.com/austindick/watson"
+  "repository": "https://github.com/austindick/watson",
+  "skills": [
+    {
+      "name": "watson:status",
+      "path": "skills/core/skills/status.md",
+      "description": "Check the status of your Watson prototype — sections built, pending amendments, session history."
+    }
+  ]
 }
