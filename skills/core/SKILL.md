@@ -104,6 +104,7 @@ After collecting answers:
 - `/watson discuss` → Tier 1 (discuss)
 - `/watson loupe` → Tier 2 (build)
 - `/watson help` → Help response (see Routing below)
+- `/watson save-blueprint` → Dispatch `@skills/save-blueprint.md` with `blueprintPath` (resolved via Blueprint Discovery if Watson is active, or let save-blueprint handle detection if not)
 - "switch prototype / work on something else / open {name}" → write session entry (same sequence as `/watson off` steps 1a–1f above), then auto-commit (`watson: checkpoint`), re-enter 2-path fork. Watson stays ON throughout.
 
 **Check for Figma URL in the message** → flag as a build signal (figmaUrl detected)
@@ -183,6 +184,8 @@ Handle each status as an **explicit case** — no fallthrough:
 - **`ready_for_build`:** Say "Great, I have what I need — building now." Dispatch `@skills/loupe.md` with `blueprintPath`, `sections[]`, `hasFullFrame`, `fullFrameUrl`, `crossSectionFlows` from the return status.
 - **`discussion_only`:** Say "Decisions saved to your blueprint. When you're ready to build, just say /watson and I'll pick up where we left off." Exit.
 - **`cancelled`:** Acknowledge gracefully. Exit.
+
+**Note:** When discuss is dispatched by save-blueprint (gap discussion), it returns to save-blueprint — not this chain. Save-blueprint handles its own post-discuss flow.
 
 **Error handling:** Silent retry once on first failure. On second failure: non-technical explanation with actionable suggestion.
 
