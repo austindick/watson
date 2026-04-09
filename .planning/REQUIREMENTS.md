@@ -3,14 +3,14 @@
 **Defined:** 2026-04-04
 **Core Value:** Every prototype decision is grounded in real context and traceable from idea through prototype to production spec.
 
-## v1.2 Requirements (Complete)
+## v1.2 Requirements
 
-All 15 requirements satisfied. See `milestones/` for archive.
+9 of 15 requirements fully satisfied. 6 have verification gaps (Phase 15 missing VERIFICATION.md). See `milestones/` for archive.
 
 - [x] PLUG-01 through PLUG-05: Plugin infrastructure (Phase 13)
 - [x] HOOK-01 through HOOK-04: Hook migration (Phase 14)
-- [x] DIST-01 through DIST-04: Distribution (Phase 15)
-- [x] VALD-01, VALD-02: Validation (Phase 15)
+- [ ] DIST-01 through DIST-04: Distribution (Phase 15 → Phase 20 gap closure)
+- [ ] VALD-01, VALD-02: Validation (Phase 15 → Phase 20 gap closure)
 
 ## v1.3 Requirements
 
@@ -79,6 +79,12 @@ Deferred to next milestone (Discuss Refactor). Tracked but not in current roadma
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
+| DIST-01 | Phase 20 | Pending |
+| DIST-02 | Phase 20 | Pending |
+| DIST-03 | Phase 20 | Pending |
+| DIST-04 | Phase 20 | Pending |
+| VALD-01 | Phase 20 | Pending |
+| VALD-02 | Phase 20 | Pending |
 | ACTV-01 | Phase 16 | Complete |
 | ACTV-02 | Phase 16 | Complete |
 | ACTV-03 | Phase 16 | Complete |
@@ -102,8 +108,9 @@ Deferred to next milestone (Discuss Refactor). Tracked but not in current roadma
 | FLEX-02 | Phase 19 | Complete |
 
 **Coverage:**
-- v1.3 requirements: 21 total
-- Mapped to phases: 21
+- v1.2 requirements: 15 total (9 complete, 6 pending — Phase 20)
+- v1.3 requirements: 21 total (21 complete)
+- Mapped to phases: 36
 - Unmapped: 0
 
 ---

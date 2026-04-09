@@ -6,7 +6,7 @@
 - ✅ **Watson 1.0 Foundation** — Phases 1-5 (shipped 2026-04-01)
 - ✅ **Watson 1.1 Ambient Mode & Iteration** — Phases 6-12 (shipped 2026-04-03)
 - ✅ **Watson 1.2 Plugin Deployment** — Phases 13-15 (shipped 2026-04-07)
-- 🚧 **Watson 1.3 User Experience & Commands** — Phases 16-19 (in progress)
+- 🚧 **Watson 1.3 User Experience & Commands** — Phases 16-20 (in progress)
 
 ## Phases
 
@@ -70,6 +70,7 @@ Full details: see Phase Details below (archived inline).
 - [x] **Phase 17: Save Blueprint Command** - `/watson:save-blueprint` retroactively captures session context into blueprint files with gap analysis (completed 2026-04-09)
 - [x] **Phase 18: Recovery & Lifecycle Commands** - `/watson:status`, `/watson:resume`, and `/watson:off` give users visibility and control over session state (completed 2026-04-09)
 - [x] **Phase 19: Standalone Commands & Flexible Entry** - `/watson:discuss` and `/watson:loupe` callable without full session; continue accepts branch, URL, or directory (completed 2026-04-09)
+- [ ] **Phase 20: Audit Gap Closure** - Retroactive Phase 15 verification + README/resume.md integration fixes (gap closure)
 
 ## Phase Details
 
@@ -181,6 +182,22 @@ Plans:
 - [x] 19-02-PLAN.md — Add direct-input mode to watson-init for flexible continue, refactor SKILL.md routing (FLEX-01, FLEX-02, STND-01, STND-02)
 - [ ] 19-03-PLAN.md — UAT gap closure: loupe targetFilePath auto-resolve, URL/slug branch search, scaffold offer (STND-02, FLEX-01, FLEX-02)
 
+### Phase 20: Audit Gap Closure
+**Goal**: Close all process gaps from Phase 15 (missing VERIFICATION.md, incomplete SUMMARY frontmatter) and fix two integration issues (README ambient rule contradiction, resume.md prose control transfer)
+**Depends on**: Phase 19
+**Requirements**: VALD-01, VALD-02, DIST-01, DIST-02, DIST-03, DIST-04
+**Gap Closure:** Closes gaps from v1.0-MILESTONE-AUDIT.md
+**Success Criteria** (what must be TRUE):
+  1. Phase 15 VERIFICATION.md exists and confirms all 6 requirements (DIST-01-04, VALD-01-02)
+  2. 15-02 SUMMARY frontmatter `requirements_completed` includes VALD-01, VALD-02
+  3. README.md no longer instructs users to copy watson-ambient.md — documents `/watson` invocation instead
+  4. resume.md Phase 3 describes actual mechanism (write watson-active.json, tell user, await next message) instead of prose "Proceed to Intent Classification"
+  5. Re-running `/gsd:audit-milestone` returns status: passed
+**Plans**: 1 plan
+
+Plans:
+- [ ] 20-01-PLAN.md — Retroactive Phase 15 verification, SUMMARY frontmatter fix, README /watson docs, resume.md control transfer fix
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -194,4 +211,5 @@ Plans:
 | 16. Opt-in Activation Model | v1.3 | 2/2 | Complete | 2026-04-09 |
 | 17. Save Blueprint Command | v1.3 | 2/2 | Complete | 2026-04-09 |
 | 18. Recovery & Lifecycle Commands | v1.3 | 2/2 | Complete | 2026-04-09 |
-| 19. Standalone Commands & Flexible Entry | 3/3 | Complete   | 2026-04-09 | - |
+| 19. Standalone Commands & Flexible Entry | v1.3 | 3/3 | Complete | 2026-04-09 |
+| 20. Audit Gap Closure | v1.3 | 0/1 | Pending | — |
