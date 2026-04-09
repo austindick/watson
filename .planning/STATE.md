@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 19-02-PLAN.md
-last_updated: "2026-04-09T17:08:43.196Z"
+stopped_at: Completed 19-03-PLAN.md
+last_updated: "2026-04-09T20:12:55.425Z"
 last_activity: 2026-04-09 — v1.3 roadmap written, 21 requirements mapped across 4 phases
 progress:
   total_phases: 7
   completed_phases: 7
-  total_plans: 13
-  completed_plans: 13
+  total_plans: 14
+  completed_plans: 14
   percent: 0
 ---
 
@@ -56,6 +56,9 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 19-standalone-commands-flexible-entry]: Conditional activation: only write watson-active.json on watson/* branches; off watson/* branches run capability without session tracking
 - [Phase 19-standalone-commands-flexible-entry]: Standalone chain in discuss.md surfaces /watson:loupe pointer instead of auto-dispatching; SKILL.md continues to own the discuss->loupe chain
 - [Phase 19-standalone-commands-flexible-entry]: direct-input mode added to watson-init as Phase 0C; SKILL.md Path B routes pasted flexible input to direct-input with offerConversion: true; colon-variants documented as bypassing SKILL.md
+- [Phase 19-standalone-commands-flexible-entry]: targetFilePath auto-resolved in Phase -1 via protoDir probe (index.tsx -> sole .tsx -> STATUS.md -> null); Phase 3 consumes it if set
+- [Phase 19-standalone-commands-flexible-entry]: Branch search in url/slug handlers is unrestricted (all branches, not just watson/*) enabling prototype/* and other naming conventions
+- [Phase 19-standalone-commands-flexible-entry]: Health check scaffold offer uses AskUserQuestion with Yes/Cancel — explicit pattern matches Phase 0C directory handler
 
 ### Pending Todos
 
@@ -72,6 +75,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-09T17:05:49.787Z
-Stopped at: Completed 19-02-PLAN.md
+Last session: 2026-04-09T20:12:55.422Z
+Stopped at: Completed 19-03-PLAN.md
 Resume: Run `/gsd:plan-phase 16` to begin planning Phase 16 (Opt-in Activation Model)
