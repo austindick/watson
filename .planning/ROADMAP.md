@@ -68,7 +68,7 @@ Full details: see Phase Details below (archived inline).
 
 - [x] **Phase 16: Opt-in Activation Model** - Watson never auto-activates; startup asks intent first, defers housekeeping, eliminates empty commit (completed 2026-04-09)
 - [x] **Phase 17: Save Blueprint Command** - `/watson:save-blueprint` retroactively captures session context into blueprint files with gap analysis (completed 2026-04-09)
-- [ ] **Phase 18: Recovery & Lifecycle Commands** - `/watson:status`, `/watson:resume`, and `/watson:off` give users visibility and control over session state
+- [x] **Phase 18: Recovery & Lifecycle Commands** - `/watson:status`, `/watson:resume`, and `/watson:off` give users visibility and control over session state (completed 2026-04-09)
 - [ ] **Phase 19: Standalone Commands & Flexible Entry** - `/watson:discuss` and `/watson:loupe` callable without full session; continue accepts branch, URL, or directory
 
 ## Phase Details
@@ -191,5 +191,5 @@ Plans:
 | 15. Distribution + Onboarding + Validation | v1.2 | 2/2 | Complete | 2026-04-07 |
 | 16. Opt-in Activation Model | v1.3 | 2/2 | Complete | 2026-04-09 |
 | 17. Save Blueprint Command | v1.3 | 2/2 | Complete | 2026-04-09 |
-| 18. Recovery & Lifecycle Commands | v1.3 | 0/2 | Planning | - |
+| 18. Recovery & Lifecycle Commands | 2/2 | Complete   | 2026-04-09 | - |
 | 19. Standalone Commands & Flexible Entry | v1.3 | 0/? | Not started | - |

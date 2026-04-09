@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 17-save-blueprint-command plan 02
-last_updated: "2026-04-09T14:56:00.093Z"
+stopped_at: Completed 18-02-PLAN.md
+last_updated: "2026-04-09T15:51:51.792Z"
 last_activity: 2026-04-09 — v1.3 roadmap written, 21 requirements mapped across 4 phases
 progress:
   total_phases: 7
-  completed_phases: 5
-  total_plans: 9
-  completed_plans: 9
+  completed_phases: 6
+  total_plans: 11
+  completed_plans: 11
   percent: 0
 ---
 
@@ -49,6 +49,9 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 17-save-blueprint-command]: save-blueprint runs as single-pass analysis (not agent dispatch) because full conversation context is required
 - [Phase 17-save-blueprint-command]: [INFERRED] markers removed on user confirmation during discuss bridge — no [CONFIRMED] marker; Watson stays inactive after non-Watson path (no watson-active.json written)
 - [Phase 17-save-blueprint-command]: save-blueprint added as explicit shortcut only (not tier-classified); [INFERRED] skip parity with [PENDING] in builder amendment filter
+- [Phase 18-recovery-lifecycle-commands]: watson:status is an independent skill (own frontmatter + plugin.json entry) — not dispatched from SKILL.md, ensuring STAT-02 (no Watson activation) by design
+- [Phase 18-recovery-lifecycle-commands]: Plugin manifest gains skills array pattern for independently-discoverable skill entries; watson:status is first entry
+- [Phase 18-recovery-lifecycle-commands]: Resume always writes watson-active.json (activates Watson) unlike status which is read-only; off flow is silent on checkpoint commit; save-blueprint prompt uses _Not yet defined._ as template-only signal
 
 ### Pending Todos
 
@@ -65,6 +68,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-09T14:53:33.300Z
-Stopped at: Completed 17-save-blueprint-command plan 02
+Last session: 2026-04-09T15:51:51.789Z
+Stopped at: Completed 18-02-PLAN.md
 Resume: Run `/gsd:plan-phase 16` to begin planning Phase 16 (Opt-in Activation Model)

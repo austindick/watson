@@ -34,8 +34,8 @@ Requirements for Watson 1.3: User Experience & Commands. Each maps to roadmap ph
 
 ### Commands — Status & Resume
 
-- [ ] **STAT-01**: `/watson:status` displays current prototype state: name, branch, sections built, pending amendments count, session history (last 3), and suggested next action
-- [ ] **STAT-02**: `/watson:status` does not require or trigger full Watson activation — it's a read-only inspection command
+- [x] **STAT-01**: `/watson:status` displays current prototype state: name, branch, sections built, pending amendments count, session history (last 3), and suggested next action
+- [x] **STAT-02**: `/watson:status` does not require or trigger full Watson activation — it's a read-only inspection command
 - [ ] **RESM-01**: `/watson:resume` reconstructs Watson context from persistent state (STATUS.md + blueprint files) after a context reset
 - [ ] **RESM-02**: `/watson:resume` offers the appropriate next action based on state: if CONTEXT.md populated but nothing built → offer build; if sections built but amendments pending → offer rebuild; if mid-discussion → summarize and continue
 
@@ -89,8 +89,8 @@ Deferred to next milestone (Discuss Refactor). Tracked but not in current roadma
 | SAVE-02 | Phase 17 | Complete |
 | SAVE-03 | Phase 17 | Complete |
 | SAVE-04 | Phase 17 | Complete |
-| STAT-01 | Phase 18 | Pending |
-| STAT-02 | Phase 18 | Pending |
+| STAT-01 | Phase 18 | Complete |
+| STAT-02 | Phase 18 | Complete |
 | RESM-01 | Phase 18 | Pending |
 | RESM-02 | Phase 18 | Pending |
 | SESS-01 | Phase 18 | Pending |
