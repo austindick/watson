@@ -6,7 +6,7 @@
 - ✅ **Watson 1.0 Foundation** — Phases 1-5 (shipped 2026-04-01)
 - ✅ **Watson 1.1 Ambient Mode & Iteration** — Phases 6-12 (shipped 2026-04-03)
 - ✅ **Watson 1.2 Plugin Deployment** — Phases 13-15 (shipped 2026-04-07)
-- 🚧 **Watson 1.3 User Experience & Commands** — Phases 16-20 (in progress)
+- 🚧 **Watson 1.3 User Experience & Commands** — Phases 16-21 (in progress)
 
 ## Phases
 
@@ -71,6 +71,7 @@ Full details: see Phase Details below (archived inline).
 - [x] **Phase 18: Recovery & Lifecycle Commands** - `/watson:status`, `/watson:resume`, and `/watson:off` give users visibility and control over session state (completed 2026-04-09)
 - [x] **Phase 19: Standalone Commands & Flexible Entry** - `/watson:discuss` and `/watson:loupe` callable without full session; continue accepts branch, URL, or directory (completed 2026-04-09)
 - [x] **Phase 20: Audit Gap Closure** - Retroactive Phase 15 verification + README/resume.md integration fixes (gap closure) (completed 2026-04-09)
+- [ ] **Phase 21: Tech Debt Wiring Fixes** - Fix resume plugin registration, session hook cleanup, recovery notification text (tech debt from audit)
 
 ## Phase Details
 
@@ -198,6 +199,22 @@ Plans:
 Plans:
 - [ ] 20-01-PLAN.md — Retroactive Phase 15 verification, SUMMARY frontmatter fix, README /watson docs, resume.md control transfer fix
 
+### Phase 21: Tech Debt Wiring Fixes
+**Goal**: Fix all integration wiring issues and broken E2E flows identified by the v1.3 milestone audit — resume command registration, session hook cleanup, recovery notification accuracy
+**Depends on**: Phase 20
+**Requirements**: RESM-01, RESM-02, ACTV-02, SESS-01, SESS-02 (all already satisfied; these are wiring quality fixes)
+**Gap Closure:** Closes integration gaps INT-01 through INT-04, flow gaps FLOW-07 and FLOW-08 from v1.3-MILESTONE-AUDIT.md
+**Success Criteria** (what must be TRUE):
+  1. `/watson:resume` (colon variant) is discoverable as a standalone slash command — resume.md listed in plugin.json commands array
+  2. resume.md "Start fresh" path invokes watson-init without `operation` parameter (not `operation: "new"`)
+  3. `/tmp/watson-declined.json` is cleaned up by `watson-session-start.js` — decline is truly session-scoped
+  4. Recovery notification in `watson-session-start.js` says `/watson:resume` instead of `/watson`
+  5. Re-running `/gsd:audit-milestone` returns no integration gaps and all 8 E2E flows COMPLETE
+**Plans**: 0 plans (not yet planned)
+
+Plans:
+- [ ] 21-01-PLAN.md — Fix resume plugin registration, session hook cleanup, recovery notification (INT-01 through INT-04, FLOW-07, FLOW-08)
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -212,4 +229,5 @@ Plans:
 | 17. Save Blueprint Command | v1.3 | 2/2 | Complete | 2026-04-09 |
 | 18. Recovery & Lifecycle Commands | v1.3 | 2/2 | Complete | 2026-04-09 |
 | 19. Standalone Commands & Flexible Entry | v1.3 | 3/3 | Complete | 2026-04-09 |
-| 20. Audit Gap Closure | 1/1 | Complete   | 2026-04-09 | — |
+| 20. Audit Gap Closure | v1.3 | 1/1 | Complete | 2026-04-09 |
+| 21. Tech Debt Wiring Fixes | v1.3 | 0/1 | Not Started | — |

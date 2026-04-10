@@ -63,7 +63,7 @@ AskUserQuestion — header: "Resume", question: "{dashboard summary}\n\nWhat wou
 - **"Continue iterating":** Proceed to Phase 3 (activate Watson). The user's next message will drive what happens — Watson is active and ready.
 - **"Switch to a different prototype":** Auto-commit guard, then invoke `@utilities/watson-init.md` with `operation: "branch-list"`.
 - **"Just activate Watson":** Proceed to Phase 3 (activate Watson). The user's next message will drive what happens.
-- **"Start fresh":** Proceed to Phase 3 (activate Watson), then invoke `@utilities/watson-init.md` with `operation: "new"` to start the new-prototype flow.
+- **"Start fresh":** Proceed to Phase 3 (activate Watson), then invoke `@utilities/watson-init.md` to start the new-prototype flow.
 
 ---
 
