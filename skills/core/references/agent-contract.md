@@ -28,6 +28,18 @@ Additional parameters for loupe pipeline agents only (layout, design, interactio
 
 ---
 
+## Source Pipeline Parameters
+
+Additional parameters for source pipeline agents only (source-layout, source-design, source-interaction):
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| filePaths | string[] | Resolved component file paths from surface-resolver output |
+| sectionName | string | Section name from surface-resolver output |
+| screenshotPath | string? | Optional page-level screenshot for structural reference |
+
+---
+
 ## Agent Registry
 
 | Agent | File | Dispatch Mode | Agent-Specific Params | Outputs |
@@ -40,6 +52,10 @@ Additional parameters for loupe pipeline agents only (layout, design, interactio
 | reviewer | agents/reviewer.md | background | layoutPath (string), designPath (string), sourceFilePath (string — prototype file to review), sectionScope (string) | in-place fixes to sourceFilePath |
 | consolidator | agents/consolidator.md | background | sectionsGlob (string — glob path to .watson/sections/ directory) | blueprint/LAYOUT.md, blueprint/DESIGN.md, blueprint/INTERACTION.md |
 | librarian | agents/librarian.md | background | mode (enum: generate \| update), sourcePaths (string[] — paths Librarian scans), outputBookPath (string — target library/book/ directory) | library/{book}/BOOK.md + CHAPTER.md files |
+| surface-resolver | agents/surface-resolver.md | foreground | experienceName (string — user-specified surface name to locate in codebase-map book) | sections[] JSON inline (each entry: name, referenceType:"prod-clone", filePaths[], description, sourceSurface) |
+| source-layout | agents/source-layout.md | background | filePaths (string[] — resolved component file paths from surface-resolver), sectionName (string), screenshotPath? (string — optional page screenshot) | .watson/sections/{sectionName}/LAYOUT.md (< 80 lines) |
+| source-design | agents/source-design.md | background | filePaths (string[] — resolved component file paths from surface-resolver), sectionName (string), screenshotPath? (string — optional page screenshot) | .watson/sections/{sectionName}/DESIGN.md (< 80 lines) |
+| source-interaction | agents/source-interaction.md | background | filePaths (string[] — resolved component file paths from surface-resolver), sectionName (string), screenshotPath? (string — optional page screenshot) | .watson/sections/{sectionName}/INTERACTION.md (< 50 lines) |
 
 ---
 
@@ -57,10 +73,13 @@ Dispatch mode is **binary and permanent** per agent. Subskills do not dynamicall
 ### Foreground Agents
 
 - **decomposer** — always foreground. Figma URL is required; if not provided, agent must ask.
+- **surface-resolver** — always foreground. Experience name may need disambiguation; agent must ask via AskUserQuestion.
 
 ### Background Agents
 
 All other agents (layout, design, interaction, builder, reviewer, consolidator, librarian) are always background. They receive all required context via parameters and must not prompt the user.
+
+All source agents (source-layout, source-design, source-interaction) are always background. They receive filePaths[] and all required context via parameters.
 
 - **interaction** — always background. Receives all required context via parameters (`interactionContext` from discuss, or `watsonMode=true` in loupe parallel dispatch).
 
