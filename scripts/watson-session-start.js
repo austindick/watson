@@ -19,8 +19,18 @@ if (fs.existsSync(AMBIENT_RULE)) {
   }
 }
 
+// Decline marker cleanup — ensure "don't ask again" resets each session
+const DECLINE_FILE = '/tmp/watson-declined.json';
+if (fs.existsSync(DECLINE_FILE)) {
+  try {
+    fs.unlinkSync(DECLINE_FILE);
+  } catch (e) {
+    // Non-critical — marker will be stale but won't cause errors
+  }
+}
+
 // Session recovery check — notify if Watson was active before /clear
 const ACTIVE_FILE = '/tmp/watson-active.json';
 if (fs.existsSync(ACTIVE_FILE)) {
-  console.log('\u26a1 Watson was active before /clear. Run /watson to reactivate.');
+  console.log('\u26a1 Watson was active before /clear. Run /watson:resume to pick up where you left off.');
 }
