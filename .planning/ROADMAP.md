@@ -111,12 +111,12 @@ Plans:
   3. Source design agent reads TSX files and produces a DESIGN.md with Slate tokens and CSS variables, matching the existing schema
   4. Source interaction agent reads TSX files and produces an INTERACTION.md with a componentList[] of detected Slate components
   5. All three source agents annotate uncertain values with confidence indicators (e.g., `/* from code analysis — verify visually */`)
-**Plans**: TBD
+**Plans:** 2/3 plans executed
 
 Plans:
-- [ ] 23-01: Surface resolver agent
-- [ ] 23-02: Source layout + source design agents
-- [ ] 23-03: Source interaction agent
+- [ ] 23-01-PLAN.md — Surface resolver agent (foreground, codebase-map lookup + section decomposition)
+- [ ] 23-02-PLAN.md — Source layout + source design agents (background, TSX to LAYOUT.md + DESIGN.md)
+- [ ] 23-03-PLAN.md — Source interaction agent + agent-contract.md registry extension
 
 ### Phase 24: Pipeline Generalization & Discussion-Only
 **Goal**: The Loupe orchestrator presents a multi-mode entry prompt, routes prod-clone sections to source agents in parallel, and supports a discussion-only build path without external reference
@@ -160,6 +160,6 @@ Plans:
 | 13-15. Plugin Deployment | v1.2 | 5/5 | Complete | 2026-04-07 |
 | 16-21. User Experience & Commands | v1.3 | 11/11 | Complete | 2026-04-10 |
 | 22. Codebase-Map Library Book | 1/1 | Complete    | 2026-04-10 | - |
-| 23. Source Agents | v1.4 | 0/3 | Not started | - |
+| 23. Source Agents | 2/3 | In Progress|  | - |
 | 24. Pipeline Generalization & Discussion-Only | v1.4 | 0/3 | Not started | - |
 | 25. Integration Testing | v1.4 | 0/1 | Not started | - |

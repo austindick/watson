@@ -9,10 +9,10 @@ Requirements for multi-mode design reference input. Each maps to roadmap phases.
 
 ### Surface Resolver
 
-- [ ] **RSLV-01**: Surface resolver uses codebase-map book to locate source files for a user-specified experience
-- [ ] **RSLV-02**: Surface resolver reads the main component file and identifies sections/regions of the page
-- [ ] **RSLV-03**: Surface resolver produces a section list with file paths per section (analogous to decomposer's section list from Figma)
-- [ ] **RSLV-04**: Surface resolver verifies file paths from codebase-map exist before including them
+- [x] **RSLV-01**: Surface resolver uses codebase-map book to locate source files for a user-specified experience
+- [x] **RSLV-02**: Surface resolver reads the main component file and identifies sections/regions of the page
+- [x] **RSLV-03**: Surface resolver produces a section list with file paths per section (analogous to decomposer's section list from Figma)
+- [x] **RSLV-04**: Surface resolver verifies file paths from codebase-map exist before including them
 
 ### Source Layout Agent
 
@@ -90,10 +90,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CBNV-01 | Phase 22 | Complete |
 | CBNV-02 | Phase 22 | Complete |
 | CBNV-03 | Phase 22 | Complete |
-| RSLV-01 | Phase 23 | Pending |
-| RSLV-02 | Phase 23 | Pending |
-| RSLV-03 | Phase 23 | Pending |
-| RSLV-04 | Phase 23 | Pending |
+| RSLV-01 | Phase 23 | Complete |
+| RSLV-02 | Phase 23 | Complete |
+| RSLV-03 | Phase 23 | Complete |
+| RSLV-04 | Phase 23 | Complete |
 | SLAY-01 | Phase 23 | Pending |
 | SLAY-02 | Phase 23 | Pending |
 | SDSG-01 | Phase 23 | Pending |
