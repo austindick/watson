@@ -10,6 +10,7 @@
     "./skills/core/skills/status.md",
     "./skills/core/skills/resume.md",
     "./skills/core/skills/discuss.md",
-    "./skills/core/skills/loupe.md"
+    "./skills/core/skills/loupe.md",
+    "./skills/core/skills/save-blueprint.md"
   ]
 }
