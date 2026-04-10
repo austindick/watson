@@ -16,13 +16,13 @@ Requirements for multi-mode design reference input. Each maps to roadmap phases.
 
 ### Source Layout Agent
 
-- [ ] **SLAY-01**: Source layout agent reads TSX files for a section and produces LAYOUT.md conforming to existing artifact schema
-- [ ] **SLAY-02**: Source layout agent annotates static-analysis-derived values with confidence indicators
+- [x] **SLAY-01**: Source layout agent reads TSX files for a section and produces LAYOUT.md conforming to existing artifact schema
+- [x] **SLAY-02**: Source layout agent annotates static-analysis-derived values with confidence indicators
 
 ### Source Design Agent
 
-- [ ] **SDSG-01**: Source design agent reads TSX files for a section and produces DESIGN.md conforming to existing artifact schema (Slate tokens, CSS variables, spacing)
-- [ ] **SDSG-02**: Source design agent annotates static-analysis-derived values with confidence indicators
+- [x] **SDSG-01**: Source design agent reads TSX files for a section and produces DESIGN.md conforming to existing artifact schema (Slate tokens, CSS variables, spacing)
+- [x] **SDSG-02**: Source design agent annotates static-analysis-derived values with confidence indicators
 
 ### Source Interaction Agent
 
@@ -94,10 +94,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RSLV-02 | Phase 23 | Complete |
 | RSLV-03 | Phase 23 | Complete |
 | RSLV-04 | Phase 23 | Complete |
-| SLAY-01 | Phase 23 | Pending |
-| SLAY-02 | Phase 23 | Pending |
-| SDSG-01 | Phase 23 | Pending |
-| SDSG-02 | Phase 23 | Pending |
+| SLAY-01 | Phase 23 | Complete |
+| SLAY-02 | Phase 23 | Complete |
+| SDSG-01 | Phase 23 | Complete |
+| SDSG-02 | Phase 23 | Complete |
 | SINT-01 | Phase 23 | Pending |
 | SINT-02 | Phase 23 | Pending |
 | SINT-03 | Phase 23 | Pending |
