@@ -87,13 +87,36 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated by roadmapper) | | |
+| CBNV-01 | Phase 22 | Pending |
+| CBNV-02 | Phase 22 | Pending |
+| CBNV-03 | Phase 22 | Pending |
+| RSLV-01 | Phase 23 | Pending |
+| RSLV-02 | Phase 23 | Pending |
+| RSLV-03 | Phase 23 | Pending |
+| RSLV-04 | Phase 23 | Pending |
+| SLAY-01 | Phase 23 | Pending |
+| SLAY-02 | Phase 23 | Pending |
+| SDSG-01 | Phase 23 | Pending |
+| SDSG-02 | Phase 23 | Pending |
+| SINT-01 | Phase 23 | Pending |
+| SINT-02 | Phase 23 | Pending |
+| SINT-03 | Phase 23 | Pending |
+| PIPE-01 | Phase 24 | Pending |
+| PIPE-02 | Phase 24 | Pending |
+| PIPE-03 | Phase 24 | Pending |
+| PIPE-04 | Phase 24 | Pending |
+| PIPE-05 | Phase 24 | Pending |
+| PIPE-06 | Phase 24 | Pending |
+| DISC-01 | Phase 24 | Pending |
+| DISC-02 | Phase 24 | Pending |
+| DISC-03 | Phase 24 | Pending |
+| DISC-04 | Phase 24 | Pending |
 
 **Coverage:**
 - v1.4 requirements: 22 total
-- Mapped to phases: 0
-- Unmapped: 22
+- Mapped to phases: 22
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-09*
-*Last updated: 2026-04-09 after initial definition*
+*Last updated: 2026-04-09 after roadmap creation*
