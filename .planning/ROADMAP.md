@@ -71,7 +71,7 @@ Full details: see Phase Details below (archived inline).
 - [x] **Phase 18: Recovery & Lifecycle Commands** - `/watson:status`, `/watson:resume`, and `/watson:off` give users visibility and control over session state (completed 2026-04-09)
 - [x] **Phase 19: Standalone Commands & Flexible Entry** - `/watson:discuss` and `/watson:loupe` callable without full session; continue accepts branch, URL, or directory (completed 2026-04-09)
 - [x] **Phase 20: Audit Gap Closure** - Retroactive Phase 15 verification + README/resume.md integration fixes (gap closure) (completed 2026-04-09)
-- [ ] **Phase 21: Tech Debt Wiring Fixes** - Fix resume plugin registration, session hook cleanup, recovery notification text (tech debt from audit)
+- [x] **Phase 21: Tech Debt Wiring Fixes** - Fix resume plugin registration, session hook cleanup, recovery notification text (tech debt from audit) (completed 2026-04-10)
 
 ## Phase Details
 
@@ -210,7 +210,7 @@ Plans:
   3. `/tmp/watson-declined.json` is cleaned up by `watson-session-start.js` — decline is truly session-scoped
   4. Recovery notification in `watson-session-start.js` says `/watson:resume` instead of `/watson`
   5. Re-running `/gsd:audit-milestone` returns no integration gaps and all 8 E2E flows COMPLETE
-**Plans**: 0 plans (not yet planned)
+**Plans**: 1 plan
 
 Plans:
 - [ ] 21-01-PLAN.md — Fix resume plugin registration, session hook cleanup, recovery notification (INT-01 through INT-04, FLOW-07, FLOW-08)
@@ -230,4 +230,4 @@ Plans:
 | 18. Recovery & Lifecycle Commands | v1.3 | 2/2 | Complete | 2026-04-09 |
 | 19. Standalone Commands & Flexible Entry | v1.3 | 3/3 | Complete | 2026-04-09 |
 | 20. Audit Gap Closure | v1.3 | 1/1 | Complete | 2026-04-09 |
-| 21. Tech Debt Wiring Fixes | v1.3 | 0/1 | Not Started | — |
+| 21. Tech Debt Wiring Fixes | 1/1 | Complete   | 2026-04-10 | — |

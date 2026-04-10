@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 20-01-PLAN.md
-last_updated: "2026-04-09T20:55:49.316Z"
+stopped_at: Completed 21-01-PLAN.md
+last_updated: "2026-04-10T01:04:49.517Z"
 last_activity: 2026-04-09 — v1.3 roadmap written, 21 requirements mapped across 4 phases
 progress:
-  total_phases: 8
-  completed_phases: 8
-  total_plans: 15
-  completed_plans: 15
+  total_phases: 9
+  completed_phases: 9
+  total_plans: 16
+  completed_plans: 16
   percent: 0
 ---
 
@@ -61,6 +61,9 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 19-standalone-commands-flexible-entry]: Health check scaffold offer uses AskUserQuestion with Yes/Cancel — explicit pattern matches Phase 0C directory handler
 - [Phase 20-audit-gap-closure]: re_verification: true frontmatter marks retroactive VERIFICATION.md files — distinguishes gap-closure from initial verification
 - [Phase 20-audit-gap-closure]: resume.md Start fresh invokes watson-init with operation: new after activation — not a SKILL.md 2-path fork re-entry
+- [Phase 21-tech-debt-wiring-fixes]: resume.md placed second in commands array (after status.md) — lifecycle order: status, resume, discuss, loupe
+- [Phase 21-tech-debt-wiring-fixes]: watson-init called without operation parameter for Start fresh — absence of parameter is the new-prototype path
+- [Phase 21-tech-debt-wiring-fixes]: Decline marker cleanup placed before session recovery check in watson-session-start.js — ensures clean state before session logic
 
 ### Pending Todos
 
@@ -77,6 +80,6 @@ Progress: [░░░░░░░░░░] 0%
 
 ## Session Continuity
 
-Last session: 2026-04-09T20:52:24.911Z
-Stopped at: Completed 20-01-PLAN.md
+Last session: 2026-04-10T01:04:49.515Z
+Stopped at: Completed 21-01-PLAN.md
 Resume: Run `/gsd:plan-phase 16` to begin planning Phase 16 (Opt-in Activation Model)
