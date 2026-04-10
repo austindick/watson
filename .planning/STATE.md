@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 22 context gathered
-last_updated: "2026-04-10T15:30:22.754Z"
+stopped_at: Completed 22-01-PLAN.md
+last_updated: "2026-04-10T15:47:54.732Z"
 last_activity: 2026-04-09 — v1.4 roadmap created; phases 22-25 defined
 progress:
   total_phases: 4
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
 ---
 
 # Project State
@@ -40,6 +40,8 @@ Recent decisions affecting current work:
 - v1.4 arch: Existing Figma agents + builder/reviewer/consolidator are NOT modified; only loupe.md changes
 - v1.4 arch: referenceType defaults to "figma" when absent — backward compatibility guard against Figma regression
 - v1.4 arch: Codebase-map book is critical path blocker; Phase 22 must complete before Phase 23
+- [Phase 22-codebase-map-library-book]: codebase-map scanning uses parallel scanning reference (codebase-map-scanning.md) conditionally dispatched from Librarian based on outputBookPath; existing source-scanning.md unchanged
+- [Phase 22-codebase-map-library-book]: Codebase-map book is 2-level only (no PAGE.md); seed entries in CHAPTER.md allow downstream Phase 23/24 development before Librarian generate run
 
 ### Pending Todos
 
@@ -56,6 +58,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-04-10T15:30:22.744Z
-Stopped at: Phase 22 context gathered
+Last session: 2026-04-10T15:47:54.729Z
+Stopped at: Completed 22-01-PLAN.md
 Resume: Run /gsd:plan-phase 22

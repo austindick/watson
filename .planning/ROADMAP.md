@@ -77,11 +77,11 @@ Full details: `milestones/v1.3-ROADMAP.md`
 
 </details>
 
-### 🚧 Watson 1.4 Multi-Mode Loupe (In Progress)
+### Watson 1.4 Multi-Mode Loupe (In Progress)
 
 **Milestone Goal:** Generalize the Loupe pipeline to accept any design reference — prod codebase, Figma frame, or discussion-based intent — so designers can clone existing experiences and PMs/engineers can prototype from ideas alone.
 
-- [ ] **Phase 22: Codebase-Map Library Book** — Librarian generates monorepo navigation reference for faire/frontend
+- [x] **Phase 22: Codebase-Map Library Book** — Librarian generates monorepo navigation reference for faire/frontend (completed 2026-04-10)
 - [ ] **Phase 23: Source Agents** — Surface resolver + 3 parallel source agents produce normalized pipeline artifacts from TSX
 - [ ] **Phase 24: Pipeline Generalization & Discussion-Only** — Loupe orchestrator supports multi-mode entry, prod-clone dispatch, and discussion-only path
 - [ ] **Phase 25: Integration Testing** — All 3 modes validated end-to-end; Figma regression confirmed
@@ -96,10 +96,10 @@ Full details: `milestones/v1.3-ROADMAP.md`
   1. Running Librarian in generate mode produces a codebase-map book scoped to product area entry points
   2. Each entry in the codebase-map book includes a last_verified date
   3. A user can invoke the named experience menu and select a known surface by name
-**Plans**: TBD
+**Plans:** 1/1 plans complete
 
 Plans:
-- [ ] 22-01: Codebase-map book schema, Librarian instructions, and named experience menu
+- [ ] 22-01-PLAN.md — Codebase-map scanning reference, Librarian update, seed book, and LIBRARY.md entry
 
 ### Phase 23: Source Agents
 **Goal**: A surface resolver and 3 parallel source agents can read TSX files from faire/frontend and produce LAYOUT.md, DESIGN.md, and INTERACTION.md artifacts that conform to the existing pipeline schema
@@ -139,7 +139,7 @@ Plans:
 ### Phase 25: Integration Testing
 **Goal**: All three Loupe input modes (Figma, prod-clone, discussion-only) produce correct pipeline output end-to-end; no regressions in the Figma path
 **Depends on**: Phase 24
-**Requirements**: (validates RSLV-01–04, SLAY-01–02, SDSG-01–02, SINT-01–03, CBNV-01–03, PIPE-01–06, DISC-01–04 end-to-end)
+**Requirements**: (validates RSLV-01-04, SLAY-01-02, SDSG-01-02, SINT-01-03, CBNV-01-03, PIPE-01-06, DISC-01-04 end-to-end)
 **Success Criteria** (what must be TRUE):
   1. An existing Figma build completes with identical output before and after the referenceType extension is applied
   2. A prod-clone build for a known faire/frontend surface produces compilable prototype code with Slate components
@@ -159,7 +159,7 @@ Plans:
 | 6-12. Ambient Mode & Iteration | v1.1 | 11/11 | Complete | 2026-04-03 |
 | 13-15. Plugin Deployment | v1.2 | 5/5 | Complete | 2026-04-07 |
 | 16-21. User Experience & Commands | v1.3 | 11/11 | Complete | 2026-04-10 |
-| 22. Codebase-Map Library Book | v1.4 | 0/1 | Not started | - |
+| 22. Codebase-Map Library Book | 1/1 | Complete   | 2026-04-10 | - |
 | 23. Source Agents | v1.4 | 0/3 | Not started | - |
 | 24. Pipeline Generalization & Discussion-Only | v1.4 | 0/3 | Not started | - |
 | 25. Integration Testing | v1.4 | 0/1 | Not started | - |
