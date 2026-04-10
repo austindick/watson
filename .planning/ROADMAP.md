@@ -159,7 +159,7 @@ Plans:
 | 6-12. Ambient Mode & Iteration | v1.1 | 11/11 | Complete | 2026-04-03 |
 | 13-15. Plugin Deployment | v1.2 | 5/5 | Complete | 2026-04-07 |
 | 16-21. User Experience & Commands | v1.3 | 11/11 | Complete | 2026-04-10 |
-| 22. Codebase-Map Library Book | 1/1 | Complete   | 2026-04-10 | - |
+| 22. Codebase-Map Library Book | 1/1 | Complete    | 2026-04-10 | - |
 | 23. Source Agents | v1.4 | 0/3 | Not started | - |
 | 24. Pipeline Generalization & Discussion-Only | v1.4 | 0/3 | Not started | - |
 | 25. Integration Testing | v1.4 | 0/1 | Not started | - |
