@@ -22,6 +22,7 @@ Scans source files and produces structured Book/Chapter/Page references for agen
 **References:**
 - Output schema: @references/book-schema.md (includes component PAGE.md template)
 - Scanning instructions: @references/source-scanning.md
+- Codebase-map scanning: @references/codebase-map-scanning.md
 - Agent contract: @references/agent-contract.md
 
 ---
@@ -53,11 +54,15 @@ If `watsonMode=false` and book exists: prompt for overwrite confirmation.
 
 ### Step 2: Scan Source Files
 
-Follow @references/source-scanning.md for all four sub-scans (components, tokens, typography, icons). Skip unparseable files — log them in `skipped_files`, don't fail.
+**For codebase-map books** (identified by `outputBookPath` containing `codebase-map`): follow @references/codebase-map-scanning.md instead. This reference specifies codebase-map-specific sub-scans (surface entry discovery — not component/token/icon scans). Skip to Step 3 after scanning.
+
+**For all other books:** Follow @references/source-scanning.md for all four sub-scans (components, tokens, typography, icons). Skip unparseable files — log them in `skipped_files`, don't fail.
 
 ### Step 3: Determine Book Structure
 
-Follow the structure rules in @references/source-scanning.md to map scanned data to chapters. Decide two-level vs three-level per chapter.
+**For codebase-map books:** Structure rules are in @references/codebase-map-scanning.md (always 2-level, exactly 3 chapters: brand-portal, retailer, logged-out). Skip the source-scanning.md structure determination entirely.
+
+**For all other books:** Follow the structure rules in @references/source-scanning.md to map scanned data to chapters. Decide two-level vs three-level per chapter.
 
 ### Step 4: Write Chapter and Page Files
 
