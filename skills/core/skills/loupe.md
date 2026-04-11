@@ -136,11 +136,11 @@ If `mode` is `'figma'` or `'discuss-only'` with no prod-clone sections: skip cod
 
 ---
 
-## Phase 1: Decompose
+## Phase 1: Decompose / Resolve
 
-**Condition:** `hasFullFrame` is true → decomposer runs. `hasFullFrame` is false AND `sections[]` was provided → skip decomposer, use `sections[]` as-is.
+**Branch by mode:**
 
-**If hasFullFrame is true:**
+**If `mode='figma'` AND `hasFullFrame` is true → decomposer runs:**
 
 Progress update: "Analyzing your Figma frame..."
 
@@ -154,19 +154,56 @@ watsonMode: true
 
 Receive `sections[]` from decomposer output. Each entry has: `name`, `nodeId`, `referenceType` (set to "figma" for all decomposer-output sections).
 
-**If hasFullFrame is false and sections[] provided:**
+**If `mode='prod-clone'` AND `sections[]` not provided → surface-resolver runs:**
 
-Use `sections[]` as-is. Each entry already has: `name`, `referenceType` ("figma" or "discuss-only"), and for figma sections: `figmaUrl`, `nodeId`.
+Progress update: [Claude's discretion — designer language, e.g., "Looking up this experience in the codebase..."]
 
-**If neither hasFullFrame nor sections[] was provided:**
+Dispatch `@agents/surface-resolver.md` as **foreground** agent with:
+```
+experienceName: {experienceName}
+blueprintPath: {blueprintPath}
+libraryPaths: {libraryPaths}
+watsonMode: true
+```
+
+Receive `sections[]` from surface-resolver. Each entry has: `name`, `referenceType='prod-clone'`, `filePaths[]`, `description`, `sourceSurface{name, route}`.
+
+**Merge with additional discuss-only sections (hybrid builds):**
+If `additionalSections` is non-null (from Phase -1 hybrid discuss return):
+  Append `additionalSections` to `sections[]` after the prod-clone sections.
+  Ordering: prod-clone (base) sections first in surface-resolver's top-to-bottom visual order; discuss-only (additive) sections appended after.
+
+**Screenshot prompt (for builds with prod-clone sections, between Phase 1 and Phase 2):**
+```
+screenshotPath = null
+```
+Check if `{protoDir}/.watson/screenshot.png` exists:
+- If yes: `screenshotPath = "{protoDir}/.watson/screenshot.png"` — reuse silently, no prompt.
+- If no: AskUserQuestion — header: "Screenshot", question: "Have a screenshot of this page? It helps me match the layout more accurately, but it's totally optional.", options: ["I'll share one", "Skip, build without"]
+  - "I'll share one": accept screenshot from user, save to `{protoDir}/.watson/screenshot.png`, set `screenshotPath`.
+  - "Skip, build without": `screenshotPath` remains null.
+
+**If `sections[]` already provided (from caller or from discuss return) → use as-is:**
+
+Skip decomposer and surface-resolver. Use the provided `sections[]` directly.
+
+**If `mode='discuss-only'` → sections[] comes from discuss return:**
+
+No Phase 1 work needed — sections were already set from Phase -1 discuss return.
+
+**If neither hasFullFrame nor sections[] was provided AND mode is not set:**
 
 Surface error in designer language: "I need a Figma frame or section list to proceed. Share a Figma link and I'll get started." Exit.
 
 ---
 
-## Phase 2: Research (parallel per figma section)
+## Phase 2: Research (parallel per section)
 
 **Dispatch all research agents first, then wait for all of them before proceeding to Phase 3.**
+
+**Backward compatibility guard (PIPE-02):** For any section with no `referenceType` field, default to `referenceType = "figma"`.
+
+All sections (figma + prod-clone) dispatch simultaneously in the same wave. Wait for ALL agents across ALL sections before proceeding to Phase 3.
 
 For each section where `referenceType = "figma"`:
 
@@ -203,6 +240,21 @@ For each section where `referenceType = "figma"`:
 - DESIGN.md missing -> designPath: null (existing fallback rule)
 - INTERACTION.md missing -> retry interaction agent once silently. On second failure: interactionPath: null
 
+For each section where `referenceType = "prod-clone"`:
+
+1. Progress update: [Claude's discretion — designer language, e.g., "Reading the [section.name] from your codebase..."]
+2. Dispatch `@agents/source-layout.md` as **background** agent:
+   ```
+   filePaths: {section.filePaths}
+   sectionName: {section.name}
+   screenshotPath: {screenshotPath}    [omit this parameter entirely if screenshotPath is null — do NOT pass null]
+   blueprintPath: {blueprintPath}
+   libraryPaths: {libraryPaths}
+   watsonMode: true
+   ```
+3. Dispatch `@agents/source-design.md` as **background** agent in parallel (same params as source-layout above)
+4. Dispatch `@agents/source-interaction.md` as **background** agent in parallel (same params as source-layout above)
+
 For sections where `referenceType = "discuss-only"`: **skip Phase 2 entirely.** These sections have no Figma node. Blueprint files were populated by discuss. Proceed directly to Phase 3.
 
 ---
@@ -230,6 +282,11 @@ For **discuss-only** sections:
 - `layoutPath` = `{blueprintPath}/LAYOUT.md`
 - `designPath` = `{blueprintPath}/DESIGN.md`
 - `interactionPath` = `{blueprintPath}/INTERACTION.md` if that file exists (populated by discuss), otherwise null
+
+For **prod-clone** sections:
+- `layoutPath` = `{protoDir}/.watson/sections/{section.name}/LAYOUT.md` (set to null if file is missing after agents completed)
+- `designPath` = `{protoDir}/.watson/sections/{section.name}/DESIGN.md` (set to null if file is missing after agents completed)
+- `interactionPath` = `{protoDir}/.watson/sections/{section.name}/INTERACTION.md` (set to null if file is missing)
 
 **Resolve targetFilePath:**
 - If `targetFilePath` was already set by Phase -1 (standalone) or the caller, use it.
@@ -330,6 +387,9 @@ Section failure is **isolated.** Other sections continue regardless.
 |----------------|---------------------|
 | Decomposer running | "Analyzing your Figma frame..." |
 | Layout + design + interaction agents running | "Mapping out the [section name]..." |
+| Surface resolver running | [Claude's discretion — e.g., "Looking up this experience in the codebase..."] |
+| Source agents running (prod-clone sections) | [Claude's discretion — e.g., "Reading the [section name] from your codebase..."] |
+| Screenshot prompt | "Have a screenshot of this page? It helps me match the layout more accurately, but it's totally optional." |
 | Builder running | "Building the [section name]..." |
 | Reviewer running | "Reviewing for accuracy..." |
 | Consolidator running | (silent) |
@@ -342,6 +402,7 @@ Section failure is **isolated.** Other sections continue regardless.
 - `watsonMode: true` on every agent dispatch — never false
 - Never emit technical language to the user — designer language only
 - All library paths resolved from LIBRARY.md and BOOK.md manifests — never improvise paths
-- Never dispatch `@skills/discuss.md` — that is SKILL.md's responsibility
+- Never dispatch `@skills/discuss.md` except in Phase -1 "Describe what you want" branch (locked decision from CONTEXT.md — this single entry path is the explicit exception)
 - Discuss-only sections skip layout + design research agents entirely (no Figma node to analyze)
 - SKILL.md passes `blueprintPath` and `sections[]` to loupe.md; loupe.md does not ask the user for these
+- The `mode` input parameter controls routing. `referenceType` defaults to `'figma'` when absent on any section (PIPE-02 backward compatibility guard)
