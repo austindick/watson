@@ -1,4 +1,6 @@
 # LAYOUT: Product Quick View
+Reference: figma
+<!-- Reference values: figma | prod-clone | discuss-only -->
 
 ## Product Grid
 

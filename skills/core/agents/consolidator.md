@@ -48,6 +48,8 @@ Read each file using the Read tool. Derive the section name from the directory n
 
 If a section directory has no LAYOUT.md or no DESIGN.md, note it (the section may have failed mid-pipeline) but continue — partial sections are valid input. Skip the missing file for that section only. INTERACTION.md is optional per section — if a section has no INTERACTION.md, skip it for interaction consolidation only.
 
+**Reference: marker preservation:** When merging sections, preserve each section's `Reference:` value in the consolidated output. Do not replace individual section reference markers with a single global marker. In mixed-mode builds, different sections will have different Reference: values (e.g., one section has `Reference: figma`, another has `Reference: prod-clone`) — this is expected and correct.
+
 ### Step 2: Read existing consolidated files
 
 Read `{blueprintPath}/LAYOUT.md` if it exists. Store as `priorLayout`.

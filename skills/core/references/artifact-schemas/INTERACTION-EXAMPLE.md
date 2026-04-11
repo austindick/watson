@@ -1,4 +1,6 @@
 # INTERACTION: Product Quick View
+Reference: figma
+<!-- Reference values: figma | prod-clone | discuss-only -->
 
 ## States
 

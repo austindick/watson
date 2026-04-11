@@ -59,6 +59,8 @@ If you catch yourself thinking any of these, stop and re-check — you are about
 
 Read `layoutPath` (LAYOUT.md) and `designPath` (DESIGN.md). Check if INTERACTION.md exists at `interactionPath`; if yes, load it; if no, note "library component defaults only" and proceed.
 
+**Reference: header reading:** After loading each artifact file, check the `Reference:` line (second line, after the `#` heading). When `Reference: discuss-only`, treat all unspecified values as "use library book defaults" — use standard Slate spacing, sizing, and component defaults for anything not explicitly specified in the artifact. Do not guess, do not interpolate, do not ask. When `Reference: figma` or `Reference: prod-clone`, proceed with normal behavior (these artifacts have reference-derived values).
+
 **Amendment filter:** Read `{blueprintPath}/LAYOUT.md`, `{blueprintPath}/DESIGN.md`, and `{blueprintPath}/INTERACTION.md` (if it exists). Locate the `## Discuss Amendments` section in each. Filter each amendment line:
 - Lines starting with `[PENDING] `: **skip entirely** — uncommitted decisions, not ready for build
 - Lines starting with `[INFERRED] `: **skip entirely** — unconfirmed decisions from save-blueprint extraction, not ready for build
