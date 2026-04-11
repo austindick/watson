@@ -125,6 +125,7 @@ After collecting answers:
 **Defaults:**
 - Bare or ambiguous invocation with no signal → Tier 1 (discuss). Starting a conversation gathers context either way.
 - Figma URL + clear scope + populated blueprint → Tier 2 (build)
+- Experience name reference ("build from [name]", "clone [name]") + populated blueprint → Tier 2 (build). Set mode='prod-clone'.
 - **Never answer design questions inline.** If a message is design-related (feedback, improvements, exploration, critique, "what if" questions), it MUST route to Tier 1 (discuss) or Tier 3 (ask) — never handle it with an inline response. Inline responses are only for Help and non-design passthrough. When in doubt, dispatch discuss.
 
 **Session calibration (within-session only):**
@@ -148,11 +149,9 @@ Before dispatching loupe: if STATUS.md `drafts:` is non-empty AND `/tmp/watson-a
   - "Commit and build": replace all `[PENDING]` with `[COMMITTED]` in blueprint files, clear STATUS.md `drafts: []`, then dispatch loupe.
   - "Build without pending": add `"pendingWarningShown": true` to /tmp/watson-active.json (Edit tool), then dispatch loupe as-is.
 Dispatch `@skills/loupe.md` with:
-- `blueprintPath`: resolved blueprint/ path
-- `sections`: inferred from blueprint if populated (or empty — loupe will decompose)
-- `hasFullFrame`: true if fullFrameUrl is a whole-frame Figma link, false otherwise
-- `fullFrameUrl`: Figma URL if detected (or null)
-- `crossSectionFlows`: null (no discuss context in direct Tier 2 build)
+- `blueprintPath`, `sections`, `hasFullFrame`, `fullFrameUrl`, `crossSectionFlows`
+- `mode`: 'figma' (Figma URL detected) | 'prod-clone' (experience reference detected) | null (let loupe resolve)
+- `experienceName`: extracted from message if mode='prod-clone', otherwise null
 
 **Tier 3 (ask):**
 Use AskUserQuestion:
@@ -171,23 +170,14 @@ Inline conversational response — no dispatch. Example: "I can help you think t
 
 After `@skills/discuss.md` returns, read the return status JSON:
 
-```json
-{
-  "status": "ready_for_build" | "discussion_only" | "cancelled",
-  "blueprintPath": "/path/to/prototype/blueprint/",
-  "sections": [...],
-  "hasFullFrame": false,
-  "fullFrameUrl": null
-}
-```
-
 Handle each status as an **explicit case** — no fallthrough:
 
-- **`ready_for_build`:** Say "Great, I have what I need — building now." Dispatch `@skills/loupe.md` with `blueprintPath`, `sections[]`, `hasFullFrame`, `fullFrameUrl`, `crossSectionFlows` from the return status.
-- **`discussion_only`:** Say "Decisions saved to your blueprint. When you're ready to build, just say /watson and I'll pick up where we left off." Exit.
+- **`ready_for_build`:** Say "Building now." Dispatch `@skills/loupe.md` with `blueprintPath`, `sections[]`, `hasFullFrame`, `fullFrameUrl`, `crossSectionFlows` from the return status.
+- **`ready_for_hybrid_build`:** Say "I'll pull [surfaceName] as the base and build your additions on top." Dispatch `@skills/loupe.md` with `blueprintPath`, `mode: 'prod-clone'`, `surfaceName`, `sections[]` from the return status, `hasFullFrame: false`, `fullFrameUrl: null`, `crossSectionFlows: null`.
+- **`discussion_only`:** Say "Decisions saved. When ready to build, say /watson." Exit.
 - **`cancelled`:** Acknowledge gracefully. Exit.
 
-**Note:** When discuss is dispatched by save-blueprint (gap discussion), it returns to save-blueprint — not this chain. Save-blueprint handles its own post-discuss flow.
+**Note:** When discuss is dispatched by save-blueprint, it returns to save-blueprint — not this chain.
 
 **Error handling:** Silent retry once on first failure. On second failure: non-technical explanation with actionable suggestion.
 
