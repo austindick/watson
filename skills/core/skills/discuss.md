@@ -13,6 +13,25 @@ You are the design conversation partner in Watson. Your job is to help designers
 
 ---
 
+## Inputs
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| blueprintPath | string | Absolute path to the prototype's blueprint/ directory (provided by caller or resolved in Phase -1) |
+| figmaUrl | string or null | Figma URL detected in user's message (optional) |
+| describeOnly | boolean, optional | When true, discuss runs in direct-from-loupe mode. Defaults to false. |
+
+**describeOnly mode behavior:**
+When `describeOnly` is true:
+- Skip Phase -1 (blueprintPath is provided by loupe)
+- Load codebase-map book for hybrid surface detection (see Phase 0 extension below)
+- Run Phase 2 Complexity Scaling immediately on the user's description
+- On "clearly simple": run the Discuss-Only Build Path to write LAYOUT.md + DESIGN.md from the description + library books, then return `ready_for_build` directly — do NOT skip artifact writing
+- On "ambiguous": AskUserQuestion — header: "Depth", question: "Want to think through this more, or should I work with this description?", options: ["Think through it first", "Just build with this description"]. "Think through it first" → run abbreviated discussion (Phases 5-6 only, no Pattern Research). "Just build" → run Discuss-Only Build Path, return ready_for_build.
+- On "clearly complex": run abbreviated discussion (Phases 5-6 only, no Pattern Research), then Discuss-Only Build Path, then return ready_for_build
+
+---
+
 ## Phase -1: Standalone Setup (runs only when invoked standalone)
 
 **Detection:** If `blueprintPath` was not provided by the caller, this is a standalone invocation. If `blueprintPath` was provided, skip Phase -1 entirely and proceed to On Activation.
@@ -67,6 +86,14 @@ Read `${CLAUDE_PLUGIN_ROOT}/skills/core/library/LIBRARY.md` immediately when dis
 
 **Never improvise component names.** All component names, variant names, and token names must come from loaded library books. If a component the user describes doesn't exist in the design system book, acknowledge the gap explicitly.
 
+**Conditional codebase-map loading (describeOnly mode only):**
+If `describeOnly` is true:
+  1. Read codebase-map BOOK.md manifest from LIBRARY.md (the `codebase-map` entry's `path:` field)
+  2. Read all CHAPTER.md files listed in BOOK.md `chapters[]`
+  3. Collect all surface names from the Name column of each chapter's 5-column tables
+  4. Store this surface name index for hybrid detection (used later in Discuss-Only Build Path)
+If `describeOnly` is false: skip codebase-map loading (existing behavior unchanged).
+
 ---
 
 ## Phase 1: Blueprint State Reading (before conversation opens)
@@ -105,14 +132,18 @@ Assess the user's request before starting the conversation. This applies equally
 - Write CONTEXT.md with the basic scenario
 - Return status immediately (see Loupe Handoff: Return Status section below)
 
+**CRITICAL (describeOnly mode):** In `describeOnly` mode, "clearly simple" still means the Discuss-Only Build Path runs to write LAYOUT.md + DESIGN.md from the user's description + library books BEFORE returning `ready_for_build`. "Skip the design discussion" refers to skipping the conversational questions — never to skipping artifact writing. Without LAYOUT.md + DESIGN.md, loupe receives a discuss-only section with no blueprint artifacts.
+
 **Clearly complex** (multi-step flow, multiple states, data tables, multiple section variants, complex interactions, cross-component orchestration):
 - Proceed to full Core Questions + Contextual Questions conversation
+- In `describeOnly` mode: run abbreviated discussion (Phases 5-6 only, no Pattern Research), then Discuss-Only Build Path, then return `ready_for_build`
 
 **Ambiguous:**
 - Use AskUserQuestion:
   - header: "Approach"
   - question: "Want to think through the design first, or should I just start building?"
   - options: ["Think it through first", "Just start building"]
+- In `describeOnly` mode: use a different AskUserQuestion — header: "Depth", question: "Want to think through this more, or should I work with this description?", options: ["Think through it first", "Just build with this description"]. "Think through it first" → run abbreviated discussion (Phases 5-6 only, no Pattern Research). "Just build with this description" → run Discuss-Only Build Path, return `ready_for_build`.
 
 **Mid-build modifier:** Same scaling logic applies. Existing blueprint decisions naturally reduce question count — skip anything already decided; focus on gaps and changes.
 

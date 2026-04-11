@@ -129,12 +129,12 @@ Plans:
   4. Builder output for discussion-only mode visibly acknowledges intent-level certainty vs reference-derived certainty
   5. A build where different sections have different referenceTypes completes without error
   6. Source agents gracefully handle a null screenshotPath with no pipeline failure
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 24-01: Multi-mode entry prompt and referenceType contract extension
-- [ ] 24-02: Prod-clone dispatch branch and source agent wiring in loupe.md
-- [ ] 24-03: Discussion-only path and intent marker contract
+- [ ] 24-01-PLAN.md — loupe.md multi-mode entry (Phase -1), conditional codebase-map (Phase 0), surface-resolver routing (Phase 1), prod-clone parallel dispatch (Phase 2)
+- [ ] 24-02-PLAN.md — discuss.md describeOnly mode, adaptive depth, codebase-map hybrid detection, ready_for_hybrid_build return status
+- [ ] 24-03-PLAN.md — SKILL.md Tier 2 experience references + hybrid chain, artifact Reference: headers, builder/consolidator behavioral notes
 
 ### Phase 25: Integration Testing
 **Goal**: All three Loupe input modes (Figma, prod-clone, discussion-only) produce correct pipeline output end-to-end; no regressions in the Figma path
