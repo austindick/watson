@@ -26,9 +26,9 @@ Requirements for multi-mode design reference input. Each maps to roadmap phases.
 
 ### Source Interaction Agent
 
-- [ ] **SINT-01**: Source interaction agent reads TSX files for a section and produces INTERACTION.md conforming to existing artifact schema
-- [ ] **SINT-02**: Source interaction agent outputs componentList[] of detected Slate components per section
-- [ ] **SINT-03**: Source interaction agent annotates static-analysis-derived values with confidence indicators
+- [x] **SINT-01**: Source interaction agent reads TSX files for a section and produces INTERACTION.md conforming to existing artifact schema
+- [x] **SINT-02**: Source interaction agent outputs componentList[] of detected Slate components per section
+- [x] **SINT-03**: Source interaction agent annotates static-analysis-derived values with confidence indicators
 
 ### Codebase Navigation
 
@@ -98,9 +98,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SLAY-02 | Phase 23 | Complete |
 | SDSG-01 | Phase 23 | Complete |
 | SDSG-02 | Phase 23 | Complete |
-| SINT-01 | Phase 23 | Pending |
-| SINT-02 | Phase 23 | Pending |
-| SINT-03 | Phase 23 | Pending |
+| SINT-01 | Phase 23 | Complete |
+| SINT-02 | Phase 23 | Complete |
+| SINT-03 | Phase 23 | Complete |
 | PIPE-01 | Phase 24 | Pending |
 | PIPE-02 | Phase 24 | Pending |
 | PIPE-03 | Phase 24 | Pending |
