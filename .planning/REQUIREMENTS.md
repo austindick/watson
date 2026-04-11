@@ -47,8 +47,8 @@ Requirements for multi-mode design reference input. Each maps to roadmap phases.
 
 ### Discussion-Only Build
 
-- [ ] **DISC-01**: User can enter Loupe in discussion-only mode without prior discuss session or external reference
-- [ ] **DISC-02**: Discussion-only mode produces Slate-grounded output via library books (same quality as Figma-based builds)
+- [x] **DISC-01**: User can enter Loupe in discussion-only mode without prior discuss session or external reference
+- [x] **DISC-02**: Discussion-only mode produces Slate-grounded output via library books (same quality as Figma-based builds)
 - [ ] **DISC-03**: Cross-agent intent marker distinguishes discuss-generated specs from externally-referenced specs
 - [ ] **DISC-04**: Builder handles intent-marked specs appropriately (acknowledges lower certainty vs Figma/code-derived)
 
@@ -107,8 +107,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PIPE-04 | Phase 24 | Pending |
 | PIPE-05 | Phase 24 | Pending |
 | PIPE-06 | Phase 24 | Pending |
-| DISC-01 | Phase 24 | Pending |
-| DISC-02 | Phase 24 | Pending |
+| DISC-01 | Phase 24 | Complete |
+| DISC-02 | Phase 24 | Complete |
 | DISC-03 | Phase 24 | Pending |
 | DISC-04 | Phase 24 | Pending |
 
