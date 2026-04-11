@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 24-01-PLAN.md
-last_updated: "2026-04-11T03:24:13.842Z"
+stopped_at: Completed 24-03-PLAN.md
+last_updated: "2026-04-11T03:27:51.316Z"
 last_activity: 2026-04-10 — Phase 23 plan 01 complete; surface-resolver.md authored
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 7
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -49,6 +49,8 @@ Recent decisions affecting current work:
 - [Phase 24-pipeline-generalization-discussion-only]: In describeOnly mode, clearly-simple tier still runs Discuss-Only Build Path before returning ready_for_build — artifact writing is never skipped
 - [Phase 24-pipeline-generalization-discussion-only]: Hybrid detection triggers confirmatory AskUserQuestion rather than automatic mode switching; discuss returns ready_for_hybrid_build with surfaceName for loupe to route
 - [Phase 24-pipeline-generalization-discussion-only]: loupe.md Phase -1 handles 3-mode entry prompt; mode param controls routing; referenceType defaults to figma for backward compat (PIPE-02); discuss.md dispatched from Phase -1 Describe path only (locked decision override)
+- [Phase 24-pipeline-generalization-discussion-only]: [Phase 24-03]: SKILL.md JSON schema block removed during compression; status case bullets are self-documenting; SKILL.md at 204 lines (budget 215)
+- [Phase 24-pipeline-generalization-discussion-only]: [Phase 24-03]: Reference: intent marker pattern established — second line of artifact files signals pipeline origin (figma | prod-clone | discuss-only); builder uses library-defaults-first for discuss-only
 
 ### Pending Todos
 
@@ -65,6 +67,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-04-11T03:24:13.840Z
-Stopped at: Completed 24-01-PLAN.md
+Last session: 2026-04-11T03:27:51.314Z
+Stopped at: Completed 24-03-PLAN.md
 Resume: Run /gsd:execute-phase 23 plan 02

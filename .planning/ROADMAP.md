@@ -83,7 +83,7 @@ Full details: `milestones/v1.3-ROADMAP.md`
 
 - [x] **Phase 22: Codebase-Map Library Book** — Librarian generates monorepo navigation reference for faire/frontend (completed 2026-04-10)
 - [x] **Phase 23: Source Agents** — Surface resolver + 3 parallel source agents produce normalized pipeline artifacts from TSX (completed 2026-04-10)
-- [ ] **Phase 24: Pipeline Generalization & Discussion-Only** — Loupe orchestrator supports multi-mode entry, prod-clone dispatch, and discussion-only path
+- [x] **Phase 24: Pipeline Generalization & Discussion-Only** — Loupe orchestrator supports multi-mode entry, prod-clone dispatch, and discussion-only path (completed 2026-04-11)
 - [ ] **Phase 25: Integration Testing** — All 3 modes validated end-to-end; Figma regression confirmed
 
 ## Phase Details
@@ -129,7 +129,7 @@ Plans:
   4. Builder output for discussion-only mode visibly acknowledges intent-level certainty vs reference-derived certainty
   5. A build where different sections have different referenceTypes completes without error
   6. Source agents gracefully handle a null screenshotPath with no pipeline failure
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [ ] 24-01-PLAN.md — loupe.md multi-mode entry (Phase -1), conditional codebase-map (Phase 0), surface-resolver routing (Phase 1), prod-clone parallel dispatch (Phase 2)
@@ -161,5 +161,5 @@ Plans:
 | 16-21. User Experience & Commands | v1.3 | 11/11 | Complete | 2026-04-10 |
 | 22. Codebase-Map Library Book | 1/1 | Complete    | 2026-04-10 | - |
 | 23. Source Agents | 3/3 | Complete    | 2026-04-10 | - |
-| 24. Pipeline Generalization & Discussion-Only | 2/3 | In Progress|  | - |
+| 24. Pipeline Generalization & Discussion-Only | 3/3 | Complete   | 2026-04-11 | - |
 | 25. Integration Testing | v1.4 | 0/1 | Not started | - |

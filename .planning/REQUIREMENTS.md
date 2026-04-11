@@ -38,19 +38,19 @@ Requirements for multi-mode design reference input. Each maps to roadmap phases.
 
 ### Pipeline Generalization
 
-- [ ] **PIPE-01**: Loupe Phase -1 presents multi-mode entry prompt (Figma frame / existing experience / describe it)
-- [ ] **PIPE-02**: Section contract extended with referenceType field; defaults to "figma" when absent (backward compatibility)
-- [ ] **PIPE-03**: Loupe Phase 2 dispatches 3 source agents in parallel for prod-clone sections
-- [ ] **PIPE-04**: Existing Figma pipeline passes regression test after referenceType extension
-- [ ] **PIPE-05**: Mixed-mode sections supported — different sections in a single build can have different referenceTypes
-- [ ] **PIPE-06**: Source agents accept optional screenshotPath parameter and gracefully handle null
+- [x] **PIPE-01**: Loupe Phase -1 presents multi-mode entry prompt (Figma frame / existing experience / describe it)
+- [x] **PIPE-02**: Section contract extended with referenceType field; defaults to "figma" when absent (backward compatibility)
+- [x] **PIPE-03**: Loupe Phase 2 dispatches 3 source agents in parallel for prod-clone sections
+- [x] **PIPE-04**: Existing Figma pipeline passes regression test after referenceType extension
+- [x] **PIPE-05**: Mixed-mode sections supported — different sections in a single build can have different referenceTypes
+- [x] **PIPE-06**: Source agents accept optional screenshotPath parameter and gracefully handle null
 
 ### Discussion-Only Build
 
 - [x] **DISC-01**: User can enter Loupe in discussion-only mode without prior discuss session or external reference
 - [x] **DISC-02**: Discussion-only mode produces Slate-grounded output via library books (same quality as Figma-based builds)
-- [ ] **DISC-03**: Cross-agent intent marker distinguishes discuss-generated specs from externally-referenced specs
-- [ ] **DISC-04**: Builder handles intent-marked specs appropriately (acknowledges lower certainty vs Figma/code-derived)
+- [x] **DISC-03**: Cross-agent intent marker distinguishes discuss-generated specs from externally-referenced specs
+- [x] **DISC-04**: Builder handles intent-marked specs appropriately (acknowledges lower certainty vs Figma/code-derived)
 
 ## Future Requirements
 
@@ -101,16 +101,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SINT-01 | Phase 23 | Complete |
 | SINT-02 | Phase 23 | Complete |
 | SINT-03 | Phase 23 | Complete |
-| PIPE-01 | Phase 24 | Pending |
-| PIPE-02 | Phase 24 | Pending |
-| PIPE-03 | Phase 24 | Pending |
-| PIPE-04 | Phase 24 | Pending |
-| PIPE-05 | Phase 24 | Pending |
-| PIPE-06 | Phase 24 | Pending |
+| PIPE-01 | Phase 24 | Complete |
+| PIPE-02 | Phase 24 | Complete |
+| PIPE-03 | Phase 24 | Complete |
+| PIPE-04 | Phase 24 | Complete |
+| PIPE-05 | Phase 24 | Complete |
+| PIPE-06 | Phase 24 | Complete |
 | DISC-01 | Phase 24 | Complete |
 | DISC-02 | Phase 24 | Complete |
-| DISC-03 | Phase 24 | Pending |
-| DISC-04 | Phase 24 | Pending |
+| DISC-03 | Phase 24 | Complete |
+| DISC-04 | Phase 24 | Complete |
 
 **Coverage:**
 - v1.4 requirements: 22 total
