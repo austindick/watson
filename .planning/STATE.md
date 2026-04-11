@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 24-02-PLAN.md
-last_updated: "2026-04-11T03:23:29.629Z"
+stopped_at: Completed 24-01-PLAN.md
+last_updated: "2026-04-11T03:24:13.842Z"
 last_activity: 2026-04-10 — Phase 23 plan 01 complete; surface-resolver.md authored
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 7
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -48,6 +48,7 @@ Recent decisions affecting current work:
 - [Phase 23-source-agents]: agent-contract.md extended to 12 agents (8 existing + 4 new): surface-resolver, source-layout, source-design, source-interaction; Source Pipeline Parameters added as distinct section
 - [Phase 24-pipeline-generalization-discussion-only]: In describeOnly mode, clearly-simple tier still runs Discuss-Only Build Path before returning ready_for_build — artifact writing is never skipped
 - [Phase 24-pipeline-generalization-discussion-only]: Hybrid detection triggers confirmatory AskUserQuestion rather than automatic mode switching; discuss returns ready_for_hybrid_build with surfaceName for loupe to route
+- [Phase 24-pipeline-generalization-discussion-only]: loupe.md Phase -1 handles 3-mode entry prompt; mode param controls routing; referenceType defaults to figma for backward compat (PIPE-02); discuss.md dispatched from Phase -1 Describe path only (locked decision override)
 
 ### Pending Todos
 
@@ -64,6 +65,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-04-11T03:23:29.627Z
-Stopped at: Completed 24-02-PLAN.md
+Last session: 2026-04-11T03:24:13.840Z
+Stopped at: Completed 24-01-PLAN.md
 Resume: Run /gsd:execute-phase 23 plan 02
