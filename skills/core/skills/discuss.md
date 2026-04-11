@@ -475,6 +475,31 @@ When there is no Figma reference for a section (`referenceType` is `"discuss-onl
 - Populate if the conversation covered interaction specifics (states, flows, transitions)
 - Leave as template if interaction discussion was minimal — Builder can infer from component choices
 
+**Hybrid detection (describeOnly mode only):**
+After loading codebase-map surface names (from Phase 0), scan the user's description for matches BEFORE starting the conversation or writing artifacts:
+
+For each surface name in the codebase-map index:
+  If user's description contains this surface name (case-insensitive substring match):
+    Candidate hybrid surface found.
+
+If a candidate is found:
+  AskUserQuestion — header: "Surface", question: "Looks like you want to build on the [surfaceName]. I'll pull the existing layout and we'll add your changes on top.", options: ["Yes, use existing layout", "No, describe from scratch"]
+  - "Yes, use existing layout":
+    Run Discuss-Only Build Path for the user's description (write LAYOUT.md + DESIGN.md for the describe-only sections)
+    Return status `ready_for_hybrid_build` with surfaceName and discuss-only sections
+  - "No, describe from scratch":
+    Proceed as pure discuss-only (no hybrid)
+
+If no candidate is found:
+  Proceed as pure discuss-only (standard Discuss-Only Build Path).
+
+**Important:** Hybrid detection runs BEFORE the conversation or artifact writing. If the user confirms hybrid, discuss still writes LAYOUT.md + DESIGN.md for the discuss-only sections (the user's new additions), then returns. The prod-clone base sections are resolved by surface-resolver in loupe — discuss never dispatches surface-resolver.
+
+**Anti-patterns to enforce:**
+- discuss NEVER dispatches surface-resolver, loupe, or any agent — it returns status only
+- Hybrid detection triggers a user confirmation prompt, NOT automatic mode switching
+- The AskUserQuestion wording is confirmatory: "Looks like you want to build on..." not assumptive "I'll use..."
+
 ---
 
 ## Reference Inventory
@@ -609,14 +634,37 @@ Discuss pre-categorizes interaction context into the four keys (`customStates`, 
 
 **`status` values:**
 - `ready_for_build` — user confirmed ready to build; all sections have decided reference types
+- `ready_for_hybrid_build` — hybrid detected; discuss-only sections written, surface name identified for prod-clone base
 - `discussion_only` — user chose to save decisions without building (amendments persist in blueprint)
 - `cancelled` — user cancelled the discussion
+
+**`ready_for_hybrid_build` schema example:**
+
+```json
+{
+  "status": "ready_for_hybrid_build",
+  "blueprintPath": "/path/to/prototype/blueprint/",
+  "surfaceName": "Order List",
+  "sections": [
+    {
+      "name": "promotions-banner",
+      "referenceType": "discuss-only",
+      "interactionContext": null
+    }
+  ],
+  "crossSectionFlows": [],
+  "hasFullFrame": false,
+  "fullFrameUrl": null
+}
+```
+
+**`surfaceName`** is only present when status is `ready_for_hybrid_build`. It identifies the codebase-map surface that loupe should pass to surface-resolver for the prod-clone base sections.
 
 **`hasFullFrame`:** `true` when the user provided a full Figma frame URL (decomposer runs on it); `false` when only individual section frames or discuss-only sections exist.
 
 **`fullFrameUrl`:** The full-frame Figma URL if `hasFullFrame` is true; `null` otherwise.
 
-**`sections`:** One entry per section tracked in the reference inventory. Each entry has `name` and `referenceType`. Figma entries include `figmaUrl` and `nodeId` from the mid-session Figma fetch.
+**`sections`:** One entry per section tracked in the reference inventory. Each entry has `name` and `referenceType`. Figma entries include `figmaUrl` and `nodeId` from the mid-session Figma fetch. For `ready_for_hybrid_build`, sections[] contains only the discuss-only sections (the user's new additions) — the prod-clone base sections are resolved by surface-resolver in loupe.
 
 ---
 
