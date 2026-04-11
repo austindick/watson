@@ -15,10 +15,34 @@ You are the pipeline orchestrator for Watson. You wire decomposer → layout + d
 
 **Detection:** If `blueprintPath` was not provided by the caller, this is a standalone invocation. If `blueprintPath` was provided, skip Phase -1 entirely and proceed to Inputs / Phase 0.
 
-**Step 1: Check user's message for input**
-- If the user's message contains a Figma URL: extract it as `fullFrameUrl`, set `hasFullFrame: true`
-- If the user's message contains a description (not just bare `/watson:loupe`): note it for inline CONTEXT.md population (same as SKILL.md Tier 2 minimal CONTEXT.md write)
-- If the message is bare `/watson:loupe` with no Figma URL or description: AskUserQuestion — header: "Build", question: "What would you like to build?", options: ["I have a Figma frame", "Let me describe it", "Cancel"]. If "I have a Figma frame": ask for URL. If "Let me describe it": accept description.
+**Step 1: Resolve build mode**
+
+First check if `mode` was provided by the caller (SKILL.md or a continuation agent):
+- If `mode` was provided → skip mode detection entirely. If `mode='prod-clone'` AND `experienceName` is already provided, skip to Step 5.
+- If `mode` was NOT provided → proceed with auto-detection below.
+
+**Auto-detection (only when `mode` is not pre-set):**
+
+1. If the user's message contains a Figma URL: extract it as `fullFrameUrl`, set `hasFullFrame: true`, set `mode='figma'`. Skip the mode prompt — proceed to Step 2.
+
+2. If the user's message references a known experience by name (e.g., "build from Order List", "clone the Products page", "based on Order List"): set `mode='prod-clone'`, set `experienceName` to the referenced name. Skip the mode prompt — proceed to Step 2.
+
+3. If the message is bare `/watson:loupe` (no Figma URL, no experience reference, no description): AskUserQuestion — header: "Build", question: "Where should I start from?", options: ["Start from a Figma frame", "Clone an existing experience", "Describe what you want", "Cancel"].
+   - "Start from a Figma frame" → ask for Figma URL, extract as `fullFrameUrl`, set `hasFullFrame: true`, set `mode='figma'`. Proceed to Step 2.
+   - "Clone an existing experience" → show named experience menu via AskUserQuestion (read codebase-map CHAPTER.md Names column to build options list). Set `mode='prod-clone'`, set `experienceName` from user's selection. Proceed to Step 2.
+   - "Describe what you want" → set `mode='discuss-only'`. Dispatch `@skills/discuss.md` **foreground** with:
+     ```
+     blueprintPath: {blueprintPath}
+     describeOnly: true
+     ```
+     Wait for discuss return status. Handle return:
+     - `ready_for_build`: use returned `sections[]`, proceed to Step 5 (set mode='discuss-only').
+     - `ready_for_hybrid_build`: set `mode='prod-clone'`, set `experienceName` from return's `surfaceName`, store returned `sections[]` (discuss-only sections) as `additionalSections`. Proceed to Step 5.
+     - `discussion_only`: say "Decisions saved. Run /watson:loupe when you're ready to build." Exit.
+     - `cancelled`: exit.
+
+     **Note:** This is the only place in loupe.md where `@skills/discuss.md` is dispatched. The existing constraint "Never dispatch @skills/discuss.md" is overridden specifically for this "Describe what you want" entry path — a locked decision from CONTEXT.md.
+   - "Cancel" → exit.
 
 **Step 2: Detect blueprint directory**
 Same logic as discuss.md Phase -1 Step 1:
@@ -45,6 +69,9 @@ Set the standard loupe inputs from what was gathered:
 - `hasFullFrame`: true if Figma URL detected, false otherwise
 - `fullFrameUrl`: extracted Figma URL or null
 - `crossSectionFlows`: null
+- `mode`: resolved from Step 1 (`'figma'`, `'prod-clone'`, or `'discuss-only'`)
+- `experienceName`: resolved from Step 1 (experience name string, or null for non-prod-clone builds)
+- `additionalSections`: discuss-only sections from a hybrid discuss return — null unless hybrid (`ready_for_hybrid_build` was returned by discuss)
 
 ---
 
@@ -57,6 +84,10 @@ Set the standard loupe inputs from what was gathered:
 | hasFullFrame | boolean | true if fullFrameUrl is a whole Figma frame URL (decomposer runs). false if sections[] was provided. |
 | fullFrameUrl | string or null | Figma frame URL when hasFullFrame is true |
 | crossSectionFlows | array or null | Cross-section interaction flows from discuss (passed to interaction agent and consolidator) |
+| mode | string or null | `'figma'` \| `'prod-clone'` \| `'discuss-only'` — set by SKILL.md or resolved in Phase -1. When null/absent, Phase -1 resolves it. |
+| experienceName | string or null | Experience name for prod-clone mode (from user message or Phase -1 menu) |
+
+When `mode` is provided by the caller, Phase -1 skips the mode prompt.
 
 When invoked standalone (Phase -1 ran), these inputs are resolved by the preamble. When dispatched from SKILL.md, these are passed directly by the caller.
 
@@ -94,6 +125,14 @@ If `/tmp/watson-active.json` does not exist or has no `actions` field, skip sile
    ]
    ```
 5. Pass this array to every agent dispatch below. **Never improvise paths.** All paths come from LIBRARY.md and BOOK.md manifests.
+
+**Conditional codebase-map loading:**
+If `mode` is `'prod-clone'` OR `sections[]` contains any entry with `referenceType='prod-clone'`:
+  1. Read the codebase-map book's BOOK.md manifest (find the `codebase-map` entry in LIBRARY.md, use its `path:` field to locate BOOK.md).
+  2. For each chapter in BOOK.md `chapters[]`, append the chapter's absolute path to `libraryPaths[]`.
+  3. Pass the extended `libraryPaths[]` to surface-resolver and all source agent dispatches.
+
+If `mode` is `'figma'` or `'discuss-only'` with no prod-clone sections: skip codebase-map loading entirely.
 
 ---
 
