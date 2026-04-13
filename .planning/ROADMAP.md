@@ -84,7 +84,7 @@ Full details: `milestones/v1.3-ROADMAP.md`
 - [x] **Phase 22: Codebase-Map Library Book** — Librarian generates monorepo navigation reference for faire/frontend (completed 2026-04-10)
 - [x] **Phase 23: Source Agents** — Surface resolver + 3 parallel source agents produce normalized pipeline artifacts from TSX (completed 2026-04-10)
 - [x] **Phase 24: Pipeline Generalization & Discussion-Only** — Loupe orchestrator supports multi-mode entry, prod-clone dispatch, and discussion-only path (completed 2026-04-11)
-- [ ] **Phase 25: Integration Testing** — All 3 modes validated end-to-end; Figma regression confirmed
+- [x] **Phase 25: Integration Testing** — All 3 modes validated end-to-end; Figma regression confirmed (completed 2026-04-13)
 
 ## Phase Details
 
@@ -145,10 +145,11 @@ Plans:
   2. A prod-clone build for a known faire/frontend surface produces compilable prototype code with Slate components
   3. A discussion-only build from a text description alone produces compilable prototype code grounded in Slate library books
   4. Mixed-mode sections (one Figma, one prod-clone) in a single build complete without error or routing failure
-**Plans**: TBD
+**Plans:** 2/2 plans complete
 
 Plans:
-- [ ] 25-01: End-to-end validation across all 3 modes + Figma regression
+- [ ] 25-01-PLAN.md — Figma regression test + prod-clone build validation (Scenarios A + B)
+- [ ] 25-02-PLAN.md — Discussion-only build + mixed-mode validation (Scenarios C + D)
 
 ## Progress
 
@@ -161,5 +162,5 @@ Plans:
 | 16-21. User Experience & Commands | v1.3 | 11/11 | Complete | 2026-04-10 |
 | 22. Codebase-Map Library Book | 1/1 | Complete    | 2026-04-10 | - |
 | 23. Source Agents | 3/3 | Complete    | 2026-04-10 | - |
-| 24. Pipeline Generalization & Discussion-Only | 3/3 | Complete   | 2026-04-11 | - |
-| 25. Integration Testing | v1.4 | 0/1 | Not started | - |
+| 24. Pipeline Generalization & Discussion-Only | 3/3 | Complete    | 2026-04-11 | - |
+| 25. Integration Testing | 2/2 | Complete   | 2026-04-13 | - |
