@@ -163,4 +163,4 @@ Plans:
 | 22. Codebase-Map Library Book | 1/1 | Complete    | 2026-04-10 | - |
 | 23. Source Agents | 3/3 | Complete    | 2026-04-10 | - |
 | 24. Pipeline Generalization & Discussion-Only | 3/3 | Complete    | 2026-04-11 | - |
-| 25. Integration Testing | 2/2 | Complete   | 2026-04-13 | - |
+| 25. Integration Testing | 2/2 | Complete    | 2026-04-13 | - |
