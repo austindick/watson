@@ -44,11 +44,11 @@ Requirements for the Design Toolkit milestone. Decompose Watson into standalone 
 - [x] **DSGN-06**: Builder handles `page-container` type — creates wrapper structure with insertion region, not standalone component
 - [x] **DSGN-07**: Reviewer cross-references each CSS property against the specific token assigned in LAYOUT.md annotated CSS (not just token name validity)
 - [x] **DSGN-08**: Builder resolves all styling through token system for novel compositions, not just direct copies
-- [ ] **DSGN-09**: Builder→reviewer uses convergent loop: iterate until output matches spec or max 3 iterations, with structured diff (not prose) between passes
-- [ ] **DSGN-10**: User can rebuild specific section(s) without re-running full pipeline — skips decomposition, targets only specified sections
+- [x] **DSGN-09**: Builder→reviewer uses convergent loop: iterate until output matches spec or max 3 iterations, with structured diff (not prose) between passes
+- [x] **DSGN-10**: User can rebuild specific section(s) without re-running full pipeline — skips decomposition, targets only specified sections
 - [x] **DSGN-11**: Reads PRD from `/think` if present, works without it
 - [x] **DSGN-12**: Blueprint files (LAYOUT.md, DESIGN.md, INTERACTION.md) written per section and consolidated
-- [ ] **DSGN-13**: After consolidation, run full-prototype type-check and dev server verification before declaring completion — auto-fix up to 2 attempts, designer-friendly error reporting
+- [x] **DSGN-13**: After consolidation, run full-prototype type-check and dev server verification before declaring completion — auto-fix up to 2 attempts, designer-friendly error reporting
 
 ### /save — Checkpoint Utility
 
@@ -117,11 +117,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DSGN-06 | Phase 30 | Complete |
 | DSGN-07 | Phase 30 | Complete |
 | DSGN-08 | Phase 30 | Complete |
-| DSGN-09 | Phase 30 | Pending |
-| DSGN-10 | Phase 30 | Pending |
+| DSGN-09 | Phase 30 | Complete |
+| DSGN-10 | Phase 30 | Complete |
 | DSGN-11 | Phase 29 | Complete |
 | DSGN-12 | Phase 29 | Complete |
-| DSGN-13 | Phase 30 | Pending |
+| DSGN-13 | Phase 30 | Complete |
 | SAVE-01 | Phase 31 | Pending |
 | SAVE-02 | Phase 31 | Pending |
 | SAVE-03 | Phase 31 | Pending |

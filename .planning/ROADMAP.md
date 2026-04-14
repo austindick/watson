@@ -217,6 +217,6 @@ Plans:
 | 27. /play Skill | 2/2 | Complete    | 2026-04-14 | - |
 | 28. /think Skill | 2/2 | Complete    | 2026-04-14 | - |
 | 29. /design Extraction | 2/2 | Complete    | 2026-04-14 | - |
-| 30. /design Hardening | 3/3 | Complete   | 2026-04-14 | - |
+| 30. /design Hardening | 3/3 | Complete    | 2026-04-14 | - |
 | 31. /save Skill | v1.5 | 0/TBD | Not started | - |
 | 32. Integration Testing | v1.5 | 0/TBD | Not started | - |
