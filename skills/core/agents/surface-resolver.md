@@ -12,7 +12,7 @@ Parse a user-specified experience name against the codebase-map library book, re
 ## Critical Constraints
 
 1. **Foreground only** — MUST run as a foreground agent. Uses `AskUserQuestion` for approval. A silent unapproved section list is a pipeline corruption.
-2. **Output format is fixed** — `{name, referenceType, filePaths, description, sourceSurface}[]` only. `referenceType` is always `"prod-clone"`. Do not extend the contract.
+2. **Output format is fixed** — `{name, referenceType, filePaths, description, sourceSurface, type?}[]` only. `referenceType` is always `"prod-clone"`. The optional `type` field is only present on the first (page-container) entry. Do not extend the contract beyond these fields.
 3. **Never expose file paths to user** — approval list shows humanized names and descriptions only. Paths are internal to the section contract.
 4. **Verify file paths before including** — Read each file path; if it errors, trigger stale entry handling (search nearby, suggest candidates, fall back to surface repick). This is RSLV-04.
 5. **No Figma MCP calls** — this agent reads files via Read tool only. No `mcp__figma__` calls anywhere in execution.
@@ -25,7 +25,7 @@ Parse a user-specified experience name against the codebase-map library book, re
   - `blueprintPath` (string) — absolute path to prototype's blueprint/ directory
   - `libraryPaths` (string[]) — pre-resolved chapter/page paths; resolver reads codebase-map CHAPTER.md files from this array
   - `quietMode` (boolean) — suppress interactive prompts when true
-- **Output:** sections[] JSON inline — each entry: `name`, `referenceType:"prod-clone"`, `filePaths[]`, `description`, `sourceSurface`
+- **Output:** sections[] JSON inline — each entry: `name`, `referenceType:"prod-clone"`, `filePaths[]`, `description`, `sourceSurface`, optional `type` (only on first entry)
 
 ## Execution
 
@@ -69,6 +69,26 @@ Parse a user-specified experience name against the codebase-map library book, re
   - Any component with a meaningful visual name that corresponds to a page area
 
 - **Auto-expand rule:** if 2 or fewer visual children remain after filtering, look one level deeper inside the largest component (the one with the most direct JSX children in its source file). Use those children as the section list instead.
+
+### Step 3.5: Emit page-container entry
+
+Before resolving child section file paths, create the first entry in the output representing the page component itself with `type: "page-container"`. The page component file verified in Step 2 is the source for this entry.
+
+```json
+{
+  "name": "Page Container",
+  "referenceType": "prod-clone",
+  "filePaths": ["{verified page component file path from Step 2}"],
+  "description": "Page-level wrapper layout",
+  "sourceSurface": {
+    "name": "{matched experience Name from codebase-map}",
+    "route": "{matched Route from codebase-map}"
+  },
+  "type": "page-container"
+}
+```
+
+This entry is emitted automatically and silently — it is NOT shown in the user approval list (Step 6). It is always the first item in the returned sections array.
 
 ### Step 4: Resolve section file paths
 
@@ -140,6 +160,17 @@ For each approved section, construct the contract entry:
 ```json
 [
   {
+    "name": "Page Container",
+    "referenceType": "prod-clone",
+    "filePaths": ["@repo/packages/.../PageFile.tsx"],
+    "description": "Page-level wrapper layout",
+    "sourceSurface": {
+      "name": "Experience Name",
+      "route": "/route/path"
+    },
+    "type": "page-container"
+  },
+  {
     "name": "Section Name",
     "referenceType": "prod-clone",
     "filePaths": ["@repo/packages/.../ComponentFile.tsx"],
@@ -152,7 +183,9 @@ For each approved section, construct the contract entry:
 ]
 ```
 
-- Ordered by visual top-to-bottom order as they appear in the page component's JSX return
+- **First entry is always the page-container** — represents the page component itself; emitted automatically by Step 3.5
+- Child sections follow in visual top-to-bottom order as they appear in the page component's JSX return
 - `referenceType` is always `"prod-clone"` — never `"figma"` or `"discuss-only"`
 - `filePaths[]` always contains at least one entry (the primary component file)
 - `sourceSurface` always present — carries the original codebase-map entry for builder context and progress messages
+- `type` field is only present on the page-container entry; child sections omit it

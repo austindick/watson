@@ -22,9 +22,9 @@ books_count: 3
 **Path:** library/playground-conventions/BOOK.md
 **Book type:** foundational
 **Last updated:** 2026-03-31
-**Chapters:** Project Structure, Scaffolding, Components, Design Tokens, Dev Workflow, Multi-Variant, Contributor Registration
-**Use when:** Agent needs prototype scaffolding steps, component imports, design tokens, dev workflow, or multi-variant patterns
-**Last run:** Manually authored -- 7 chapters consolidated from 6 source documents
+**Chapters:** Project Structure, Scaffolding, Components, Design Tokens, Dev Workflow, Multi-Variant, Contributor Registration, Page Templates
+**Use when:** Agent needs prototype scaffolding steps, component imports, design tokens, dev workflow, multi-variant patterns, or portal outer shell values
+**Last run:** Manually authored -- 8 chapters (7 original + page-templates added 2026-04-14)
 
 ### Codebase Map
 **Path:** library/codebase-map/BOOK.md

@@ -27,11 +27,34 @@ Convert Figma auto-layout properties for a section into a LAYOUT.md spec using d
 - `blueprintPath` — absolute path to the prototype's `blueprint/` directory; read `{blueprintPath}/LAYOUT.md` for vocabulary context if it exists
 - `libraryPaths` — string array of pre-resolved chapter/page file paths; read each file directly to load spacing and radius tokens
 - `quietMode` — boolean; suppress interactive prompts when true
+- `sectionType` (string, optional) — when `"page-container"`, triggers container-only extraction mode (see Page-Container Mode below)
 
 ## Outputs
 
 - `{protoDir}/.dt/sections/{sectionName}/LAYOUT.md` — layout spec, under 80 lines
 - Sections: Token Quick-Reference, Component Tree, Annotated CSS
+
+## Page-Container Mode
+
+When `sectionType` is `"page-container"`, the layout agent runs a constrained extraction targeting only the outer container properties of the Figma frame. This mode is triggered by the orchestrator for the first section in the decomposer output.
+
+**What to extract (container-only):**
+- Background color of the frame root
+- Outer padding (all four sides) of the frame root
+- Content max-width (if set on the frame)
+- Inter-section spacing: gap between direct children of the frame (not between elements within a section)
+- Alignment of content within the frame container (justify-content, align-items)
+
+**What NOT to extract:**
+- Layout properties of individual child sections — those belong to per-section layout passes
+- Component tree details beyond the outer wrapper level
+- Any element deeper than the first level of children
+
+**Portal template baseline:**
+Also read the page-templates chapter from `libraryPaths` (the chapter with id `page-templates`). Use portal template values as the baseline for outer shell properties. Figma-derived values override portal template values when they differ — Figma wins for any property explicitly set on the frame. When Figma data is absent for a property, use the portal template value.
+
+**Output:**
+The Component Tree shows only the outer wrapper structure (frame root and one level of children as named stubs). The Annotated CSS has a single container class with the outer shell properties only. The 80-line budget applies as normal.
 
 ## Execution
 

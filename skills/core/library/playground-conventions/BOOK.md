@@ -33,6 +33,9 @@ chapters:
   - id: contributor-registration
     path: contributor-registration/CHAPTER.md
     summary: "How to add team members to contributors.ts, registration format, owner field matching"
+  - id: page-templates
+    path: page-templates/CHAPTER.md
+    summary: "Portal outer shell values (Retailer, Brand): background, padding, max-width, nav, inter-section spacing"
 ---
 
 # Playground Conventions
@@ -52,3 +55,4 @@ Root path: `packages/design/prototype-playground/`
 | dev-workflow | [Dev Workflow](dev-workflow/CHAPTER.md) | Dev server, thumbnails, publishing, commits, shared code policy |
 | multi-variant | [Multi-Variant](multi-variant/CHAPTER.md) | Folder structure, CONCEPTS array, variant isolation |
 | contributor-registration | [Contributor Registration](contributor-registration/CHAPTER.md) | Adding team members, owner field matching |
+| page-templates | [Page Templates](page-templates/CHAPTER.md) | Portal outer shell values (Retailer, Brand): background, padding, max-width, nav, inter-section spacing |

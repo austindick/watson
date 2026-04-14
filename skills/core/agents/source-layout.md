@@ -30,11 +30,34 @@ Extract spatial structure and layout properties from TSX source files for a sect
 - `blueprintPath` (string) — absolute path to prototype's `blueprint/` directory
 - `libraryPaths` (string[]) — pre-resolved chapter/page file paths for token lookup
 - `quietMode` (boolean) — suppress interactive prompts when true
+- `sectionType` (string, optional) — when `"page-container"`, triggers container-only extraction mode (see Page-Container Mode below)
 
 ## Outputs
 
 - `{protoDir}/.dt/sections/{sectionName}/LAYOUT.md` — layout spec, under 80 lines
 - Sections: Token Quick-Reference, Component Tree, Annotated CSS
+
+## Page-Container Mode
+
+When `sectionType` is `"page-container"`, the source-layout agent runs a constrained extraction targeting only the root element of the page component file. This mode is triggered for the first section in the surface-resolver output when `type` is `"page-container"`.
+
+**What to extract (container-only):**
+- Background color from the page component's root JSX element (or its outermost wrapper div)
+- Outer padding (all four sides) of the root element
+- Content max-width (if set as a style or class on the root or its immediate layout wrapper)
+- Inter-section spacing: gap between the root element's direct children (top-level section components)
+- Alignment of content within the root container
+
+**What NOT to extract:**
+- Layout properties of individual child section components — those belong to per-section source-layout passes
+- Import deep-dive into child section files
+- Any element properties below the first level of children
+
+**Portal template baseline:**
+Also read the page-templates chapter from `libraryPaths` (the chapter with id `page-templates`). Use portal template values as the baseline for outer shell properties. Source-derived values (confidence "from code") override portal template values. When no source value is found for a property, use the portal template value with confidence annotation `/* portal-template */`.
+
+**Output:**
+The Component Tree shows only the root wrapper and its direct children as named stubs. The Annotated CSS has a single container class. The confidence summary tally (from Step 9) applies as normal.
 
 ## Execution
 

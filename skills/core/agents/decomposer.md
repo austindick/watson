@@ -12,18 +12,20 @@ Parse a Figma frame node tree into an ordered list of named sections for pipelin
 
 - **Foreground only** — MUST run as a foreground agent (never background). `AskUserQuestion` fails silently in background mode; a silent unapproved section list is a pipeline corruption.
 - **Never fetch page-level node** — ALL `mcp__figma__get_figma_data` calls MUST scope to the frame nodeId or a child nodeId. Never pass a page nodeId.
-- **Output format is fixed** — `{name, nodeId, dimensions}[]` only. No dependency hints, no extra fields (except optional `parent` for subsections). Do not extend the contract.
+- **Output format is fixed** — `{name, nodeId, dimensions, parent?, type?}[]` only. No dependency hints, no extra fields beyond the listed optional ones. The `type` field is only used for the page-container entry.
 - **Correct MCP tool** — use `mcp__figma__get_figma_data`. This is the only available Figma MCP tool.
 - **Fail loudly on tool error** — if any MCP call fails with a tool-not-found error, HALT immediately and report the exact error message to the user. Do not continue with fabricated or inferred data.
 - **Tagged path is automatic** — if ANY `::section` tags are found, skip approval entirely and return the section list immediately.
+- **The frame itself is always first** — the Figma frame is emitted as the first section with `type: page-container` before any child sections, in both tagged and heuristic paths. This entry is never shown in the approval prompt.
 
 ## Inputs / Outputs
 
 - **Input:** Figma frame URL — full URL including `node-id` query parameter (e.g., `https://figma.com/design/kL9xQn.../Name?node-id=42-15`)
 - **Parameters:** `figmaUrl` (string), `blueprintPath` (string), `libraryPaths` (string[]), `quietMode` (boolean)
   - Note: `libraryPaths` is accepted as part of the shared plugin contract but is not used by this agent — decomposer reads only Figma metadata.
-- **Output:** `{name, nodeId, dimensions, parent?}[]` ordered by Figma layer order
+- **Output:** `{name, nodeId, dimensions, parent?, type?}[]` ordered by Figma layer order
   - `parent` is only present on subsection entries; omit for top-level sections
+  - `type` is only present on the first entry (the page-container); omit for all child sections
 
 ## Execution
 
@@ -39,6 +41,16 @@ Parse a Figma frame node tree into an ordered list of named sections for pipelin
 - Response is XML containing node IDs, names, types, x/y positions, and width/height
 - Width and height from this response satisfy the `dimensions` field in the output contract — no follow-up call needed for the section list itself
 - If the response lacks dimension data for a node, make a follow-up `mcp__figma__get_figma_data` call on that child nodeId
+
+### Step 2.5: Emit page-container entry
+
+Before processing children, emit the Figma frame ITSELF as the first entry in the section list with `type: "page-container"`. Use the frame's own `nodeId` and `dimensions` from the Step 2 response. Derive `name` from the Figma frame name (e.g., if the frame is named "Brand Portal — Orders", use that as the name; if generic, use "Page Container").
+
+```json
+{ "name": "Page Container", "nodeId": "42-15", "dimensions": { "width": 1440, "height": 900 }, "type": "page-container" }
+```
+
+This entry is always the first item. All child sections (from Step 3 or Step 4) follow it. The page-container entry is NOT shown in the user approval list — it is emitted automatically and silently.
 
 ### Step 3: Tag detection — scan for `::section` suffix
 
@@ -105,12 +117,15 @@ Build the section list from all fetched responses in the order the URLs were pro
 
 ```json
 [
+  { "name": "Page Container", "nodeId": "42-15", "dimensions": { "width": 1440, "height": 900 }, "type": "page-container" },
   { "name": "Navbar", "nodeId": "42-16", "dimensions": { "width": 1440, "height": 64 } },
   { "name": "Hero", "nodeId": "42-17", "dimensions": { "width": 1440, "height": 500 } },
   { "name": "Hero Caption", "nodeId": "42-20", "dimensions": { "width": 1440, "height": 80 }, "parent": "Hero" }
 ]
 ```
 
-- Ordered by Figma layer order (top to bottom as in the XML response)
+- The frame itself is always emitted as the **first entry** with `type: "page-container"` — it represents the page-level wrapper, not a visual section
+- Child sections follow in Figma layer order (top to bottom as in the XML response)
 - Subsections include `"parent": "SectionName"`; top-level sections omit the `parent` field
 - No dependency hints (`isolated`, `has-deps`) in the returned list
+- `type` field is only present on the page-container entry; child sections omit it
