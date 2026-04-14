@@ -160,7 +160,8 @@ If `/tmp/dt-active.json` does not exist or has no `actions` field, skip silently
      "${CLAUDE_PLUGIN_ROOT}/skills/core/library/playground-conventions/design-tokens/CHAPTER.md",
      "${CLAUDE_PLUGIN_ROOT}/skills/core/library/playground-conventions/dev-workflow/CHAPTER.md",
      "${CLAUDE_PLUGIN_ROOT}/skills/core/library/playground-conventions/multi-variant/CHAPTER.md",
-     "${CLAUDE_PLUGIN_ROOT}/skills/core/library/playground-conventions/contributor-registration/CHAPTER.md"
+     "${CLAUDE_PLUGIN_ROOT}/skills/core/library/playground-conventions/contributor-registration/CHAPTER.md",
+     "${CLAUDE_PLUGIN_ROOT}/skills/core/library/playground-conventions/page-templates/CHAPTER.md"
    ]
    ```
 5. Pass this array to every agent dispatch below. **Never improvise paths.** All paths come from LIBRARY.md and BOOK.md manifests.
