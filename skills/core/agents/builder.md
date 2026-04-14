@@ -36,6 +36,10 @@ If you catch yourself thinking any of these, stop and re-check — you are about
 | "I don't need to check the amendments, they probably don't affect this section" | Read the amendments. Filter mechanically: skip `[PENDING]` and `[INFERRED]`, apply `[COMMITTED]`. The word "probably" means you skipped Step 1's amendment filter. |
 | "This section is simple enough to do from memory" | Read the spec files. Every section, regardless of complexity, follows the same Step 1-9 sequence. "From memory" means you're generating from training data, not from the spec. |
 | "The TODO comment format doesn't matter that much" | Use the exact locked format: `{/* TODO: unmapped — closest library: [Name] (gap: [reason]); raw: prop="value" */}`. The reviewer checks for this exact format. Deviation = reviewer FAIL. |
+| "There's no token for this" | Check the full token table in the library books. Spacing, radius, color, and typography categories cover nearly everything. If you searched one chapter, search all of them. Only declare "no token" after checking every token table in libraryPaths. |
+| "I'll use a common CSS value" | Common CSS values (16px, #333, 1rem) are NOT tokens. Find the design system token that maps to this value category. `var(--spacing-md)` not `16px`. `var(--color-text-primary)` not `#333`. |
+| "Novel component so tokens don't apply" | Tokens apply to ALL components — novel or standard. A custom card layout still uses `var(--spacing-*)` for padding, `var(--radius-*)` for corners, `var(--color-*)` for backgrounds. The component is novel; the token system is universal. |
+| "The spec doesn't assign a token for this property" | When LAYOUT.md doesn't specify a token (e.g., discuss-only mode), read the library book token tables and select the semantically correct token by category. Gap between cards? Use a spacing token. Card corner radius? Use a radius token. Derive, don't skip. |
 
 ## Inputs
 
@@ -47,6 +51,7 @@ If you catch yourself thinking any of these, stop and re-check — you are about
 - `blueprintPath` — absolute path to the prototype's `blueprint/` directory
 - `libraryPaths` — string array of pre-resolved chapter/page file paths; read each file directly for component variant validation
 - `quietMode` — boolean; suppress interactive prompts when true
+- `reviewFeedback` (object, optional) — structured feedback from a prior reviewer pass in the convergent loop. Contains `remaining[]` (diff items with status FAIL) and `escalations[]`. When present, the builder reads this as a targeted fix list and addresses each item before proceeding with normal generation. Format matches the reviewer's structured result diff entries: `{ element, property, expected, figmaValue, actual, status }`.
 
 ## Outputs
 
@@ -68,6 +73,8 @@ Read `layoutPath` (LAYOUT.md) and `designPath` (DESIGN.md). Check if INTERACTION
 - Lines with no marker prefix (pre-Phase-7 format): **apply as-is** — backwards compatibility
 
 Apply committed amendments as an overlay on the per-section spec data.
+
+**reviewFeedback (convergent loop):** If `reviewFeedback` is provided, parse it as a targeted fix list. For each entry in `reviewFeedback.remaining`, the builder will specifically ensure the `expected` token is used for the `property` on the `element` during code generation. This is a focused correction pass — address each item explicitly before proceeding with normal generation. The `figmaValue` field provides the Figma source value for context when selecting the correct token.
 
 ### Step 2: Read library books
 
@@ -96,6 +103,12 @@ Record all file content before `startLine` as `protectedBefore` and all content 
 ### Step 6: Generate section implementation
 
 Build the replacement code for the captured region:
+
+- **Token Resolution for Novel Compositions:** For EVERY CSS property that takes a design token value (spacing, color, radius, typography), the builder MUST resolve through the token system — including novel components with no direct Figma-to-component match:
+  1. If LAYOUT.md or DESIGN.md specifies a token: use that exact token.
+  2. If no spec token exists (discuss-only mode, or spec gap): read the library book token tables from `libraryPaths`. Find the token category matching the CSS property — spacing tokens for `gap`/`padding`/`margin`, radius tokens for `border-radius`, color tokens for `background`/`color`/`border-color`, typography tokens for `font-size`/`font-weight`/`line-height`. Select the semantically closest token by value.
+  3. If the property category genuinely has NO tokens in any library book: use the raw value with a TODO comment in locked format. This should be rare — nearly all visual properties have token coverage.
+  Never emit raw hex colors, bare px values, or magic numbers without first checking the full token system.
 
 - **Import Resolution:** Use the import paths from the library books (e.g., `import { Button } from "@faire/slate/components/button"`). If the library import fails to compile (Step 9), fall back to the import path used in the existing target file for that component. The library book `**Import:**` line is the preferred source of truth, but compilability wins.
 - **Component Mapping (DESIGN.md):** For each row, use the exact library component, variant, and props listed — no substitutions
