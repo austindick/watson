@@ -36,9 +36,9 @@ Requirements for the Design Toolkit milestone. Decompose Watson into standalone 
 
 ### /design — Build Pipeline
 
-- [ ] **DSGN-01**: User can run `/design` as standalone skill independent of `/think` or `/play`
-- [ ] **DSGN-02**: 3-mode entry: Figma frame URL, existing prod experience reference, or text description
-- [ ] **DSGN-03**: All 12 agents ported to standalone context (8 Figma pipeline + 4 source agents)
+- [x] **DSGN-01**: User can run `/design` as standalone skill independent of `/think` or `/play`
+- [x] **DSGN-02**: 3-mode entry: Figma frame URL, existing prod experience reference, or text description
+- [x] **DSGN-03**: All 12 agents ported to standalone context (8 Figma pipeline + 4 source agents)
 - [ ] **DSGN-04**: Decomposer emits frame as first section with `type: page-container` for page-level layout properties
 - [ ] **DSGN-05**: Layout agent handles `page-container` type — extracts container-only properties (background, padding, alignment, inter-section spacing)
 - [ ] **DSGN-06**: Builder handles `page-container` type — creates wrapper structure with insertion region, not standalone component
@@ -46,8 +46,8 @@ Requirements for the Design Toolkit milestone. Decompose Watson into standalone 
 - [ ] **DSGN-08**: Builder resolves all styling through token system for novel compositions, not just direct copies
 - [ ] **DSGN-09**: Builder→reviewer uses convergent loop: iterate until output matches spec or max 3 iterations, with structured diff (not prose) between passes
 - [ ] **DSGN-10**: User can rebuild specific section(s) without re-running full pipeline — skips decomposition, targets only specified sections
-- [ ] **DSGN-11**: Reads PRD from `/think` if present, works without it
-- [ ] **DSGN-12**: Blueprint files (LAYOUT.md, DESIGN.md, INTERACTION.md) written per section and consolidated
+- [x] **DSGN-11**: Reads PRD from `/think` if present, works without it
+- [x] **DSGN-12**: Blueprint files (LAYOUT.md, DESIGN.md, INTERACTION.md) written per section and consolidated
 - [ ] **DSGN-13**: After consolidation, run full-prototype type-check and dev server verification before declaring completion — auto-fix up to 2 attempts, designer-friendly error reporting
 
 ### /save — Checkpoint Utility
@@ -109,9 +109,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | THINK-04 | Phase 28 | Complete |
 | THINK-05 | Phase 28 | Complete |
 | THINK-06 | Phase 28 | Complete |
-| DSGN-01 | Phase 29 | Pending |
-| DSGN-02 | Phase 29 | Pending |
-| DSGN-03 | Phase 29 | Pending |
+| DSGN-01 | Phase 29 | Complete |
+| DSGN-02 | Phase 29 | Complete |
+| DSGN-03 | Phase 29 | Complete |
 | DSGN-04 | Phase 30 | Pending |
 | DSGN-05 | Phase 30 | Pending |
 | DSGN-06 | Phase 30 | Pending |
@@ -119,8 +119,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DSGN-08 | Phase 30 | Pending |
 | DSGN-09 | Phase 30 | Pending |
 | DSGN-10 | Phase 30 | Pending |
-| DSGN-11 | Phase 29 | Pending |
-| DSGN-12 | Phase 29 | Pending |
+| DSGN-11 | Phase 29 | Complete |
+| DSGN-12 | Phase 29 | Complete |
 | DSGN-13 | Phase 30 | Pending |
 | SAVE-01 | Phase 31 | Pending |
 | SAVE-02 | Phase 31 | Pending |

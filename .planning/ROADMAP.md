@@ -212,7 +212,7 @@ Plans:
 | 26. Plugin Scaffold | 3/3 | Complete    | 2026-04-14 | - |
 | 27. /play Skill | 2/2 | Complete    | 2026-04-14 | - |
 | 28. /think Skill | 2/2 | Complete    | 2026-04-14 | - |
-| 29. /design Extraction | v1.5 | 0/2 | Not started | - |
+| 29. /design Extraction | 1/2 | In Progress|  | - |
 | 30. /design Hardening | v1.5 | 0/TBD | Not started | - |
 | 31. /save Skill | v1.5 | 0/TBD | Not started | - |
 | 32. Integration Testing | v1.5 | 0/TBD | Not started | - |
