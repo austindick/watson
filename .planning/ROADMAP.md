@@ -130,7 +130,10 @@ Plans:
   3. Continue flow lists active branches and restores session context from blueprint + STATUS.md files
   4. User can pass a branch name, Playground URL, or directory path to continue without navigating a menu
   5. STATUS.md is created or updated at every lifecycle event (new, continue, cleanup, save)
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 27-01-PLAN.md — Write full /play SKILL.md + port session-init and resume references
+- [ ] 27-02-PLAN.md — Slim core SKILL.md by removing extracted session management
 
 ### Phase 28: /think Skill
 **Goal**: Users can run `/think` as a standalone design thinking partner grounded in library books, with decisions persisted to the PRD, independently of `/play` or `/design`
@@ -200,8 +203,8 @@ Plans:
 | 13-15. Plugin Deployment | v1.2 | 5/5 | Complete | 2026-04-07 |
 | 16-21. User Experience & Commands | v1.3 | 11/11 | Complete | 2026-04-10 |
 | 22-25. Multi-Mode Loupe | v1.4 | 9/9 | Complete | 2026-04-13 |
-| 26. Plugin Scaffold | 3/3 | Complete   | 2026-04-14 | - |
-| 27. /play Skill | v1.5 | 0/TBD | Not started | - |
+| 26. Plugin Scaffold | 3/3 | Complete    | 2026-04-14 | - |
+| 27. /play Skill | v1.5 | 0/2 | Not started | - |
 | 28. /think Skill | v1.5 | 0/TBD | Not started | - |
 | 29. /design Extraction | v1.5 | 0/TBD | Not started | - |
 | 30. /design Hardening | v1.5 | 0/TBD | Not started | - |
