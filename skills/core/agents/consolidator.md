@@ -7,7 +7,7 @@ dispatch: background
 
 ## Role
 
-Merge all section-level LAYOUT.md, DESIGN.md, and INTERACTION.md artifacts from `.watson/sections/` into consolidated project-level vocabulary files at `blueprint/LAYOUT.md`, `blueprint/DESIGN.md`, and `blueprint/INTERACTION.md`. Extend existing files on subsequent runs — never replace them. Clean up the staging directory only after both consolidated files are verified.
+Merge all section-level LAYOUT.md, DESIGN.md, and INTERACTION.md artifacts from `.dt/sections/` into consolidated project-level vocabulary files at `blueprint/LAYOUT.md`, `blueprint/DESIGN.md`, and `blueprint/INTERACTION.md`. Extend existing files on subsequent runs — never replace them. Clean up the staging directory only after both consolidated files are verified.
 
 ## Critical Constraints
 
@@ -15,16 +15,16 @@ Merge all section-level LAYOUT.md, DESIGN.md, and INTERACTION.md artifacts from 
 2. **Deduplicate identical rows** — a row is a duplicate if its token name (normalized: trim whitespace, lowercase) AND its value are identical to an existing row. Deduplicated rows appear once in the output.
 3. **Flag conflicts, keep both** — if two rows share the same normalized token name but have different values, keep BOTH rows and append: `<!-- conflict: {sectionA} uses {valueA}, {sectionB} uses {valueB} -->`
 4. **Soft 80-line budget** — compress aggressively (dedup, merge similar) before counting lines. Allow overflow if compression would lose real data. Never truncate.
-5. **Cleanup is gated** — delete `.watson/sections/` ONLY after BOTH LAYOUT.md and DESIGN.md consolidated files are verified to exist and are non-empty (at least 5 lines each). INTERACTION.md is optional — its absence does not block cleanup.
+5. **Cleanup is gated** — delete `.dt/sections/` ONLY after BOTH LAYOUT.md and DESIGN.md consolidated files are verified to exist and are non-empty (at least 5 lines each). INTERACTION.md is optional — its absence does not block cleanup.
 6. **No AskUserQuestion** — this agent runs in background. All decisions are deterministic.
-7. **No Figma calls** — work entirely from existing `.watson/sections/` artifacts. Do NOT call any MCP tool.
+7. **No Figma calls** — work entirely from existing `.dt/sections/` artifacts. Do NOT call any MCP tool.
 
 ## Inputs
 
-- `sectionsGlob` — glob pattern for section staging directories (e.g., `.watson/sections/*/`)
+- `sectionsGlob` — glob pattern for section staging directories (e.g., `.dt/sections/*/`)
 - `blueprintPath` — absolute path to the prototype's `blueprint/` directory; read `{blueprintPath}/LAYOUT.md` and `{blueprintPath}/DESIGN.md` as prior run vocabulary (may not exist on first run)
 - `libraryPaths` — string array of pre-resolved chapter/page file paths (accepted per contract; not used by consolidator)
-- `watsonMode` — boolean; suppress interactive prompts when true
+- `quietMode` — boolean; suppress interactive prompts when true
 - `crossSectionFlows` — optional array of cross-section flow objects from discuss return status. Appended as a `## Cross-Section Flows` section at the end of consolidated INTERACTION.md. May be null/empty.
 
 ## Outputs
@@ -32,17 +32,17 @@ Merge all section-level LAYOUT.md, DESIGN.md, and INTERACTION.md artifacts from 
 - `{blueprintPath}/LAYOUT.md` — consolidated layout vocabulary (union of all sections + prior runs)
 - `{blueprintPath}/DESIGN.md` — consolidated design vocabulary (union of all sections + prior runs)
 - `{blueprintPath}/INTERACTION.md` — consolidated interaction vocabulary (union of all sections + prior runs + cross-section flows); produced only when at least one section INTERACTION.md exists or priorInteraction exists
-- `.watson/sections/` — deleted after successful verification of LAYOUT.md and DESIGN.md (INTERACTION.md optional)
+- `.dt/sections/` — deleted after successful verification of LAYOUT.md and DESIGN.md (INTERACTION.md optional)
 
 ## Execution
 
 ### Step 1: Read all section artifacts
 
-Use the Glob tool to find all `.watson/sections/*/LAYOUT.md` files matching `sectionsGlob`.
+Use the Glob tool to find all `.dt/sections/*/LAYOUT.md` files matching `sectionsGlob`.
 
-Use the Glob tool to find all `.watson/sections/*/DESIGN.md` files matching `sectionsGlob`.
+Use the Glob tool to find all `.dt/sections/*/DESIGN.md` files matching `sectionsGlob`.
 
-Use the Glob tool to find all `.watson/sections/*/INTERACTION.md` files matching `sectionsGlob`.
+Use the Glob tool to find all `.dt/sections/*/INTERACTION.md` files matching `sectionsGlob`.
 
 Read each file using the Read tool. Derive the section name from the directory name (the path segment between `sections/` and the filename).
 
@@ -129,7 +129,7 @@ Write `{blueprintPath}/LAYOUT.md` using the Write tool. The file content is the 
 Include a header comment as the first line of the file:
 
 ```
-<!-- Consolidated by Watson Agent: Consolidator | Sections: {comma-separated list of section names} | Date: {today YYYY-MM-DD} -->
+<!-- Consolidated by Design Toolkit: Consolidator | Sections: {comma-separated list of section names} | Date: {today YYYY-MM-DD} -->
 ```
 
 Write `{blueprintPath}/DESIGN.md` using the Write tool. The file content is the full union from Step 4. Use the same header comment format.
@@ -144,7 +144,7 @@ Read `{blueprintPath}/DESIGN.md` — confirm the file exists and has at least 5 
 
 If INTERACTION.md was produced in Step 4b: Read `{blueprintPath}/INTERACTION.md` — confirm the file exists and has at least 5 lines. INTERACTION.md verification failure is reported but does NOT block cleanup (LAYOUT.md and DESIGN.md gating is sufficient).
 
-If BOTH LAYOUT.md and DESIGN.md are verified: derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` segment, then run `rm -rf {protoDir}/.watson/sections/` via the Bash tool. Report: "Staging cleaned: {protoDir}/.watson/sections/ deleted."
+If BOTH LAYOUT.md and DESIGN.md are verified: derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` segment, then run `rm -rf {protoDir}/.dt/sections/` via the Bash tool. Report: "Staging cleaned: {protoDir}/.dt/sections/ deleted."
 
 If EITHER LAYOUT.md or DESIGN.md is missing or has fewer than 5 lines: HALT. Do NOT delete the staging directory. Report exactly which file failed and why (e.g., "Write tool returned empty content for blueprint/LAYOUT.md"). Leave staging intact for debugging.
 
@@ -154,5 +154,5 @@ Report final output:
 Consolidated: blueprint/LAYOUT.md ({line count} lines), blueprint/DESIGN.md ({line count} lines), blueprint/INTERACTION.md ({line count} lines or "not produced")
 Sections merged: {list of section names}
 Conflicts flagged: {count}
-Staging cleaned: .watson/sections/ deleted
+Staging cleaned: .dt/sections/ deleted
 ```

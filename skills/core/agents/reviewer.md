@@ -37,20 +37,20 @@ If you catch yourself thinking any of these, stop and re-check — you are about
 
 ## Inputs
 
-- `layoutPath` — path to `.watson/sections/{sectionScope}/LAYOUT.md`
-- `designPath` — path to `.watson/sections/{sectionScope}/DESIGN.md`
-- `interactionPath` — path to `.watson/sections/{sectionScope}/INTERACTION.md` (optional — may not exist)
+- `layoutPath` — path to `.dt/sections/{sectionScope}/LAYOUT.md`
+- `designPath` — path to `.dt/sections/{sectionScope}/DESIGN.md`
+- `interactionPath` — path to `.dt/sections/{sectionScope}/INTERACTION.md` (optional — may not exist)
 - `sourceFilePath` — the built source file from the builder agent
 - `sectionScope` — the section name (for locating the region to review)
 - `blueprintPath` — absolute path to the prototype's `blueprint/` directory
 - `libraryPaths` — string array of pre-resolved chapter/page file paths
-- `watsonMode` — boolean; suppress interactive prompts when true
+- `quietMode` — boolean; suppress interactive prompts when true
 
 ## Outputs
 
 - Modified `sourceFilePath` — all in-scope discrepancies fixed in-place
 - Summary report in conversation (not a file)
-- Section files confirmed at `.watson/sections/{sectionScope}/`
+- Section files confirmed at `.dt/sections/{sectionScope}/`
 
 ## Execution
 
@@ -95,7 +95,7 @@ Re-read `sourceFilePath`. Re-run the full checklist against the fixed code:
 
 ### Step 6: Confirm file staging
 
-Verify that `.watson/sections/{sectionScope}/LAYOUT.md` and `.watson/sections/{sectionScope}/DESIGN.md` exist — they should already be present from the layout and design agents. If INTERACTION.md was loaded, verify it exists too. Do not move files — they are already at the correct path.
+Verify that `.dt/sections/{sectionScope}/LAYOUT.md` and `.dt/sections/{sectionScope}/DESIGN.md` exist — they should already be present from the layout and design agents. If INTERACTION.md was loaded, verify it exists too. Do not move files — they are already at the correct path.
 
 If any expected file is missing: note in the summary report but do not halt.
 
@@ -123,4 +123,4 @@ If any items were marked ESCALATE, append an ESCALATION section:
 
 ## Output Format
 
-No file artifact beyond the fixed `sourceFilePath`. Summary report is conversation output only. Section files confirmed at `.watson/sections/{sectionScope}/`. The orchestrator reads the summary from conversation to determine pipeline success.
+No file artifact beyond the fixed `sourceFilePath`. Summary report is conversation output only. Section files confirmed at `.dt/sections/{sectionScope}/`. The orchestrator reads the summary from conversation to determine pipeline success.

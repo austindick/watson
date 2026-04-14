@@ -1,5 +1,5 @@
 ---
-name: watson:init
+name: init
 description: Initialize a prototype's blueprint/ directory with template scaffold, branch operations for session management
 ---
 
@@ -7,7 +7,7 @@ description: Initialize a prototype's blueprint/ directory with template scaffol
 
 ## Purpose
 
-Creates the five blueprint files (CONTEXT.md, LAYOUT.md, DESIGN.md, INTERACTION.md, STATUS.md) inside a prototype's `blueprint/` directory. Each file is initialized with section headings and placeholder text — not empty files. This is required before any Watson agent runs because agents use Edit-based writes (section replacement) rather than full overwrites. The placeholder text (`_Not yet defined._`) provides valid targets for the Edit tool.
+Creates the five blueprint files (CONTEXT.md, LAYOUT.md, DESIGN.md, INTERACTION.md, STATUS.md) inside a prototype's `blueprint/` directory. Each file is initialized with section headings and placeholder text — not empty files. This is required before any pipeline agent runs because agents use Edit-based writes (section replacement) rather than full overwrites. The placeholder text (`_Not yet defined._`) provides valid targets for the Edit tool.
 
 Also handles single-file prototype promotion: if a prototype exists as `MyPage.tsx`, watson-init converts it to `MyPage/index.tsx` and creates `MyPage/blueprint/`.
 
@@ -24,7 +24,7 @@ Also provides branch operations for session management: branch creation, branch 
 | slug | string | Kebab-case slug derived from prototype_name by SKILL.md |
 | operation | string | Optional. "branch-list" for Path B (continue existing) flow. "direct-input" for flexible continue. Omit for Path A (new prototype) flow. |
 | userInput | string | Optional. Raw text the user pasted — a branch name, Playground URL, slug, or directory path. Used with operation: "direct-input". |
-| offerConversion | boolean | Optional. If true, offer watson/* branch conversion for non-watson inputs. Used by SKILL.md Path B. Default: false. |
+| offerConversion | boolean | Optional. If true, offer dt/* branch conversion for untracked inputs. Used by SKILL.md Path B. Default: false. |
 
 ---
 
@@ -54,7 +54,7 @@ Invoked when `operation` is "direct-input" — the user pasted a branch name, UR
 
 Parse `userInput` to determine its type. Check in this order:
 
-1. **watson/* branch name:** Input starts with `watson/` or matches a known watson/* branch (`git branch --list "watson/${userInput}" 2>/dev/null`). → Type: `watson-branch`
+1. **dt/* branch name:** Input starts with `dt/` or matches a known dt/* branch (`git branch --list "dt/${userInput}" 2>/dev/null`). → Type: `dt-branch`
 2. **Playground URL:** Input contains `playground` or matches a URL pattern (contains `://` or starts with `http`). Extract the slug from the URL path — typically the last path segment after `/pages/` or the prototype identifier. → Type: `url`
 3. **Directory path:** Input starts with `/`, `./`, `../`, or `~`, OR input contains `/` and resolves to an existing directory (`test -d "{userInput}"`). → Type: `directory`
 4. **Prototype slug:** Input is a simple string (no slashes, no protocol). Attempt case-insensitive resolution: `find src/pages/ -maxdepth 1 -iname "{userInput}" -type d 2>/dev/null | head -1`. → Type: `slug` if found, `unknown` if not.
@@ -62,7 +62,7 @@ Parse `userInput` to determine its type. Check in this order:
 
 **Step 2: Resolve blueprint path based on type**
 
-- **watson-branch:** Run Auto-Commit Guard. `git checkout watson/{slug}` (or the full branch name). Discover blueprint path via Blueprint Discovery (filesystem variant). If found, set `blueprintPath` and return. If not found, offer scaffold.
+- **dt-branch:** Run Auto-Commit Guard. `git checkout dt/{slug}` (or the full branch name). Discover blueprint path via Blueprint Discovery (filesystem variant). If found, set `blueprintPath` and return. If not found, offer scaffold.
 - **url:** Extract slug from URL path (last path segment, strip query params). Then:
   1. Search all local branches for the slug: `git branch --list "*${slug}*" 2>/dev/null`. Filter results to branches that contain the slug as a path segment (not substring noise).
   2. If exactly one branch matches: Run Auto-Commit Guard. `git checkout {matched_branch}`. Discover blueprint path via Blueprint Discovery (filesystem variant). If found, set `blueprintPath` and proceed to Step 3. If no blueprint, offer scaffold (same as directory handler pattern).
@@ -75,17 +75,17 @@ Parse `userInput` to determine its type. Check in this order:
   3. If no branch matches: attempt filesystem resolution: `find src/pages/ -maxdepth 1 -iname "{userInput}" -type d 2>/dev/null | head -1`. If found, follow directory logic. If not found, fall through to unknown handler.
 - **unknown:** AskUserQuestion — header: "Not Found", question: "I couldn't resolve '{userInput}' to a prototype. What would you like to do?", options: ["Try a different input", "Show the branch list", "Cancel"]. "Show the branch list" → fall back to branch-list operation. "Try a different input" → ask for new input. "Cancel" → exit.
 
-**Step 3: Conversion offer (full Watson flow only)**
+**Step 3: Conversion offer (full Design Toolkit flow only)**
 
-If the caller passed `offerConversion: true` AND the resolved prototype is NOT on a watson/* branch:
-- AskUserQuestion — header: "Convert?", question: "This prototype isn't tracked by Watson yet. Want to convert it to a Watson prototype for full tracking?", options: ["Yes, convert to watson/* branch", "No, work in place"]
-- "Yes, convert": Infer prototype name from directory name or STATUS.md `prototype_name`. Derive slug. Run Branch Creation (Phase 0) to create watson/{slug} from main, then copy the existing blueprint/ content to the new branch. Set `blueprintPath` on the new branch.
+If the caller passed `offerConversion: true` AND the resolved prototype is NOT on a dt/* branch:
+- AskUserQuestion — header: "Convert?", question: "This prototype isn't tracked yet. Want to convert it to a tracked prototype for full tracking?", options: ["Yes, convert to dt/* branch", "No, work in place"]
+- "Yes, convert": Infer prototype name from directory name or STATUS.md `prototype_name`. Derive slug. Run Branch Creation (Phase 0) to create dt/{slug} from main, then copy the existing blueprint/ content to the new branch. Set `blueprintPath` on the new branch.
 - "No, work in place": Use `blueprintPath` as-is. No branch switch.
 
 **Step 4: Update state and return**
 
 - Set `blueprintPath` as the resolved path
-- If on a watson/* branch: update `/tmp/watson-active.json` with `"branch": "{branch}"` and `"actions": []` if not present
+- If on a dt/* branch: update `/tmp/dt-active.json` with `"branch": "{branch}"` and `"actions": []` if not present
 - Return to caller with `blueprintPath`
 
 ---
@@ -274,7 +274,7 @@ git status --porcelain
 Only commit if output is non-empty:
 
 ```
-git add -A && git commit -m "watson: checkpoint before switching to {slug}"
+git add -A && git commit -m "dt: checkpoint before switching to {slug}"
 ```
 
 Never use `--allow-empty`. If `git status --porcelain` returns empty, skip the commit entirely.
@@ -287,17 +287,17 @@ Receives `prototype_name` and `slug` from SKILL.md Path A.
 
 1. Run Auto-Commit Guard
 2. **CRITICAL — pull latest main before branching:** `git checkout main && git pull origin main`. This ensures the new branch includes all upstream changes (e.g., dependency updates, design system additions). Skipping this step causes the new branch to miss recent changes to main. **Do not proceed to step 3 until the pull completes successfully.** If pull fails (e.g., merge conflicts on main), surface the error to the user before continuing.
-3. Check if branch already exists: `git branch --list "watson/{slug}"`
-4. **If branch exists:** AskUserQuestion — header: "Branch exists", question: "watson/{slug} already exists.", options: ["Switch to existing branch", "Create watson/{slug}-2"]
-   - "Switch to existing branch": discover blueprint path via Blueprint Discovery, run `git show watson/{slug}:{blueprintPath}/STATUS.md` and display `prototype_name` field for confirmation, then `git checkout watson/{slug}`. Skip blueprint scaffold (blueprint already exists).
-   - "Create watson/{slug}-2": use `{slug}-2` as the new slug, continue branch creation below.
-5. **If branch does not exist:** `git checkout -b watson/{slug}`
+3. Check if branch already exists: `git branch --list "dt/{slug}"`
+4. **If branch exists:** AskUserQuestion — header: "Branch exists", question: "dt/{slug} already exists.", options: ["Switch to existing branch", "Create dt/{slug}-2"]
+   - "Switch to existing branch": discover blueprint path via Blueprint Discovery, run `git show dt/{slug}:{blueprintPath}/STATUS.md` and display `prototype_name` field for confirmation, then `git checkout dt/{slug}`. Skip blueprint scaffold (blueprint already exists).
+   - "Create dt/{slug}-2": use `{slug}-2` as the new slug, continue branch creation below.
+5. **If branch does not exist:** `git checkout -b dt/{slug}`
 6. Continue to blueprint scaffold (Single-File Detection + Template Content sections)
 7. After scaffold: Do NOT commit. The scaffold files remain uncommitted. The first commit happens organically when discuss, loupe, or save-blueprint writes and commits their changes — those commits sweep up the scaffold files via `git add blueprint/`.
 
-   Exception: If `src/config/contributors.ts` was modified (new user added during Setup Flow), commit it immediately: `git add src/config/contributors.ts && git commit -m "watson: add contributor {github_username}"`. This is shared state, not blueprint scaffolding.
-8. Update STATUS.md `branch:` field via Edit tool: replace `branch: ""` with `branch: "watson/{slug}"`
-9. Update `/tmp/watson-active.json` via Edit tool: add `"branch": "watson/{slug}"` and `"actions": []`
+   Exception: If `src/config/contributors.ts` was modified (new user added during Setup Flow), commit it immediately: `git add src/config/contributors.ts && git commit -m "dt: add contributor {github_username}"`. This is shared state, not blueprint scaffolding.
+8. Update STATUS.md `branch:` field via Edit tool: replace `branch: ""` with `branch: "dt/{slug}"`
+9. Update `/tmp/dt-active.json` via Edit tool: add `"branch": "dt/{slug}"` and `"actions": []`
 
 ---
 
@@ -315,35 +315,35 @@ For the checked-out branch, use the filesystem instead: `find . -path '*/bluepri
 
 ### Branch List and Switching (continue existing prototype)
 
-1. Run `git branch --list 'watson/*'` to get local branches
+1. Run `git branch --list 'dt/*'` to get local branches
 
    Performance: Gather all branch data in a single bash script where possible. Combine `git branch --list`, per-branch `git show` for STATUS.md, and `git log` for last commit dates into one bash invocation to minimize visible terminal blocks (ACTV-06).
 2. For each branch:
-   - Discover blueprint path: run `git ls-tree -r --name-only watson/{slug} | grep 'blueprint/STATUS.md$' | head -1` — strip `/STATUS.md` to get `blueprintPath`. If empty, no blueprint exists for this branch.
-   - Read context: `git show watson/{slug}:{blueprintPath}/STATUS.md` using the discovered path (graceful fallback to branch name if discovery or git show fails)
-   - Get last commit date: `git log watson/{slug} --max-count=1 --format="%cd" --date=short`
+   - Discover blueprint path: run `git ls-tree -r --name-only dt/{slug} | grep 'blueprint/STATUS.md$' | head -1` — strip `/STATUS.md` to get `blueprintPath`. If empty, no blueprint exists for this branch.
+   - Read context: `git show dt/{slug}:{blueprintPath}/STATUS.md` using the discovered path (graceful fallback to branch name if discovery or git show fails)
+   - Get last commit date: `git log dt/{slug} --max-count=1 --format="%cd" --date=short`
    - Determine ownership: use STATUS.md `owner_github` field as primary, fall back to `git config --get user.name`
    - Tag inactive branches (30+ days since last commit) with [INACTIVE] prefix
 3. Display "Your prototypes:" group (owned branches, sorted by last activity desc), then "Browse other prototypes" expandable option for other owners' branches
 4. If 2+ inactive branches: also include "Clean up all inactive" option in the list
 5. User selects a branch:
    - **Inactive branch selected:** AskUserQuestion — header: "Inactive", question: "{name} hasn't had activity in {N} days.", options: ["Continue working on it", "Delete branch", "Reset inactivity timer"]
-     - "Delete branch": confirm with user, run `git branch -d watson/{slug}` and `git push origin --delete watson/{slug}` (catch remote delete errors silently), return to branch list
+     - "Delete branch": confirm with user, run `git branch -d dt/{slug}` and `git push origin --delete dt/{slug}` (catch remote delete errors silently), return to branch list
      - "Reset inactivity timer": update STATUS.md `last_activity` field via Edit tool with today's date, return to branch list
      - "Continue working on it": proceed with switch below
    - **Active branch selected:** proceed with switch below
 6. **Branch switch sequence:**
    - Run Auto-Commit Guard
-   - Attempt: `git checkout watson/{slug}`
-   - **If checkout fails (branch missing locally):** try `git checkout -b watson/{slug} origin/watson/{slug}` to recover from remote
-   - **If recovery also fails (gone from both local and remote):** inform user: "{slug} no longer exists locally or on the remote." AskUserQuestion — header: "Branch Missing", question: "watson/{slug} is no longer available.", options: ["Create a fresh branch with this name", "Return to branch list"]
-     - "Create a fresh branch with this name": `git checkout main && git checkout -b watson/{slug}`, then re-scaffold via Phase 0 branch creation + blueprint scaffold
+   - Attempt: `git checkout dt/{slug}`
+   - **If checkout fails (branch missing locally):** try `git checkout -b dt/{slug} origin/dt/{slug}` to recover from remote
+   - **If recovery also fails (gone from both local and remote):** inform user: "{slug} no longer exists locally or on the remote." AskUserQuestion — header: "Branch Missing", question: "dt/{slug} is no longer available.", options: ["Create a fresh branch with this name", "Return to branch list"]
+     - "Create a fresh branch with this name": `git checkout main && git checkout -b dt/{slug}`, then re-scaffold via Phase 0 branch creation + blueprint scaffold
      - "Return to branch list": re-enter Branch List and Switching from step 1
    - **Health check after switch:** discover blueprint path via Blueprint Discovery (filesystem variant since branch is now checked out). Verify `{blueprintPath}/STATUS.md` exists. If STATUS.md is missing or blueprint path could not be discovered:
      AskUserQuestion — header: "Missing Blueprint", question: "This branch doesn't have a blueprint yet. Would you like to create one?", options: ["Yes, create blueprint", "Cancel"]
-     - "Yes, create blueprint": determine prototype directory from branch name (strip `watson/` prefix, find matching directory in `src/pages/`). If directory found, scaffold 5 template files in `{protoDir}/blueprint/` using the Template Content section. Set `blueprintPath`. If no matching directory, ask user for the prototype path.
+     - "Yes, create blueprint": determine prototype directory from branch name (strip `dt/` prefix, find matching directory in `src/pages/`). If directory found, scaffold 5 template files in `{protoDir}/blueprint/` using the Template Content section. Set `blueprintPath`. If no matching directory, ask user for the prototype path.
      - "Cancel": return to branch list.
-7. Update `/tmp/watson-active.json` via Edit tool: add `"branch": "watson/{slug}"` (and `"actions": []` if not present)
+7. Update `/tmp/dt-active.json` via Edit tool: add `"branch": "dt/{slug}"` (and `"actions": []` if not present)
 
 ---
 
@@ -351,12 +351,12 @@ For the checked-out branch, use the filesystem instead: `find . -path '*/bluepri
 
 This is the ONE exception to "always branch from main." Used when a user wants to riff on another user's prototype.
 
-**Receives:** `source_branch` (e.g., `watson/their-slug`), `prototype_name` (user's name for their fork), `slug` (derived from their name).
+**Receives:** `source_branch` (e.g., `dt/their-slug`), `prototype_name` (user's name for their fork), `slug` (derived from their name).
 
-1. From the source branch: `git checkout -b watson/{slug}` (inherits all blueprint files from source branch)
+1. From the source branch: `git checkout -b dt/{slug}` (inherits all blueprint files from source branch)
 2. Create new STATUS.md with current user as owner (use Setup Flow data)
 3. Add to STATUS.md frontmatter via Edit tool:
-   - `forked_from: "watson/{source-slug}"`
+   - `forked_from: "dt/{source-slug}"`
    - `forked_from_owner: "{their-github-username}"`
-4. Commit: `git add blueprint/ && git commit -m "watson: fork {prototype_name} from watson/{source-slug}"`
-5. Update `/tmp/watson-active.json` via Edit tool: `"branch": "watson/{slug}"`, `"actions": []`
+4. Commit: `git add blueprint/ && git commit -m "dt: fork {prototype_name} from dt/{source-slug}"`
+5. Update `/tmp/dt-active.json` via Edit tool: `"branch": "dt/{slug}"`, `"actions": []`

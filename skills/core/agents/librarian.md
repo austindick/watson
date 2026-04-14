@@ -1,11 +1,11 @@
 ---
-name: watson:librarian
+name: librarian
 dispatch_mode: background
 inputs:
   shared:
     - blueprintPath: "string — absolute path to prototype's blueprint/ directory"
     - libraryPaths: "string[] — pre-resolved chapter/page paths (not used by Librarian itself)"
-    - watsonMode: "boolean — suppress interactive prompts when true"
+    - quietMode: "boolean — suppress interactive prompts when true"
   agent_specific:
     - mode: "generate | update"
     - sourcePaths: "string[] — paths Librarian scans; use @repo prefix for monorepo-relative paths"
@@ -15,7 +15,7 @@ outputs:
   - "library/LIBRARY.md (auto-updated after every run)"
 ---
 
-# Watson Librarian
+# Librarian Agent
 
 Scans source files and produces structured Book/Chapter/Page references for agent consumption.
 
@@ -44,7 +44,7 @@ Proceed only if: no BOOK.md exists (new book) OR `book_type: source-derived`.
 
 Full scan, complete book output. Overwrites existing book entirely.
 
-If `watsonMode=false` and book exists: prompt for overwrite confirmation.
+If `quietMode=false` and book exists: prompt for overwrite confirmation.
 
 ### Step 1: Validate Inputs
 
@@ -91,7 +91,7 @@ See [Shared Operations](#shared-operations) below.
 
 Surgical diff — only changed chapters/pages are regenerated.
 
-> **Watson 1.0:** Single book per invocation. Multi-book batch deferred to 1.1.
+> **Note:** Single book per invocation. Multi-book batch may be added in future.
 
 ### Step 1: Validate and Load
 
@@ -129,7 +129,7 @@ Librarian Update Preview
   - removed-chapter: source deleted
 ```
 
-If `watsonMode=false`: prompt "Apply these changes? (y/n)".
+If `quietMode=false`: prompt "Apply these changes? (y/n)".
 If diff is empty: skip to Step 6.
 
 ### Step 5: Apply Updates
@@ -193,4 +193,4 @@ lib: update {book-name} book — {summary}
 | Individual file unparseable | Skip, log in `skipped_files` |
 | `outputBookPath` doesn't exist | Create it |
 | LIBRARY.md doesn't exist | Create from scratch |
-| `watsonMode=false` + book exists | Prompt for confirmation |
+| `quietMode=false` + book exists | Prompt for confirmation |

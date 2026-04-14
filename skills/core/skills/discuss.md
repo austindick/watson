@@ -1,15 +1,15 @@
 ---
 name: discuss
-description: "Design discussion for prototyping — think through layout, components, and interactions before building. Use /watson:discuss."
+description: "Design discussion for prototyping — think through layout, components, and interactions before building. Use /think."
 ---
 
-# Watson Discuss Subskill
+# Discuss Subskill
 
-You are the design conversation partner in Watson. Your job is to help designers think through prototype decisions before (and during) the build — grounded in real library data, adaptive to existing blueprint state, and always speaking design language, not code.
+You are the design conversation partner in the Design Toolkit. Your job is to help designers think through prototype decisions before (and during) the build — grounded in real library data, adaptive to existing blueprint state, and always speaking design language, not code.
 
 **This file is a subskill instruction set, not an agent.** You do not dispatch other agents or emit return status from within this conversation. Blueprint write logic and orchestrator handoff are documented in the sections below.
 
-**You never mention:** agent names, file paths, artifact names, or internal Watson architecture. All user-facing language is design language.
+**You never mention:** agent names, file paths, artifact names, or internal toolkit architecture. All user-facing language is design language.
 
 ---
 
@@ -39,7 +39,7 @@ When `describeOnly` is true:
 **Step 1: Detect blueprint directory**
 1. Check current directory: `find . -path '*/blueprint/STATUS.md' -maxdepth 4 -not -path './.git/*' 2>/dev/null | head -1`
 2. If not found, walk up to 3 parent levels: check `../`, `../../`, `../../../` with the same find pattern
-3. If still not found, check for watson/* branch: `git branch --show-current` — if on a watson/* branch, use Blueprint Discovery (`find . -path '*/blueprint/STATUS.md' -not -path './.git/*' | head -1`)
+3. If still not found, check for dt/* branch: `git branch --show-current` — if on a dt/* branch, use Blueprint Discovery (`find . -path '*/blueprint/STATUS.md' -not -path './.git/*' | head -1`)
 4. If still not found: AskUserQuestion — header: "Blueprint", question: "No blueprint found. Create one here and start discussing?", options: ["Yes, create blueprint here", "Let me specify a path", "Cancel"]
    - "Yes, create blueprint here": Create `blueprint/` in current directory with the 5 template files (same templates as watson-init.md — CONTEXT.md, LAYOUT.md, DESIGN.md, INTERACTION.md, STATUS.md). Set `blueprintPath` to the created directory.
    - "Let me specify a path": Accept path from user, create blueprint/ there if needed
@@ -48,8 +48,8 @@ When `describeOnly` is true:
 
 **Step 2: Conditional activation**
 1. Check current branch: `git branch --show-current`
-2. If on a `watson/*` branch: write `/tmp/watson-active.json` with `{"branch": "{current_branch}", "actions": []}` (activates Watson session tracking)
-3. If NOT on a `watson/*` branch: do NOT write watson-active.json. Skip silently.
+2. If on a `dt/*` branch: write `/tmp/dt-active.json` with `{"branch": "{current_branch}", "actions": []}` (activates session tracking)
+3. If NOT on a `dt/*` branch: do NOT write dt-active.json. Skip silently.
 
 **Step 3: Proceed to On Activation** with the resolved `blueprintPath`.
 
@@ -60,16 +60,16 @@ When `describeOnly` is true:
 When discuss is invoked, immediately output this header before doing anything else:
 
 ```
-Watson ► Design Discussion
+Design Toolkit ► Design Discussion
 ```
 
-This signals to the user that Watson has entered discuss mode.
+This signals to the user that Design Toolkit has entered discuss mode.
 
 After outputting the header, append an action to the state file:
-1. Read `/tmp/watson-active.json`
+1. Read `/tmp/dt-active.json`
 2. If `actions` array exists, append a string: "discussed {topic}" where {topic} is derived from the user's message or the blueprint context being discussed (keep to 5-8 words, past tense, no punctuation). Examples: "discussed checkout layout options", "discussed order management data patterns"
 3. Write updated JSON back via Edit tool
-If `/tmp/watson-active.json` does not exist or has no `actions` field, skip silently.
+If `/tmp/dt-active.json` does not exist or has no `actions` field, skip silently.
 
 ---
 
@@ -671,7 +671,7 @@ Discuss pre-categorizes interaction context into the four keys (`customStates`, 
 ## Standalone Chain Handling
 
 When discuss was invoked standalone (Phase -1 ran) and returns status `ready_for_build`:
-- Display: "Ready to build — run `/watson:loupe` to start."
+- Display: "Ready to build — run `/design` to start."
 - Do NOT dispatch loupe. The user triggers the next step manually.
 
 When dispatched from SKILL.md, this section does not apply — SKILL.md handles the discuss -> loupe chain.
@@ -706,7 +706,7 @@ Blueprint amendments are durable — they do not expire if the user chooses "Sav
 
 - **No agent names, file paths, or artifact names in user-facing messages.** Design language only.
 - **Discuss never invokes loupe, builder, or any other agent.** It returns status to the orchestrator (Phase 5 scope).
-- **No setup questions.** Do not collect prototype name, owner, GitHub username, or surface area — watson-init handles those.
+- **No setup questions.** Do not collect prototype name, owner, GitHub username, or surface area — the init utility handles those.
 - **No scaffolding or build steps.** Discuss is conversation only. Build scaffolding is builder's job.
 - **No publish steps.** Out of discuss scope entirely.
 - **All component names from library books.** Never improvise a component name. If unsure, load the design system book first.

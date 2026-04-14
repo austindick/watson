@@ -2,7 +2,7 @@
 // watson-statusline.js — Forked from ~/.claude/hooks/share-proto-statusline.js
 // Changes: removed standalone local dev server block (was lines 75-87 of original)
 // Keeps: OSC 8 link helper, portOpen, stdin parsing, context bar, share-proto tunnel links,
-//        git branch, Watson active indicator, stdout.write
+//        git branch, DT active indicator, stdout.write
 const fs = require('fs');
 const path = require('path');
 const net = require('net');
@@ -88,18 +88,18 @@ process.stdin.on('end', async () => {
       if (raw) branch = ` \x1b[2m│\x1b[0m \x1b[35m${raw}\x1b[0m`;
     } catch (e) {}
 
-    // Watson active indicator
-    let watson = '';
-    if (fs.existsSync('/tmp/watson-active.json')) {
+    // DT active indicator
+    let dtActive = '';
+    if (fs.existsSync('/tmp/dt-active.json')) {
       try {
-        const state = JSON.parse(fs.readFileSync('/tmp/watson-active.json', 'utf8'));
-        const branch = state.branch ? ` (${state.branch.replace('watson/', '')})` : '';
-        watson = ` \x1b[2m│\x1b[0m \x1b[36mWatson: ON${branch}\x1b[0m`;
+        const state = JSON.parse(fs.readFileSync('/tmp/dt-active.json', 'utf8'));
+        const branchLabel = state.branch ? ` (${state.branch.replace('dt/', '')})` : '';
+        dtActive = ` \x1b[2m│\x1b[0m \x1b[36mDT: ON${branchLabel}\x1b[0m`;
       } catch (e) {
-        watson = ` \x1b[2m│\x1b[0m \x1b[36mWatson: ON\x1b[0m`;
+        dtActive = ` \x1b[2m│\x1b[0m \x1b[36mDT: ON\x1b[0m`;
       }
     }
 
-    process.stdout.write(`\x1b[2m${model}\x1b[0m \x1b[2m│\x1b[0m \x1b[2m${dir}\x1b[0m${branch}${ctx}${proto}${watson}`);
+    process.stdout.write(`\x1b[2m${model}\x1b[0m \x1b[2m│\x1b[0m \x1b[2m${dir}\x1b[0m${branch}${ctx}${proto}${dtActive}`);
   } catch (e) {}
 });

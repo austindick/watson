@@ -1,11 +1,11 @@
 ---
 name: loupe
-description: "Build a prototype from Figma frames or design decisions — runs the full decompose, research, build, review pipeline. Use /watson:loupe."
+description: "Build a prototype from Figma frames or design decisions — runs the full decompose, research, build, review pipeline. Use /design."
 ---
 
-# Watson Loupe Subskill
+# Build Pipeline Subskill
 
-You are the pipeline orchestrator for Watson. You wire decomposer → layout + design (parallel) → builder → reviewer (sequential) → consolidator, and you surface natural progress updates in designer language throughout.
+You are the pipeline orchestrator for the Design Toolkit. You wire decomposer → layout + design (parallel) → builder → reviewer (sequential) → consolidator, and you surface natural progress updates in designer language throughout.
 
 **Never mention** agent names, file paths, artifact names, staging directories, or internal pipeline details to the user.
 
@@ -27,7 +27,7 @@ First check if `mode` was provided by the caller (SKILL.md or a continuation age
 
 2. If the user's message references a known experience by name (e.g., "build from Order List", "clone the Products page", "based on Order List"): set `mode='prod-clone'`, set `experienceName` to the referenced name. Skip the mode prompt — proceed to Step 2.
 
-3. If the message is bare `/watson:loupe` (no Figma URL, no experience reference, no description): AskUserQuestion — header: "Build", question: "Where should I start from?", options: ["Start from a Figma frame", "Clone an existing experience", "Describe what you want", "Cancel"].
+3. If the message is bare `/design` (no Figma URL, no experience reference, no description): AskUserQuestion — header: "Build", question: "Where should I start from?", options: ["Start from a Figma frame", "Clone an existing experience", "Describe what you want", "Cancel"].
    - "Start from a Figma frame" → ask for Figma URL, extract as `fullFrameUrl`, set `hasFullFrame: true`, set `mode='figma'`. Proceed to Step 2.
    - "Clone an existing experience" → show named experience menu via AskUserQuestion (read codebase-map CHAPTER.md Names column to build options list). Set `mode='prod-clone'`, set `experienceName` from user's selection. Proceed to Step 2.
    - "Describe what you want" → set `mode='discuss-only'`. Dispatch `@skills/discuss.md` **foreground** with:
@@ -38,7 +38,7 @@ First check if `mode` was provided by the caller (SKILL.md or a continuation age
      Wait for discuss return status. Handle return:
      - `ready_for_build`: use returned `sections[]`, proceed to Step 5 (set mode='discuss-only').
      - `ready_for_hybrid_build`: set `mode='prod-clone'`, set `experienceName` from return's `surfaceName`, store returned `sections[]` (discuss-only sections) as `additionalSections`. Proceed to Step 5.
-     - `discussion_only`: say "Decisions saved. Run /watson:loupe when you're ready to build." Exit.
+     - `discussion_only`: say "Decisions saved. Run /design when you're ready to build." Exit.
      - `cancelled`: exit.
 
      **Note:** This is the only place in loupe.md where `@skills/discuss.md` is dispatched. The existing constraint "Never dispatch @skills/discuss.md" is overridden specifically for this "Describe what you want" entry path — a locked decision from CONTEXT.md.
@@ -48,7 +48,7 @@ First check if `mode` was provided by the caller (SKILL.md or a continuation age
 Same logic as discuss.md Phase -1 Step 1:
 1. Check current directory: `find . -path '*/blueprint/STATUS.md' -maxdepth 4 -not -path './.git/*' 2>/dev/null | head -1`
 2. If not found, walk up to 3 parent levels
-3. If still not found, check watson/* branch
+3. If still not found, check dt/* branch
 4. If still not found: AskUserQuestion — header: "Blueprint", question: "No blueprint found. Create one here and start building?", options: ["Yes, create blueprint here", "Let me specify a path", "Cancel"]
    - Create blueprint/ with 5 template files if user confirms
 5. Set `blueprintPath`
@@ -58,8 +58,8 @@ If the user provided a description (not a Figma URL): read `{blueprintPath}/CONT
 
 **Step 4: Conditional activation**
 Same as discuss.md Phase -1 Step 2:
-1. If on a `watson/*` branch: write `/tmp/watson-active.json` with `{"branch": "{current_branch}", "actions": []}`
-2. If NOT on a `watson/*` branch: skip silently
+1. If on a `dt/*` branch: write `/tmp/dt-active.json` with `{"branch": "{current_branch}", "actions": []}`
+2. If NOT on a `dt/*` branch: skip silently
 
 **Step 5: Set pipeline inputs and proceed to Phase 0**
 Set the standard loupe inputs from what was gathered:
@@ -97,13 +97,13 @@ When invoked standalone (Phase -1 ran), these inputs are resolved by the preambl
 
 **Before dispatching any agent**, derive `protoDir` and resolve `libraryPaths[]`.
 
-Derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` (or `blueprint/`) segment. Example: if `blueprintPath` is `/path/to/MyPage/blueprint`, then `protoDir` is `/path/to/MyPage`. Use `protoDir` for all `.watson/sections/` paths throughout the pipeline.
+Derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` (or `blueprint/`) segment. Example: if `blueprintPath` is `/path/to/MyPage/blueprint`, then `protoDir` is `/path/to/MyPage`. Use `protoDir` for all `.dt/sections/` paths throughout the pipeline.
 
 Before resolving library paths, append an action to the state file:
-1. Read `/tmp/watson-active.json`
+1. Read `/tmp/dt-active.json`
 2. If `actions` array exists, append: "built {N} section(s)" where {N} is the count of sections being built (or "built full frame" if `hasFullFrame` is true). Examples: "built 2 sections", "built full frame"
 3. Write updated JSON back via Edit tool
-If `/tmp/watson-active.json` does not exist or has no `actions` field, skip silently.
+If `/tmp/dt-active.json` does not exist or has no `actions` field, skip silently.
 
 1. Read `${CLAUDE_PLUGIN_ROOT}/skills/core/library/LIBRARY.md` — this is the book index.
 2. Select books needed for the build pipeline:
@@ -149,7 +149,7 @@ Dispatch `@agents/decomposer.md` as **foreground** agent with:
 figmaUrl: {fullFrameUrl}
 blueprintPath: {blueprintPath}
 libraryPaths: {libraryPaths}
-watsonMode: true
+quietMode: true
 ```
 
 Receive `sections[]` from decomposer output. Each entry has: `name`, `nodeId`, `referenceType` (set to "figma" for all decomposer-output sections).
@@ -163,7 +163,7 @@ Dispatch `@agents/surface-resolver.md` as **foreground** agent with:
 experienceName: {experienceName}
 blueprintPath: {blueprintPath}
 libraryPaths: {libraryPaths}
-watsonMode: true
+quietMode: true
 ```
 
 Receive `sections[]` from surface-resolver. Each entry has: `name`, `referenceType='prod-clone'`, `filePaths[]`, `description`, `sourceSurface{name, route}`.
@@ -177,10 +177,10 @@ If `additionalSections` is non-null (from Phase -1 hybrid discuss return):
 ```
 screenshotPath = null
 ```
-Check if `{protoDir}/.watson/screenshot.png` exists:
-- If yes: `screenshotPath = "{protoDir}/.watson/screenshot.png"` — reuse silently, no prompt.
+Check if `{protoDir}/.dt/screenshot.png` exists:
+- If yes: `screenshotPath = "{protoDir}/.dt/screenshot.png"` — reuse silently, no prompt.
 - If no: AskUserQuestion — header: "Screenshot", question: "Have a screenshot of this page? It helps me match the layout more accurately, but it's totally optional.", options: ["I'll share one", "Skip, build without"]
-  - "I'll share one": accept screenshot from user, save to `{protoDir}/.watson/screenshot.png`, set `screenshotPath`.
+  - "I'll share one": accept screenshot from user, save to `{protoDir}/.dt/screenshot.png`, set `screenshotPath`.
   - "Skip, build without": `screenshotPath` remains null.
 
 **If `sections[]` already provided (from caller or from discuss return) → use as-is:**
@@ -214,7 +214,7 @@ For each section where `referenceType = "figma"`:
    sectionName: {section.name}
    blueprintPath: {blueprintPath}
    libraryPaths: {libraryPaths}
-   watsonMode: true
+   quietMode: true
    ```
 3. Dispatch `@agents/design.md` as **background** agent in parallel:
    ```
@@ -222,7 +222,7 @@ For each section where `referenceType = "figma"`:
    sectionName: {section.name}
    blueprintPath: {blueprintPath}
    libraryPaths: {libraryPaths}
-   watsonMode: true
+   quietMode: true
    ```
 4. Dispatch `@agents/interaction.md` as **background** agent in parallel:
    ```
@@ -232,7 +232,7 @@ For each section where `referenceType = "figma"`:
    crossSectionFlows: {crossSectionFlows}
    blueprintPath: {blueprintPath}
    libraryPaths: {libraryPaths}
-   watsonMode: true
+   quietMode: true
    ```
 
 **After ALL sections have been dispatched:** Wait for every layout, design, and interaction agent across all sections to complete before proceeding to Phase 3. Do NOT begin Phase 3 for any section until all research agents have finished. Verify each expected output file:
@@ -250,7 +250,7 @@ For each section where `referenceType = "prod-clone"`:
    screenshotPath: {screenshotPath}    [omit this parameter entirely if screenshotPath is null — do NOT pass null]
    blueprintPath: {blueprintPath}
    libraryPaths: {libraryPaths}
-   watsonMode: true
+   quietMode: true
    ```
 3. Dispatch `@agents/source-design.md` as **background** agent in parallel (same params as source-layout above)
 4. Dispatch `@agents/source-interaction.md` as **background** agent in parallel (same params as source-layout above)
@@ -275,8 +275,8 @@ Builder and reviewer accept null paths — they fall back to available specs aut
 **Determine paths before dispatching:**
 
 For **figma** sections:
-- `layoutPath` = `{protoDir}/.watson/sections/{section.name}/LAYOUT.md` (set to null if file is missing after agents completed)
-- `designPath` = `{protoDir}/.watson/sections/{section.name}/DESIGN.md` (set to null if file is missing after agents completed)
+- `layoutPath` = `{protoDir}/.dt/sections/{section.name}/LAYOUT.md` (set to null if file is missing after agents completed)
+- `designPath` = `{protoDir}/.dt/sections/{section.name}/DESIGN.md` (set to null if file is missing after agents completed)
 
 For **discuss-only** sections:
 - `layoutPath` = `{blueprintPath}/LAYOUT.md`
@@ -284,9 +284,9 @@ For **discuss-only** sections:
 - `interactionPath` = `{blueprintPath}/INTERACTION.md` if that file exists (populated by discuss), otherwise null
 
 For **prod-clone** sections:
-- `layoutPath` = `{protoDir}/.watson/sections/{section.name}/LAYOUT.md` (set to null if file is missing after agents completed)
-- `designPath` = `{protoDir}/.watson/sections/{section.name}/DESIGN.md` (set to null if file is missing after agents completed)
-- `interactionPath` = `{protoDir}/.watson/sections/{section.name}/INTERACTION.md` (set to null if file is missing)
+- `layoutPath` = `{protoDir}/.dt/sections/{section.name}/LAYOUT.md` (set to null if file is missing after agents completed)
+- `designPath` = `{protoDir}/.dt/sections/{section.name}/DESIGN.md` (set to null if file is missing after agents completed)
+- `interactionPath` = `{protoDir}/.dt/sections/{section.name}/INTERACTION.md` (set to null if file is missing)
 
 **Resolve targetFilePath:**
 - If `targetFilePath` was already set by Phase -1 (standalone) or the caller, use it.
@@ -307,7 +307,7 @@ targetFilePath: {targetFilePath}
 sectionScope: {sectionScope}
 blueprintPath: {blueprintPath}
 libraryPaths: {libraryPaths}
-watsonMode: true
+quietMode: true
 ```
 
 Wait for builder to complete.
@@ -324,7 +324,7 @@ sourceFilePath: {targetFilePath}
 sectionScope: {sectionScope}
 blueprintPath: {blueprintPath}
 libraryPaths: {libraryPaths}
-watsonMode: true
+quietMode: true
 ```
 
 Wait for reviewer to complete. Record result. **Do not proceed to the next section or to Phase 4 until the reviewer has completed for the current section.**
@@ -335,10 +335,10 @@ Wait for reviewer to complete. Record result. **Do not proceed to the next secti
 
 Dispatch `@agents/consolidator.md` as **background** agent:
 ```
-sectionsGlob: {protoDir}/.watson/sections/*/
+sectionsGlob: {protoDir}/.dt/sections/*/
 blueprintPath: {blueprintPath}
 libraryPaths: {libraryPaths}
-watsonMode: true
+quietMode: true
 crossSectionFlows: {crossSectionFlows}    (from discuss return status; passed through to consolidator for cross-section flow consolidation)
 ```
 
@@ -359,7 +359,7 @@ Update STATUS.md `sections_built` after each successful pipeline run:
 4. Write updated `sections_built:` array back to STATUS.md frontmatter via Edit tool
 
 After the build completes successfully, push to remote if this is the first build on this branch:
-1. Read `/tmp/watson-active.json` for the `branch` field
+1. Read `/tmp/dt-active.json` for the `branch` field
 2. Check if remote tracking exists: `git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null`
 3. If no remote tracking (command fails or returns empty): `git push -u origin {branch}`
 4. If remote tracking already exists: skip push (already pushed on a prior build)
@@ -399,7 +399,7 @@ Section failure is **isolated.** Other sections continue regardless.
 
 ## Constraints
 
-- `watsonMode: true` on every agent dispatch — never false
+- `quietMode: true` on every agent dispatch — never false
 - Never emit technical language to the user — designer language only
 - All library paths resolved from LIBRARY.md and BOOK.md manifests — never improvise paths
 - Never dispatch `@skills/discuss.md` except in Phase -1 "Describe what you want" branch (locked decision from CONTEXT.md — this single entry path is the explicit exception)

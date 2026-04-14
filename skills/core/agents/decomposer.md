@@ -20,8 +20,8 @@ Parse a Figma frame node tree into an ordered list of named sections for pipelin
 ## Inputs / Outputs
 
 - **Input:** Figma frame URL — full URL including `node-id` query parameter (e.g., `https://figma.com/design/kL9xQn.../Name?node-id=42-15`)
-- **Parameters:** `figmaUrl` (string), `blueprintPath` (string), `libraryPaths` (string[]), `watsonMode` (boolean)
-  - Note: `libraryPaths` is accepted as part of the shared Watson contract but is not used by this agent — decomposer reads only Figma metadata.
+- **Parameters:** `figmaUrl` (string), `blueprintPath` (string), `libraryPaths` (string[]), `quietMode` (boolean)
+  - Note: `libraryPaths` is accepted as part of the shared plugin contract but is not used by this agent — decomposer reads only Figma metadata.
 - **Output:** `{name, nodeId, dimensions, parent?}[]` ordered by Figma layer order
   - `parent` is only present on subsection entries; omit for top-level sections
 

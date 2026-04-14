@@ -4,13 +4,13 @@ type: subskill
 purpose: Retroactively captures session context into blueprint files with gap analysis
 ---
 
-# Watson Save Blueprint Subskill
+# Save Blueprint Subskill
 
-You are the blueprint capture engine in Watson. Your job is to extract design decisions, component choices, and interaction patterns from the current session — reading conversation history, built code, and git state — and write them into blueprint files with confidence markers. You then surface gap analysis and optionally bridge to discuss for resolution.
+You are the blueprint capture engine in the Design Toolkit. Your job is to extract design decisions, component choices, and interaction patterns from the current session — reading conversation history, built code, and git state — and write them into blueprint files with confidence markers. You then surface gap analysis and optionally bridge to discuss for resolution.
 
 **This file is a subskill instruction set, not an agent.** You run as single-pass analysis within this skill because full conversation context is required — agents cannot access it.
 
-**You never mention:** agent names, file paths, artifact names, or internal Watson architecture. All user-facing language is design language.
+**You never mention:** agent names, file paths, artifact names, or internal toolkit architecture. All user-facing language is design language.
 
 ---
 
@@ -19,44 +19,44 @@ You are the blueprint capture engine in Watson. Your job is to extract design de
 When save-blueprint is invoked, immediately output this header before doing anything else:
 
 ```
-Watson ► Save Blueprint
+Design Toolkit ► Save Blueprint
 ```
 
 After outputting the header, append an action to the state file:
-1. Read `/tmp/watson-active.json`
+1. Read `/tmp/dt-active.json`
 2. If `actions` array exists, append the string: `"saved blueprint"`
 3. Write updated JSON back via Edit tool
-If `/tmp/watson-active.json` does not exist or has no `actions` field, skip silently.
+If `/tmp/dt-active.json` does not exist or has no `actions` field, skip silently.
 
 ---
 
 ## Phase 0: Session Detection
 
-Check if `/tmp/watson-active.json` exists and has a `branch` field.
+Check if `/tmp/dt-active.json` exists and has a `branch` field.
 
-**Watson is active** (file exists, `branch` field present):
+**Session is active** (file exists, `branch` field present):
 - Read `branch` from the file. This is the current prototype branch.
 - Discover `blueprintPath` by reading the branch's STATUS.md: `git show {branch}:blueprint/STATUS.md` to confirm the blueprint directory. blueprintPath is `blueprint/` relative to the prototype root.
 - Continue to Phase 1.
 
-**Watson is not active** (file absent or no `branch` field):
-- Jump to Phase 0B: Non-Watson Session Handling.
+**Session is not active** (file absent or no `branch` field):
+- Jump to Phase 0B: Untracked Session Handling.
 
 ---
 
-## Phase 0B: Non-Watson Session Handling
+## Phase 0B: Untracked Session Handling
 
-When Watson was never activated for this session, ask where to save the blueprint before extracting anything.
+When Design Toolkit was never activated for this session, ask where to save the blueprint before extracting anything.
 
 AskUserQuestion — header: "Save Location", question: "Where should I save the blueprint?", options:
-- "Convert to a Watson prototype (Recommended)" — Watson can track it, pick it back up later, and manage it alongside your other prototypes
-- "Save in current directory" — writes blueprint files on the current branch, quick and simple, but Watson won't find this prototype later on its own
+- "Convert to a tracked prototype (Recommended)" — Design Toolkit can track it, pick it back up later, and manage it alongside your other prototypes
+- "Save in current directory" — writes blueprint files on the current branch, quick and simple, but Design Toolkit won't find this prototype later on its own
 
 **Convert path:**
 1. Infer prototype name from the conversation topic (what was the user building?) or from the current directory name as a fallback
 2. Confirm with the user via plain text question: "I'll name this prototype '[inferred name]' — does that work, or would you like a different name?" (Not the full 4-field Setup Flow — the user already provided context during the session)
 3. Derive slug: `name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')`
-4. Invoke `@utilities/watson-init.md` with `prototype_name` and `slug` — watson-init handles branch creation from main and blueprint scaffold
+4. Invoke `@utilities/watson-init.md` with `prototype_name` and `slug` — the init utility handles branch creation from main and blueprint scaffold
 5. blueprintPath is now available from watson-init output (blueprint/ inside the new prototype directory)
 6. Continue to Phase 1
 
@@ -73,7 +73,7 @@ AskUserQuestion — header: "Save Location", question: "Where should I save the 
 5. blueprintPath is the created `blueprint/` directory
 6. Continue to Phase 1
 
-**Both paths:** Watson stays inactive after save-blueprint completes. Do NOT write `/tmp/watson-active.json`. After the final summary, append inline: "Run `/watson` if you want to keep working with Watson."
+**Both paths:** Session stays inactive after save-blueprint completes. Do NOT write `/tmp/dt-active.json`. After the final summary, append inline: "Run `/play` if you want to keep working with the Design Toolkit."
 
 ---
 
@@ -159,7 +159,7 @@ Read existing blueprint files at `blueprintPath`. For each file, apply the corre
 **Commit immediately after all five files are written:**
 ```
 git add blueprint/
-git commit -m "watson: save blueprint"
+git commit -m "dt: save blueprint"
 ```
 
 Always commit before showing the summary. If the commit fails, report the error inline and continue to Phase 3.
@@ -171,7 +171,7 @@ Always commit before showing the summary. If the commit fails, report the error 
 Analyze the written blueprint files for four gap types:
 
 1. **Missing blueprint sections:** Areas still template-only or empty after extraction (no real content was found to populate them)
-2. **Inferred decisions:** Items marked `[INFERRED]` — Watson's best guess, awaiting confirmation
+2. **Inferred decisions:** Items marked `[INFERRED]` — the toolkit's best guess, awaiting confirmation
 3. **Ambiguous choices:** Where conversation and code conflict, or multiple interpretations exist — flagged during Phase 1
 4. **Missing interaction coverage:** Sections with layout and design content but no interaction specs in INTERACTION.md
 
@@ -183,7 +183,7 @@ Present the summary in two user-facing groups. Use design language — not file 
 
 Summarize CONTEXT.md content. For each item, use a confidence indicator:
 - `✓` Confirmed — explicitly stated or clearly in code
-- `?` Inferred — Watson's best guess, marked `[INFERRED]` in blueprint
+- `?` Inferred — best guess, marked `[INFERRED]` in blueprint
 - `✗` Missing — not found in conversation or code
 
 After listing captured items, show this group's gaps inline (missing sections, inferred items that need review).
@@ -212,14 +212,14 @@ AskUserQuestion — header: "Gaps", question: "I found {N} gap(s) in the bluepri
 3. Discuss skips complexity scaling (Phase 2) and core questions (Phase 5) for already-populated sections — it goes straight to contextual questions for gaps and `[INFERRED]` items. The populated blueprint content is the context; discuss fills the gaps.
 4. When the user confirms an `[INFERRED]` item during discuss, discuss removes the `[INFERRED]` prefix from that line — content becomes regular blueprint content. No new marker type.
 5. After discuss concludes, always return to save-blueprint — do NOT chain to loupe.
-6. Commit discussed changes: `git add blueprint/ && git commit -m "watson: discuss gaps"`
-7. Show updated summary (re-run gap analysis on the now-updated blueprint files) with inline note: "When you're ready to build, run `/watson loupe`"
+6. Commit discussed changes: `git add blueprint/ && git commit -m "dt: discuss gaps"`
+7. Show updated summary (re-run gap analysis on the now-updated blueprint files) with inline note: "When you're ready to build, run `/design`"
 
 **"No, keep as-is":**
-Show inline note: "When you're ready to build, run `/watson loupe`"
+Show inline note: "When you're ready to build, run `/design`"
 
 **If total gaps == 0:**
-"Blueprint looks complete. When you're ready to build, run `/watson loupe`"
+"Blueprint looks complete. When you're ready to build, run `/design`"
 
 ---
 
@@ -230,7 +230,7 @@ Show inline note: "When you're ready to build, run `/watson loupe`"
 | "I'll skip the library books, extraction is straightforward" | Library grounding prevents invented component names and wrong tokens. Load design-system before writing DESIGN.md. If you improvise a component name, the builder will fail to recognize it. |
 | "The user said X but the code shows Y, I'll go with the code" | Flag as ambiguous gap. Do not silently pick one signal over the other. Both signals matter — the user may have changed their mind, or the code may be a rough draft. |
 | "I'll chain to loupe after discuss finishes" | Save-blueprint always ends at save-blueprint. Show the loupe inline note. Never dispatch loupe. |
-| "I'll activate Watson for the non-Watson path" | Watson stays inactive. The save-in-place path and convert path both end without writing `/tmp/watson-active.json`. |
+| "I'll activate the session for the untracked path" | Session stays inactive. The save-in-place path and convert path both end without writing `/tmp/dt-active.json`. |
 | "I'll show the summary before committing" | Always commit blueprint files before showing the summary. The commit is the persistent record; the summary is just a view of it. |
 | "I'll skip extraction if the session was short" | Even short sessions capture something — a problem statement, a component choice, a constraint. Extract what's there and flag the rest as gaps. |
 
@@ -240,9 +240,9 @@ Show inline note: "When you're ready to build, run `/watson loupe`"
 
 - This file must stay under 350 lines
 - save-blueprint runs as single-pass analysis — not dispatched to agents — because it needs full conversation context which agents cannot access
-- Never mention file paths, agent names, or internal Watson architecture to the user
+- Never mention file paths, agent names, or internal toolkit architecture to the user
 - All user-facing language is design language (same constraint as discuss.md)
-- Watson stays inactive after save-blueprint completes on the non-Watson path — no `/tmp/watson-active.json` written
+- Session stays inactive after save-blueprint completes on the untracked path — no `/tmp/dt-active.json` written
 - Always commit blueprint files before showing the summary
 - Discuss bridge always returns to save-blueprint; never chains to loupe
 - `[INFERRED]` markers in blueprint files are the persistent record of uncertain decisions — the gap summary is read-only output derived from them

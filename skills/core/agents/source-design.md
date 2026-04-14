@@ -29,18 +29,18 @@ Map visual styles from TSX source files for a section to design system component
 - `screenshotPath` (string, optional) — page-level screenshot for structural reference only
 - `blueprintPath` (string) — absolute path to prototype's `blueprint/` directory
 - `libraryPaths` (string[]) — pre-resolved chapter/page file paths for component/token lookup
-- `watsonMode` (boolean) — suppress interactive prompts when true
+- `quietMode` (boolean) — suppress interactive prompts when true
 
 ## Outputs
 
-- `{protoDir}/.watson/sections/{sectionName}/DESIGN.md` — design spec, under 80 lines
+- `{protoDir}/.dt/sections/{sectionName}/DESIGN.md` — design spec, under 80 lines
 - Sections: Component Mapping, Typography, Color Tokens, Unmapped Values
 
 ## Execution
 
 ### Path Resolution
 
-Derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` (or `blueprint/`) segment. Example: if `blueprintPath` is `/path/to/MyPage/blueprint`, then `protoDir` is `/path/to/MyPage`. All `.watson/sections/` paths below use this absolute `protoDir` prefix.
+Derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` (or `blueprint/`) segment. Example: if `blueprintPath` is `/path/to/MyPage/blueprint`, then `protoDir` is `/path/to/MyPage`. All `.dt/sections/` paths below use this absolute `protoDir` prefix.
 
 ### Step 1: Load reference data from library books
 
@@ -158,7 +158,7 @@ Count total lines. If over 80:
 
 ### Step 11: Write output
 
-Write to `{protoDir}/.watson/sections/{sectionName}/DESIGN.md`. Create parent directories if needed. The file heading must be `# DESIGN: {sectionName}`.
+Write to `{protoDir}/.dt/sections/{sectionName}/DESIGN.md`. Create parent directories if needed. The file heading must be `# DESIGN: {sectionName}`.
 
 ## Output Format
 

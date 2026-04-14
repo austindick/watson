@@ -24,7 +24,7 @@ Parse a user-specified experience name against the codebase-map library book, re
   - `experienceName` (string) — user-specified surface name to locate in codebase-map book
   - `blueprintPath` (string) — absolute path to prototype's blueprint/ directory
   - `libraryPaths` (string[]) — pre-resolved chapter/page paths; resolver reads codebase-map CHAPTER.md files from this array
-  - `watsonMode` (boolean) — suppress interactive prompts when true
+  - `quietMode` (boolean) — suppress interactive prompts when true
 - **Output:** sections[] JSON inline — each entry: `name`, `referenceType:"prod-clone"`, `filePaths[]`, `description`, `sourceSurface`
 
 ## Execution

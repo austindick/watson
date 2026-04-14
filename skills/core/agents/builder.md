@@ -27,7 +27,7 @@ If you catch yourself thinking any of these, stop and re-check — you are about
 | If you're thinking... | Stop. The real issue is... |
 |---|---|
 | "This hex color is close enough to the token" | Look up the exact token name in DESIGN.md. "Close enough" means you didn't look it up. If no token maps, use the raw value with a TODO comment — never a "close enough" token. |
-| "The amendment is obviously what the user wants" | Check for the `[COMMITTED]` prefix. `[PENDING]` means the user has NOT confirmed this decision. `[INFERRED]` means Watson guessed — even less confirmed. Skip both regardless of how obvious it seems. |
+| "The amendment is obviously what the user wants" | Check for the `[COMMITTED]` prefix. `[PENDING]` means the user has NOT confirmed this decision. `[INFERRED]` means Design Toolkit guessed — even less confirmed. Skip both regardless of how obvious it seems. |
 | "I'll just hardcode this one spacing value" | Find the token in LAYOUT.md or the library. If truly unmapped, use the raw value with `/* TODO: unmapped */`. One hardcoded value becomes ten. |
 | "This component is basically the same as what the spec says" | Use the exact component name + variant from DESIGN.md. "Basically the same" means a different component. If DESIGN.md says `Button variant="secondary"`, do not use `Button variant="outline"` even if they look similar. |
 | "The nesting is too deep, I'll flatten this" | Match the LAYOUT.md ASCII tree exactly. Nesting depth is a design decision made during discuss or extracted from Figma — not a build-time optimization. |
@@ -39,19 +39,19 @@ If you catch yourself thinking any of these, stop and re-check — you are about
 
 ## Inputs
 
-- `layoutPath` — path to `.watson/sections/{sectionName}/LAYOUT.md`
-- `designPath` — path to `.watson/sections/{sectionName}/DESIGN.md`
-- `interactionPath` — path to `.watson/sections/{sectionName}/INTERACTION.md` (optional — may not exist)
+- `layoutPath` — path to `.dt/sections/{sectionName}/LAYOUT.md`
+- `designPath` — path to `.dt/sections/{sectionName}/DESIGN.md`
+- `interactionPath` — path to `.dt/sections/{sectionName}/INTERACTION.md` (optional — may not exist)
 - `targetFilePath` — the source file to edit
 - `sectionScope` — exact component/function name to modify
 - `blueprintPath` — absolute path to the prototype's `blueprint/` directory
 - `libraryPaths` — string array of pre-resolved chapter/page file paths; read each file directly for component variant validation
-- `watsonMode` — boolean; suppress interactive prompts when true
+- `quietMode` — boolean; suppress interactive prompts when true
 
 ## Outputs
 
 - Modified `targetFilePath` — section implemented in-place using library components and tokens
-- No new files written; spec files remain at `.watson/sections/{sectionName}/` for reviewer to consume
+- No new files written; spec files remain at `.dt/sections/{sectionName}/` for reviewer to consume
 
 ## Execution
 
@@ -132,4 +132,4 @@ On compile failure: read error output, fix within the section scope only, re-run
 
 ## Output Format
 
-No file artifact — output is the modified `targetFilePath` in-place. Spec files remain at their `.watson/sections/{sectionName}/` paths for the reviewer to consume.
+No file artifact — output is the modified `targetFilePath` in-place. Spec files remain at their `.dt/sections/{sectionName}/` paths for the reviewer to consume.

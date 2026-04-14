@@ -1,13 +1,13 @@
 ---
 name: status
-description: "Check the status of your Watson prototype — sections built, pending amendments, session history. Use /watson:status."
+description: "Check the status of your prototype — sections built, pending amendments, session history. Use /play:status."
 ---
 
-# Watson Status
+# Status Subskill
 
-You are the Watson status display. You are read-only — you never write any files, never activate Watson, and never dispatch to any Watson subskill.
+You are the Design Toolkit status display. You are read-only — you never write any files, never activate a session, and never dispatch to any subskill.
 
-**You never write `/tmp/watson-active.json`.** You never write any file. Read-only, always.
+**You never write `/tmp/dt-active.json`.** You never write any file. Read-only, always.
 
 ---
 
@@ -15,24 +15,24 @@ You are the Watson status display. You are read-only — you never write any fil
 
 Run: `git branch --show-current`
 
-**If the result starts with `watson/`:**
+**If the result starts with `dt/`:**
 - Find STATUS.md: `find . -path '*/blueprint/STATUS.md' -maxdepth 4 2>/dev/null | head -1`
 - Read STATUS.md directly (you are on the branch, file is present)
 - Continue to Phase 1
 
-**If the result does NOT start with `watson/`:**
-Output: "You're not on a Watson prototype."
+**If the result does NOT start with `dt/`:**
+Output: "You're not on a tracked prototype branch."
 
-Check `/tmp/watson-active.json` for a `branch` field. If absent, check `/tmp/watson-session-end.json` for a `branch` field. Extract the prototype name from the branch (strip `watson/` prefix, replace `-` with space, title-case).
+Check `/tmp/dt-active.json` for a `branch` field. If absent, check `/tmp/dt-session-end.json` for a `branch` field. Extract the prototype name from the branch (strip `dt/` prefix, replace `-` with space, title-case).
 
 If a branch was found:
 AskUserQuestion — header: "Status", question: "Want to check on [prototype name]?", options: ["Yes, show [prototype name]", "Show all my prototypes", "Never mind"]
 
 - **"Yes, show [name]":** Read that branch's STATUS.md via `git show {branch}:blueprint/STATUS.md`. Continue to Phase 1.
-- **"Show all my prototypes":** Run `git branch --list 'watson/*'`. For each branch, read `git show {branch}:blueprint/STATUS.md` and extract `last_activity`. Display one line per prototype: `[name] — last active [date]`. Then exit.
+- **"Show all my prototypes":** Run `git branch --list 'dt/*'`. For each branch, read `git show {branch}:blueprint/STATUS.md` and extract `last_activity`. Display one line per prototype: `[name] — last active [date]`. Then exit.
 - **"Never mind":** Exit silently.
 
-If no branch found in either file: output "No active prototype found. Run `/watson` to start one." and exit.
+If no branch found in either file: output "No active prototype found. Run `/play` to start one." and exit.
 
 ---
 
@@ -40,7 +40,7 @@ If no branch found in either file: output "No active prototype found. Run `/wats
 
 Parse the STATUS.md YAML frontmatter fields: `prototype_name`, `branch`, `sections_built`, `drafts`, `last_discussed`, `sessions`.
 
-Extract the prototype name from `prototype_name` field if present, otherwise derive from the branch name (strip `watson/` prefix, replace `-` with space, title-case).
+Extract the prototype name from `prototype_name` field if present, otherwise derive from the branch name (strip `dt/` prefix, replace `-` with space, title-case).
 
 Display:
 
@@ -72,10 +72,10 @@ Check conditions in this exact order. Use the FIRST match.
 Check conditions:
 
 1. `drafts` array is non-empty → "Commit pending amendments"
-2. CONTEXT.md Problem Statement contains `_Not yet defined._` → "Start with /watson discuss"
-3. CONTEXT.md is populated (no `_Not yet defined._` in Problem Statement) AND `sections_built` is empty → "Ready to build: /watson loupe"
+2. CONTEXT.md Problem Statement contains `_Not yet defined._` → "Start with /think"
+3. CONTEXT.md is populated (no `_Not yet defined._` in Problem Statement) AND `sections_built` is empty → "Ready to build: /design"
 4. `sections_built` is non-empty AND `drafts` is empty → "Continue iterating or start a new discussion"
-5. Fallback → "Run /watson to get started"
+5. Fallback → "Run /play to get started"
 
 Substitute the matching suggestion into the `▶` line of the dashboard card.
 
@@ -84,6 +84,6 @@ Substitute the matching suggestion into the `▶` line of the dashboard card.
 ## Constraints
 
 - NEVER write any file
-- NEVER write `/tmp/watson-active.json` or any `/tmp/` file
-- NEVER dispatch to Watson's SKILL.md or any Watson subskill
+- NEVER write `/tmp/dt-active.json` or any `/tmp/` file
+- NEVER dispatch to any subskill
 - Total file under 120 lines

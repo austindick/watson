@@ -13,7 +13,7 @@ Extract component interaction states from the design system library and structur
 
 1. Output must match INTERACTION-EXAMPLE.md section headers exactly: `## States`, `### Tier 1: Design System States`, `### Tier 2: Custom States`, `### Tier 3: Net-New Interactions`, `## Transitions`, `## User Flows`, `## Responsive Behavior`
 2. Line budget: under 50 lines — omit empty Tier 2 and Tier 3 tables (do not render them with "None" rows); User Flows and Responsive Behavior sections always present (with fallback text when empty)
-3. No AskUserQuestion when `watsonMode=true` OR `interactionContext` is provided — background mode
+3. No AskUserQuestion when `quietMode=true` OR `interactionContext` is provided — background mode
 4. Component detection uses direct Figma MCP fetch via `nodeId` — read the Figma node to identify DS components present in the section. Do NOT depend on layoutPath or designPath (not provided in parallel dispatch mode).
 5. Single MCP call permitted: Figma node fetch via nodeId for component detection (Step 1). No other MCP calls.
 6. Treat both null and absent `interactionContext` identically as "no discuss context" — fallback path
@@ -26,17 +26,17 @@ Extract component interaction states from the design system library and structur
 - `crossSectionFlows` — optional array of cross-section flow objects. Passed through for consolidator; not written to per-section INTERACTION.md.
 - `blueprintPath` — absolute path to the prototype's `blueprint/` directory
 - `libraryPaths` — string array of pre-resolved chapter/page file paths
-- `watsonMode` — boolean; suppress interactive prompts when true
+- `quietMode` — boolean; suppress interactive prompts when true
 
 ## Outputs
 
-- `{protoDir}/.watson/sections/{sectionName}/INTERACTION.md` — interaction spec (under 50 lines)
+- `{protoDir}/.dt/sections/{sectionName}/INTERACTION.md` — interaction spec (under 50 lines)
 
 ## Execution
 
 ### Path Resolution
 
-Derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` (or `blueprint/`) segment. Example: if `blueprintPath` is `/path/to/MyPage/blueprint`, then `protoDir` is `/path/to/MyPage`. All `.watson/sections/` paths below use this absolute `protoDir` prefix.
+Derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` (or `blueprint/`) segment. Example: if `blueprintPath` is `/path/to/MyPage/blueprint`, then `protoDir` is `/path/to/MyPage`. All `.dt/sections/` paths below use this absolute `protoDir` prefix.
 
 ### Step 1: Fetch Figma node and extract component names
 
@@ -95,7 +95,7 @@ For each matched component, create one table row:
 
 ### Step 5: Write INTERACTION.md
 
-Write to `{protoDir}/.watson/sections/{sectionName}/INTERACTION.md` using the Write tool. Structure (section headers must match INTERACTION-EXAMPLE.md exactly):
+Write to `{protoDir}/.dt/sections/{sectionName}/INTERACTION.md` using the Write tool. Structure (section headers must match INTERACTION-EXAMPLE.md exactly):
 
 ```
 # INTERACTION: {sectionName}

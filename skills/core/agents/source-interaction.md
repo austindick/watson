@@ -27,17 +27,17 @@ Detect Slate components from TSX import statements and JSX usage, look up their 
 - `screenshotPath` (string, optional) — page-level screenshot for structural reference
 - `blueprintPath` (string) — absolute path to prototype's blueprint/ directory
 - `libraryPaths` (string[]) — pre-resolved chapter/page file paths; includes design-system components/CHAPTER.md
-- `watsonMode` (boolean)
+- `quietMode` (boolean)
 
 ## Outputs
 
-- `{protoDir}/.watson/sections/{sectionName}/INTERACTION.md` — interaction spec (under 50 lines)
+- `{protoDir}/.dt/sections/{sectionName}/INTERACTION.md` — interaction spec (under 50 lines)
 
 ## Execution
 
 ### Path Resolution
 
-Derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` (or `blueprint/`) segment. Example: if `blueprintPath` is `/path/to/MyPage/blueprint`, then `protoDir` is `/path/to/MyPage`. All `.watson/sections/` paths below use this absolute `protoDir` prefix.
+Derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` (or `blueprint/`) segment. Example: if `blueprintPath` is `/path/to/MyPage/blueprint`, then `protoDir` is `/path/to/MyPage`. All `.dt/sections/` paths below use this absolute `protoDir` prefix.
 
 ### Step 1: Detect Slate components from TSX
 
@@ -131,7 +131,7 @@ If over 50 lines: trim Notes column to shortest meaningful clause, omit empty Ti
 
 ### Step 6: Write output
 
-Write to `{protoDir}/.watson/sections/{sectionName}/INTERACTION.md` using the Write tool. Heading: `# INTERACTION: {sectionName}`.
+Write to `{protoDir}/.dt/sections/{sectionName}/INTERACTION.md` using the Write tool. Heading: `# INTERACTION: {sectionName}`.
 
 After writing, verify the file exists and is under 50 lines. If over 50 lines, trim Notes column entries to the shortest meaningful clause and re-write.
 

@@ -26,18 +26,18 @@ Convert Figma auto-layout properties for a section into a LAYOUT.md spec using d
 - `sectionName` — used to construct the output path
 - `blueprintPath` — absolute path to the prototype's `blueprint/` directory; read `{blueprintPath}/LAYOUT.md` for vocabulary context if it exists
 - `libraryPaths` — string array of pre-resolved chapter/page file paths; read each file directly to load spacing and radius tokens
-- `watsonMode` — boolean; suppress interactive prompts when true
+- `quietMode` — boolean; suppress interactive prompts when true
 
 ## Outputs
 
-- `{protoDir}/.watson/sections/{sectionName}/LAYOUT.md` — layout spec, under 80 lines
+- `{protoDir}/.dt/sections/{sectionName}/LAYOUT.md` — layout spec, under 80 lines
 - Sections: Token Quick-Reference, Component Tree, Annotated CSS
 
 ## Execution
 
 ### Path Resolution
 
-Derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` (or `blueprint/`) segment. Example: if `blueprintPath` is `/path/to/MyPage/blueprint`, then `protoDir` is `/path/to/MyPage`. All `.watson/sections/` paths below use this absolute `protoDir` prefix.
+Derive `protoDir` from `blueprintPath` by removing the trailing `/blueprint` (or `blueprint/`) segment. Example: if `blueprintPath` is `/path/to/MyPage/blueprint`, then `protoDir` is `/path/to/MyPage`. All `.dt/sections/` paths below use this absolute `protoDir` prefix.
 
 ### Step 1: Load spacing and radius tokens from library books
 
@@ -111,7 +111,7 @@ Count lines in the draft output. If over 80:
 
 ### Step 10: Write output
 
-Write to `{protoDir}/.watson/sections/{sectionName}/LAYOUT.md`. Create parent directories if needed. The file heading must be `# LAYOUT: {sectionName}`.
+Write to `{protoDir}/.dt/sections/{sectionName}/LAYOUT.md`. Create parent directories if needed. The file heading must be `# LAYOUT: {sectionName}`.
 
 ## Output Format
 
