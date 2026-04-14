@@ -204,7 +204,10 @@ Plans:
   2. Each skill works independently — `/design` with only a Figma URL, `/think` with no existing session, `/save` without a prior `/play` session
   3. Blueprint files written by one skill are correctly read and extended by subsequent skills — no field conflicts, no overwrite of append-only sections
   4. No Watson or Loupe branding appears anywhere in any skill's output during the full workflow
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 32-01-PLAN.md — Static integration validation (cross-skill references, branding, contract compliance)
+- [ ] 32-02-PLAN.md — Live workflow and standalone skill validation (human-verify checkpoint)
 
 ## Progress
 
@@ -222,4 +225,4 @@ Plans:
 | 29. /design Extraction | 2/2 | Complete    | 2026-04-14 | - |
 | 30. /design Hardening | 3/3 | Complete    | 2026-04-14 | - |
 | 31. /save Skill | 2/2 | Complete    | 2026-04-14 | - |
-| 32. Integration Testing | v1.5 | 0/TBD | Not started | - |
+| 32. Integration Testing | 1/2 | In Progress|  | - |

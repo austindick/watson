@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Design Toolkit
 status: planning
-stopped_at: Completed 31-02-PLAN.md
-last_updated: "2026-04-14T15:35:46.066Z"
+stopped_at: Completed 32-01-PLAN.md
+last_updated: "2026-04-14T15:48:35.914Z"
 last_activity: 2026-04-13 — Roadmap created, phases 26-32 defined
 progress:
   total_phases: 7
   completed_phases: 6
-  total_plans: 14
-  completed_plans: 14
+  total_plans: 16
+  completed_plans: 15
   percent: 0
 ---
 
@@ -60,6 +60,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 30-design-hardening P03 | 3min | 2 tasks | 1 files |
 | Phase 31-save-skill P01 | 6min | 1 tasks | 1 files |
 | Phase 31-save-skill P02 | 2min | 2 tasks | 1 files |
+| Phase 32-integration-testing P01 | 2min | 2 tasks | 0 files |
 
 ## Accumulated Context
 
@@ -108,6 +109,9 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 31-save-skill]: Library path uses plugin root (library/LIBRARY.md) not skills/core/library/ — consistent with Phase 26 plugin architecture
 - [Phase 31-save-skill]: /save redirect uses 'Checkpointing is handled by /save directly. Just type /save.' — exact phrasing matches /play, /think, /design redirect pattern
 - [Phase 31-save-skill]: save-blueprint dispatch-by-think note removed entirely from core — suggest-not-dispatch makes it obsolete
+- [Phase 32-integration-testing]: page-templates chapter gap: design/SKILL.md references playground-conventions/page-templates/ which does not exist on disk — flagged for gap closure
+- [Phase 32-integration-testing]: Library path inconsistency: design/SKILL.md and think/SKILL.md reference skills/core/library/LIBRARY.md while save/SKILL.md correctly references library/LIBRARY.md at plugin root — flagged for gap closure
+- [Phase 32-integration-testing]: All 11 agents dispatched by design/SKILL.md confirmed to exist on disk; librarian.md is the 12th agent (not dispatched by design, used by library system)
 
 ### Pending Todos
 
@@ -122,6 +126,6 @@ Carried forward from v1.4:
 
 ## Session Continuity
 
-Last session: 2026-04-14T15:33:09.849Z
-Stopped at: Completed 31-02-PLAN.md
+Last session: 2026-04-14T15:48:35.912Z
+Stopped at: Completed 32-01-PLAN.md
 Resume: `/gsd:plan-phase 26` to plan the Plugin Scaffold phase
