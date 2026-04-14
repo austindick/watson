@@ -13,7 +13,7 @@ description: Design discussion and prototype building for the Faire Prototype Pl
 **Activation state check:**
 When the Design Toolkit is active (`/tmp/dt-active.json` exists), this skill handles design-related messages via intent classification below. The core skill does NOT write dt-active.json — /play writes it on session start.
 
-**Skill exclusivity:** When Design Toolkit is active, do NOT invoke `superpowers:brainstorming` or any external brainstorming/creative-exploration skills. The discuss subskill handles all design exploration, variant ideation, and creative discussion. Invoking external brainstorming skills alongside Design Toolkit creates conflicting workflows.
+**Skill exclusivity:** When Design Toolkit is active, do NOT invoke `superpowers:brainstorming` or any external brainstorming/creative-exploration skills. The /think skill handles all design exploration, variant ideation, and creative discussion. Invoking external brainstorming skills alongside Design Toolkit creates conflicting workflows.
 
 ---
 
@@ -38,7 +38,7 @@ If the answer is in the conventions book, use it — do not explore the codebase
 ## Intent Classification
 
 **Check explicit shortcuts first:**
-- `/think` → Tier 1 (discuss)
+- `/think` → Respond: "Design thinking is handled by /think directly. Just type /think." Exit. (Do not process /think in core — plugin.json routes /think to skills/think/SKILL.md)
 - `/design` → Tier 2 (build)
 - `/think:discuss` or `/design:loupe` (colon variants) → handled by Claude Code as independent skills — SKILL.md is not involved
 - `/play help` → Handled by /play skill directly. Respond: "Use /play for session management."
@@ -60,10 +60,10 @@ If the answer is in the conventions book, use it — do not explore the codebase
 **Tier 0 exits in the Routing section** — messages that reach Intent Classification have already passed the blueprint gate and Tier 0 check. The Tier 0 column is shown here for completeness but is handled upstream.
 
 **Defaults:**
-- Bare or ambiguous invocation with no signal → Tier 1 (discuss). Starting a conversation gathers context either way.
+- Bare or ambiguous invocation with no signal → Tier 1 (think). Starting a conversation gathers context either way.
 - Figma URL + clear scope + populated blueprint → Tier 2 (build)
 - Experience name reference ("build from [name]", "clone [name]") + populated blueprint → Tier 2 (build). Set mode='prod-clone'.
-- **Never answer design questions inline.** If a message is design-related (feedback, improvements, exploration, critique, "what if" questions), it MUST route to Tier 1 (discuss) or Tier 3 (ask) — never handle it with an inline response. Inline responses are only for Help and non-design passthrough. When in doubt, dispatch discuss.
+- **Never answer design questions inline.** If a message is design-related (feedback, improvements, exploration, critique, "what if" questions), it MUST route to Tier 1 (think) or Tier 3 (ask) — never handle it with an inline response. Inline responses are only for Help and non-design passthrough. When in doubt, dispatch /think.
 
 **Session calibration (within-session only):**
 Maintain a mental count of how many times the user has chosen "just build." If they have chosen it more than once this session, shift Tier 3 cases toward Tier 2. Cross-session preference learning is deferred to a future release.
@@ -74,8 +74,8 @@ Maintain a mental count of how many times the user has chosen "just build." If t
 
 ## Routing
 
-**Tier 1 (discuss):**
-Dispatch `@skills/discuss.md` with:
+**Tier 1 (think):**
+Dispatch `@skills/think/SKILL.md` with:
 - `blueprintPath`: resolved blueprint/ path
 - `figmaUrl`: if detected in user's message (optional)
 
@@ -105,7 +105,7 @@ Inline conversational response — no dispatch. Example: "I can help you think t
 
 ## Discuss → Build Chain
 
-After `@skills/discuss.md` returns, read the return status JSON:
+After `@skills/think/SKILL.md` returns, read the return status JSON:
 
 Handle each status as an **explicit case** — no fallthrough:
 
@@ -114,7 +114,7 @@ Handle each status as an **explicit case** — no fallthrough:
 - **`discussion_only`:** Say "Decisions saved. When ready to build, say /design." Exit.
 - **`cancelled`:** Acknowledge gracefully. Exit.
 
-**Note:** When discuss is dispatched by save-blueprint, it returns to save-blueprint — not this chain.
+**Note:** When /think is dispatched by save-blueprint, it returns to save-blueprint — not this chain.
 
 **Error handling:** Silent retry once on first failure. On second failure: non-technical explanation with actionable suggestion.
 
@@ -124,11 +124,11 @@ Handle each status as an **explicit case** — no fallthrough:
 
 | If you're thinking... | Stop. The real issue is... |
 |---|---|
-| "This is a simple design request, I'll just answer it inline" | If Design Toolkit is active, design questions go through discuss — even simple ones. Answering inline bypasses blueprint persistence and the discuss→build contract. |
+| "This is a simple design request, I'll just answer it inline" | If Design Toolkit is active, design questions go through /think — even simple ones. Answering inline bypasses blueprint persistence and the discuss→build contract. |
 | "The user clearly wants to build, I'll skip to Tier 2" | Check the classification table. Multiple unknowns or template-only CONTEXT.md = Tier 1 regardless of how eager the user sounds. Only Tier 2 when CONTEXT.md is populated AND scope is clear AND bounded. |
-| "I'll just write a quick CONTEXT.md and dispatch loupe" | The minimal CONTEXT.md path exists only for explicit Tier 2 with no prior discuss and clear scope. If there are open design questions, route to discuss — a thin CONTEXT.md with gaps produces a bad build. |
-| "This isn't really a design question" | If Design Toolkit is active and the user is on a `dt/*` branch with a `blueprint/` directory, it's a design context. Route to discuss or Tier 0 passthrough as appropriate. |
-| "I'll handle this brainstorming/exploration myself" | Skill exclusivity: the discuss subskill handles all design exploration. Do not invoke superpowers:brainstorming or do ad-hoc exploration inline. |
+| "I'll just write a quick CONTEXT.md and dispatch loupe" | The minimal CONTEXT.md path exists only for explicit Tier 2 with no prior /think and clear scope. If there are open design questions, route to /think — a thin CONTEXT.md with gaps produces a bad build. |
+| "This isn't really a design question" | If Design Toolkit is active and the user is on a `dt/*` branch with a `blueprint/` directory, it's a design context. Route to /think or Tier 0 passthrough as appropriate. |
+| "I'll handle this brainstorming/exploration myself" | Skill exclusivity: the /think skill handles all design exploration. Do not invoke superpowers:brainstorming or do ad-hoc exploration inline. |
 | "The pending amendments don't matter for this build" | Check STATUS.md `drafts:`. If non-empty, show the pending warning before dispatching loupe. The user must explicitly choose "build without pending." |
 
 ---
@@ -137,6 +137,6 @@ Handle each status as an **explicit case** — no fallthrough:
 
 - This file must stay under 165 lines
 - No file reads, MCP calls, or agent dispatch sequences in this file
-- Subskills (discuss.md, loupe.md) contain all execution logic
+- Skills (/think, /design) and subskills (loupe.md) contain all execution logic
 - Agents are dispatched by subskills, never by SKILL.md
 - Session management (fork, continue, cleanup, resume, /play off) is handled by /play — do not duplicate here
