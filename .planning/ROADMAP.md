@@ -190,7 +190,10 @@ Plans:
   2. Current conversation context and decisions are written to relevant blueprint files (PRD, LAYOUT.md, DESIGN.md, INTERACTION.md as applicable)
   3. A git commit is created on the current branch with a message summarizing session progress
   4. STATUS.md is updated with a snapshot sufficient for `/play continue` to fully restore the session
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 31-01-PLAN.md — Write full /save SKILL.md with checkpoint logic (extraction, blueprint writing, commit, STATUS.md update)
+- [ ] 31-02-PLAN.md — Update core SKILL.md routing to redirect /save to standalone skill
 
 ### Phase 32: Integration Testing
 **Goal**: All four skills work together via the shared blueprint contract — a user can run `/play` → `/think` → `/design` → `/save` as a continuous workflow, and each skill also works in isolation
@@ -218,5 +221,5 @@ Plans:
 | 28. /think Skill | 2/2 | Complete    | 2026-04-14 | - |
 | 29. /design Extraction | 2/2 | Complete    | 2026-04-14 | - |
 | 30. /design Hardening | 3/3 | Complete    | 2026-04-14 | - |
-| 31. /save Skill | v1.5 | 0/TBD | Not started | - |
+| 31. /save Skill | v1.5 | 0/2 | Not started | - |
 | 32. Integration Testing | v1.5 | 0/TBD | Not started | - |
