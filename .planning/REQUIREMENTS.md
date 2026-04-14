@@ -18,12 +18,12 @@ Requirements for the Design Toolkit milestone. Decompose Watson into standalone 
 
 ### /play — Session Management
 
-- [ ] **PLAY-01**: User can run `/play` to start a guided fork choosing new prototype or continue existing
-- [ ] **PLAY-02**: New prototype flow creates branch with user confirmation and scaffolds empty blueprint directory
-- [ ] **PLAY-03**: Continue flow lists active branches and restores session from blueprint + status files
-- [ ] **PLAY-04**: Inactive branch cleanup with user confirmation before deletion
-- [ ] **PLAY-05**: Flexible continue accepts branch name, Playground URL, or directory path
-- [ ] **PLAY-06**: STATUS.md created/updated with session state on every lifecycle event
+- [x] **PLAY-01**: User can run `/play` to start a guided fork choosing new prototype or continue existing
+- [x] **PLAY-02**: New prototype flow creates branch with user confirmation and scaffolds empty blueprint directory
+- [x] **PLAY-03**: Continue flow lists active branches and restores session from blueprint + status files
+- [x] **PLAY-04**: Inactive branch cleanup with user confirmation before deletion
+- [x] **PLAY-05**: Flexible continue accepts branch name, Playground URL, or directory path
+- [x] **PLAY-06**: STATUS.md created/updated with session state on every lifecycle event
 
 ### /think — Design Thinking
 
@@ -97,12 +97,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFRA-04 | Phase 26 | Complete |
 | INFRA-05 | Phase 26 | Complete |
 | INFRA-06 | Phase 26 | Complete |
-| PLAY-01 | Phase 27 | Pending |
-| PLAY-02 | Phase 27 | Pending |
-| PLAY-03 | Phase 27 | Pending |
-| PLAY-04 | Phase 27 | Pending |
-| PLAY-05 | Phase 27 | Pending |
-| PLAY-06 | Phase 27 | Pending |
+| PLAY-01 | Phase 27 | Complete |
+| PLAY-02 | Phase 27 | Complete |
+| PLAY-03 | Phase 27 | Complete |
+| PLAY-04 | Phase 27 | Complete |
+| PLAY-05 | Phase 27 | Complete |
+| PLAY-06 | Phase 27 | Complete |
 | THINK-01 | Phase 28 | Pending |
 | THINK-02 | Phase 28 | Pending |
 | THINK-03 | Phase 28 | Pending |

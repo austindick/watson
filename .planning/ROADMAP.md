@@ -95,7 +95,7 @@ Full details: `milestones/v1.4-ROADMAP.md`
 **Milestone Goal:** Decompose Watson into independent, standalone skills (`/play`, `/think`, `/design`, `/save`) packaged as a "Design Toolkit" plugin. Preserves the blueprint and library systems while removing the orchestration layer and hardening the build pipeline.
 
 - [x] **Phase 26: Plugin Scaffold** - Establish Design Toolkit plugin manifest, shared library, Librarian, blueprint contract, and rebrand (completed 2026-04-14)
-- [ ] **Phase 27: /play Skill** - Extract session management as standalone `/play` skill with branch/blueprint lifecycle
+- [x] **Phase 27: /play Skill** - Extract session management as standalone `/play` skill with branch/blueprint lifecycle (completed 2026-04-14)
 - [ ] **Phase 28: /think Skill** - Extract design thinking as standalone `/think` skill with file refactor
 - [ ] **Phase 29: /design Extraction** - Port all 12 agents and basic pipeline as standalone `/design` skill
 - [ ] **Phase 30: /design Hardening** - Add page-container, reviewer tightening, token compliance, convergent loop, section rebuild, and verification gate
@@ -145,7 +145,10 @@ Plans:
   3. Simple requests skip deep exploration; complex requests get multi-step design thinking
   4. All decisions are written back to the PRD (the living context document) with [PENDING]/[COMMITTED] amendment tracking
   5. SKILL.md is under 100 lines, with questioning flow, blueprint writing, and mid-build behavior in separate reference files
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 28-01-PLAN.md — Write full /think skill + reference files (questioning-flow, blueprint-writing, mid-build)
+- [ ] 28-02-PLAN.md — Update core SKILL.md routing to dispatch /think + verify separation
 
 ### Phase 29: /design Extraction
 **Goal**: Users can run `/design` as a standalone build pipeline — all 12 agents ported, 3-mode entry working, blueprint files written — independent of Watson or Loupe
@@ -204,7 +207,7 @@ Plans:
 | 16-21. User Experience & Commands | v1.3 | 11/11 | Complete | 2026-04-10 |
 | 22-25. Multi-Mode Loupe | v1.4 | 9/9 | Complete | 2026-04-13 |
 | 26. Plugin Scaffold | 3/3 | Complete    | 2026-04-14 | - |
-| 27. /play Skill | 1/2 | In Progress|  | - |
+| 27. /play Skill | 2/2 | Complete    | 2026-04-14 | - |
 | 28. /think Skill | v1.5 | 0/TBD | Not started | - |
 | 29. /design Extraction | v1.5 | 0/TBD | Not started | - |
 | 30. /design Hardening | v1.5 | 0/TBD | Not started | - |
