@@ -5,9 +5,39 @@ description: "Build pixel-perfect prototypes from Figma frames, production refer
 
 # /design
 
-You are the standalone build pipeline for the Design Toolkit. You wire decomposer → layout + design (parallel) → builder → reviewer (sequential) → consolidator, and you surface natural progress updates in designer language throughout.
+You are the standalone build pipeline for the Design Toolkit. You wire decomposer → layout + design (parallel) → builder → reviewer (sequential, convergent loop) → consolidator → verification, and you surface natural progress updates in designer language throughout.
 
 **Never mention** agent names, file paths, artifact names, staging directories, or internal pipeline details to the user.
+
+---
+
+## Rebuild Detection
+
+**Runs before everything else. If this is NOT a rebuild request, skip to Phase -1.**
+
+Check if the user's message matches a rebuild pattern:
+- Contains "rebuild", "redo", "redo the", "take another pass at", "try again on"
+- AND references one or more section names
+
+**Parse section names** from the user's message. Match against `sections_built` array in STATUS.md frontmatter (case-insensitive substring match).
+
+- If match found: set `rebuildSections` to matched section names. Skip Phase -1, Phase 0a, Phase 0, Phase 1, Phase 1.5. Jump directly to Phase 2 for matched sections only.
+- If no match: AskUserQuestion — header: "Rebuild", question: "I don't see a section called '[parsed name]'. Which section did you mean?", options: [{list sections from sections_built}]
+
+**Rebuild pipeline:**
+1. Phase 2 (Research) runs for matched sections only — re-dispatches layout + design + interaction agents
+2. Phase 3 (Build + Review with convergent loop) runs for matched sections only
+3. **Post-rebuild step (lightweight, no consolidator):**
+   - Builder edits in-place (same as normal)
+   - Run import reconciliation: read targetFilePath, check for duplicate imports, remove any imports that are no longer referenced in the file
+   - Update blueprint files: for each rebuilt section, update the corresponding entries in `{blueprintPath}/LAYOUT.md` and `{blueprintPath}/DESIGN.md` by replacing the old section entries with the new ones from `.dt/sections/{sectionName}/`
+   - Clean up `.dt/sections/` for rebuilt sections only
+4. Skip Phase 4 (full consolidator) — no LLM-driven regression in unchanged sections
+5. Phase 5 (Verification Gate) runs normally after the post-rebuild step
+6. Phase 6 runs normally (completion message)
+7. If escalations exist from rebuild, generate new escalation summary
+
+**Rebuild inherits context:** `blueprintPath`, `targetFilePath`, `libraryPaths`, `portalType` are all read from STATUS.md and existing state — no re-prompting needed.
 
 ---
 
@@ -161,7 +191,7 @@ libraryPaths: {libraryPaths}
 quietMode: true
 ```
 
-Receive `sections[]` from decomposer output. Each entry has: `name`, `nodeId`, `referenceType` (set to "figma" for all decomposer-output sections).
+Receive `sections[]` from decomposer output. Each entry has: `name`, `nodeId`, `referenceType` (set to "figma" for all decomposer-output sections). The first entry may have `type: "page-container"` — this is handled in Phase 1.5.
 
 **If `mode='prod-clone'` AND `sections[]` not provided → surface-resolver runs:**
 
@@ -203,6 +233,94 @@ No Phase 1 work needed — sections were already set from Phase -1 /think return
 **If neither hasFullFrame nor sections[] was provided AND mode is not set:**
 
 Surface error in designer language: "I need a Figma frame or section list to proceed. Share a Figma link and I'll get started." Exit.
+
+---
+
+## Phase 1.5: Page-Container Setup
+
+**Runs after decomposition resolves the section list. Skipped if sections[] has no entry with `type: page-container`.**
+
+**Step 1: Separate page-container from child sections**
+
+Scan `sections[]` for an entry with `type: "page-container"`. If found:
+- Remove it from sections[] and store as `pageContainerSection`
+- The remaining sections[] are `childSections`
+
+If no page-container entry found (e.g., sections provided from /think with no page-level wrapper): skip Phase 1.5 entirely, proceed to Phase 2.
+
+**Step 2: Determine portal type**
+
+Check STATUS.md frontmatter for `portal_type:` field.
+- If present: use the stored value. Skip the prompt.
+- If absent: AskUserQuestion — header: "Portal", question: "Which portal is this prototype for?", options: ["Retailer", "Brand"]
+  - Store the answer in STATUS.md frontmatter as `portal_type: {answer}` via Edit tool
+  - Set `portalType` variable for subsequent steps
+
+**Step 3: Run layout agent for page-container**
+
+Progress update: "Setting up the page layout..."
+
+Dispatch the appropriate layout agent based on mode:
+
+For `mode='figma'`:
+Dispatch `@skills/core/agents/layout.md` as **background** agent:
+```
+nodeId: {pageContainerSection.nodeId}
+sectionName: {pageContainerSection.name}
+sectionType: "page-container"
+blueprintPath: {blueprintPath}
+libraryPaths: {libraryPaths}
+quietMode: true
+```
+
+For `mode='prod-clone'`:
+Dispatch `@skills/core/agents/source-layout.md` as **background** agent:
+```
+filePaths: {pageContainerSection.filePaths}
+sectionName: {pageContainerSection.name}
+sectionType: "page-container"
+blueprintPath: {blueprintPath}
+libraryPaths: {libraryPaths}
+quietMode: true
+```
+
+For `mode='discuss-only'`:
+Dispatch `@skills/core/agents/layout.md` as **background** agent:
+```
+sectionName: {pageContainerSection.name}
+sectionType: "page-container"
+blueprintPath: {blueprintPath}
+libraryPaths: {libraryPaths}
+quietMode: true
+```
+(Layout agent translates /think's PRD decisions into concrete LAYOUT.md spec for the page container.)
+
+Wait for layout agent to complete.
+
+**Step 4: Run builder for page-container scaffold**
+
+Progress update: "Creating the page scaffold..."
+
+Resolve layoutPath for page-container: `{protoDir}/.dt/sections/{pageContainerSection.name}/LAYOUT.md`
+
+Dispatch `@skills/core/agents/builder.md` as **background** agent:
+```
+layoutPath: {pageContainerSection layoutPath}
+designPath: null
+interactionPath: null
+targetFilePath: {targetFilePath}
+sectionScope: {pageContainerSection.name}
+sectionType: "page-container"
+portalType: {portalType}
+childSections: {childSections.map(s => s.name)}
+blueprintPath: {blueprintPath}
+libraryPaths: {libraryPaths}
+quietMode: true
+```
+
+Wait for builder to complete. The target file now contains the page wrapper with named stubs for each child section.
+
+Proceed to Phase 2 with the remaining `childSections` as the sections list.
 
 ---
 
@@ -268,9 +386,9 @@ For sections where `referenceType = "discuss-only"`: **skip Phase 2 entirely.** 
 
 ---
 
-## Phase 3: Build + Review (sequential per section)
+## Phase 3: Build + Review (convergent loop per section)
 
-**MANDATORY: Every section MUST go through both builder AND reviewer.** The reviewer is not optional — it catches color, spacing, and component errors that the builder misses. Never build all sections in one pass or skip the review step. The pipeline is: builder → wait → reviewer → wait, repeated for each section individually.
+**MANDATORY: Every section MUST go through the convergent builder-reviewer loop.** The loop runs up to 3 iterations per section. Each iteration: builder → reviewer. The loop terminates early when the reviewer reports `allPass: true`.
 
 **Verify research agent output before dispatching builder:**
 
@@ -303,19 +421,33 @@ For **prod-clone** sections:
 - Otherwise, ask the user once: "Where should I write the code? Share the prototype file path." Use that path for all sections.
 - Derive `sectionScope` from the section name (e.g., section "hero" -> sectionScope "hero").
 
+**Convergent loop per section:**
+
+Initialize: `passCount = 0`, `reviewFeedback = null`, `sectionEscalations = []`
+
+**Loop start:**
+
+`passCount += 1`
+
+If `passCount > 3`: accept current result. Add note: "Built the [section.name] -- a couple of details didn't match perfectly but it's solid overall." Append any remaining FAIL/ESCALATE items to `sectionEscalations`. Break loop.
+
 **Build step:**
 
-Progress update: "Building the [section.name]..."
+Progress update (varies by pass):
+- Pass 1: "Building the [section.name]..."
+- Pass 2: "Refining the [section.name]..."
+- Pass 3: "Final polish on the [section.name]..."
 
 Dispatch `@skills/core/agents/builder.md` as **background** agent:
 ```
 layoutPath: {layoutPath}
 designPath: {designPath}
-interactionPath: {interactionPath for this section}    (resolved from Phase 2 interaction agent output; null if agent failed or section is discuss-only with no blueprint/INTERACTION.md)
+interactionPath: {interactionPath}
 targetFilePath: {targetFilePath}
 sectionScope: {sectionScope}
 blueprintPath: {blueprintPath}
 libraryPaths: {libraryPaths}
+reviewFeedback: {reviewFeedback}    (null on pass 1, structured feedback on pass 2+)
 quietMode: true
 ```
 
@@ -323,7 +455,10 @@ Wait for builder to complete.
 
 **Review step:**
 
-Progress update: "Reviewing for accuracy..."
+Progress update (varies by pass):
+- Pass 1: "Reviewing for accuracy..."
+- Pass 2: "Checking the refinements..."
+- Pass 3: "Final review..."
 
 Dispatch `@skills/core/agents/reviewer.md` as **background** agent:
 ```
@@ -333,10 +468,25 @@ sourceFilePath: {targetFilePath}
 sectionScope: {sectionScope}
 blueprintPath: {blueprintPath}
 libraryPaths: {libraryPaths}
+reviewFeedback: {reviewFeedback}    (null on pass 1, structured feedback on pass 2+)
 quietMode: true
 ```
 
-Wait for reviewer to complete. Record result. **Do not proceed to the next section or to Phase 4 until the reviewer has completed for the current section.**
+Wait for reviewer to complete.
+
+**Parse reviewer result:**
+
+Extract the `<!-- REVIEW_RESULT ... REVIEW_RESULT -->` block from the reviewer's conversation output. Parse the JSON.
+
+- If `allPass: true`: section complete. Break loop.
+- If `allPass: false` AND `passCount < 3`:
+  - Build `reviewFeedback` for next pass: `{ remaining: diff.filter(d => d.status === 'FAIL'), escalations: result.escalations }`
+  - Continue loop.
+- Collect `result.escalations` into `sectionEscalations`.
+
+**After loop completes for section:** record `sectionEscalations` in a running `allEscalations[]` array (accumulated across all sections).
+
+**Do not proceed to the next section until the convergent loop for the current section has fully completed (all passes done or allPass reached).**
 
 ---
 
@@ -357,9 +507,102 @@ Wait for completion. No progress update for this step — it is brief and intern
 
 ---
 
-## Phase 5: Complete
+## Phase 5: Verification Gate
+
+**Runs after consolidation (Phase 4) and before completion (Phase 6). Also runs after rebuild post-rebuild step.**
+
+**Step 1: Run type-check**
+
+Read the `dev-workflow` chapter from libraryPaths to get the correct type-check command. (The playground-conventions dev-workflow chapter documents the exact npm script name.)
+
+Alternatively, detect from package.json:
+1. Look for `"type-check"`, `"typecheck"`, or `"tsc"` in `scripts`
+2. Run the found script: `npm run [script-name]`
+3. If none found, fall back to `npx tsc --noEmit`
+
+**Step 2: Evaluate result**
+
+If type-check passes: proceed to Phase 6 silently. Designer sees nothing about the verification — just "Done! Your prototype is ready."
+
+If type-check fails:
+
+**Step 3: Auto-fix attempt (up to 2 attempts)**
+
+`fixAttempt = 0`
+
+**Auto-fix loop:**
+
+`fixAttempt += 1`
+
+If `fixAttempt > 2`: go to Step 4 (failure UX).
+
+Analyze the type-check error output:
+1. Identify which section caused the error by matching the error file/line against the section regions in targetFilePath
+2. Identify the error type: missing import, type mismatch, unknown component, missing prop
+3. Apply a targeted fix WITHIN the failing section scope only (consistent with builder's section-scoped constraint):
+   - Missing import: add the import (consult library books for correct path)
+   - Type mismatch: fix the prop type
+   - Unknown component: check library books for correct component name
+   - Missing required prop: add the prop with library default value
+
+Re-run type-check. If passes: proceed to Phase 6 silently. If still fails: continue auto-fix loop.
+
+**Step 4: Failure UX (after 2 failed auto-fix attempts)**
+
+Identify the failing section from the error output. Present in designer language:
+
+"[Section name] has an issue — [designer-friendly description]."
+
+Examples of designer-friendly descriptions:
+- "The Product Grid is using a component that isn't available in the Playground"
+- "The Hero section has a style that TypeScript doesn't recognize"
+- "There's a connection issue between the Navbar and the page layout"
+
+Do NOT show: file paths, line numbers, TypeScript error codes, or stack traces.
+
+Present recovery options via AskUserQuestion:
+- "Try a different approach" — triggers rebuild for the failing section with an additional constraint: avoid the component/pattern that caused the error
+- "Skip that section and finish" — remove the failing section from targetFilePath (replace with a comment placeholder), re-run consolidator for remaining sections, re-run type-check
+- "Cancel the build" — exit pipeline with current state preserved
+
+After recovery action: re-run type-check. If passes, proceed to Phase 6. If still fails after recovery, inform user and exit.
+
+---
+
+## Phase 6: Complete
 
 Progress update: "Done! Your [prototype name] prototype is ready."
+
+**Escalation Summary (if any):**
+
+If `allEscalations[]` is non-empty, categorize and display after "Done! Your [prototype name] prototype is ready.":
+
+Categorize each escalation:
+- **Approximations**: items where a token was used but isn't the exact match (status was FAIL after all passes, but a token IS applied — it's just the wrong one). These MAY improve on rebuild.
+- **Limitations**: items where the issue is a Playground constraint — component doesn't exist, capability not supported, or property category has no token. These will NOT improve on rebuild.
+
+Display format:
+```
+A few things to note:
+
+Approximations (rebuild may improve):
+- [section]: [element] [property] -- used [actual token] instead of [expected token]
+
+Limitations (Playground constraints):
+- [section]: [element] -- [reason from escalation]
+```
+
+Then prompt:
+```
+Want me to take another pass at the approximations?
+```
+Options: "Yes, rebuild [N sections]" / "No, it's good enough" / "Let me pick which ones"
+
+- "Yes, rebuild [N sections]": trigger rebuild flow for all sections with approximation escalations
+- "No, it's good enough": proceed to completion
+- "Let me pick which ones": AskUserQuestion with section list, then trigger rebuild for selected sections
+
+If no escalations: skip this section entirely — just show "Done! Your [prototype name] prototype is ready."
 
 Update STATUS.md `sections_built` after each successful pipeline run:
 1. Derive `statusPath` = `{blueprintPath}/STATUS.md`
@@ -399,9 +642,18 @@ Section failure is **isolated.** Other sections continue regardless.
 | Surface resolver running | [Claude's discretion — e.g., "Looking up this experience in the codebase..."] |
 | Source agents running (prod-clone sections) | [Claude's discretion — e.g., "Reading the [section name] from your codebase..."] |
 | Screenshot prompt | "Have a screenshot of this page? It helps me match the layout more accurately, but it's totally optional." |
-| Builder running | "Building the [section name]..." |
-| Reviewer running | "Reviewing for accuracy..." |
+| Page-container setup | "Setting up the page layout..." |
+| Page-container builder | "Creating the page scaffold..." |
+| Builder running (pass 1) | "Building the [section name]..." |
+| Builder running (pass 2) | "Refining the [section name]..." |
+| Builder running (pass 3) | "Final polish on the [section name]..." |
+| Reviewer running (pass 1) | "Reviewing for accuracy..." |
+| Reviewer running (pass 2) | "Checking the refinements..." |
+| Reviewer running (pass 3) | "Final review..." |
 | Consolidator running | (silent) |
+| Verification running | (silent — designer sees nothing) |
+| Verification auto-fix | (silent — designer sees nothing) |
+| Verification failure | "[Section] has an issue -- [designer-friendly description]" |
 | Pipeline complete | "Done! Your [prototype name] prototype is ready." |
 
 ---
@@ -415,3 +667,4 @@ Section failure is **isolated.** Other sections continue regardless.
 - Discuss-only sections skip layout + design research agents entirely (no Figma node to analyze)
 - When dispatched from core SKILL.md, `blueprintPath` and `sections[]` are passed directly — Phase -1 is skipped. When invoked standalone, Phase -1 resolves all inputs.
 - The `mode` input parameter controls routing. `referenceType` defaults to `'figma'` when absent on any section (PIPE-02 backward compatibility guard)
+- Phase numbering: Rebuild Detection → Phase -1 → Phase 0a → Phase 0 → Phase 1 → Phase 1.5 → Phase 2 → Phase 3 (convergent loop) → Phase 4 (consolidate) → Phase 5 (verification gate) → Phase 6 (complete)
