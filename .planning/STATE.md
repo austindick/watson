@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Design Toolkit
 status: planning
-stopped_at: Completed 26-plugin-scaffold/26-03-PLAN.md
-last_updated: "2026-04-14T04:17:44.478Z"
+stopped_at: Completed 27-play-skill/27-01-PLAN.md
+last_updated: "2026-04-14T04:53:21.670Z"
 last_activity: 2026-04-13 — Roadmap created, phases 26-32 defined
 progress:
   total_phases: 7
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 5
+  completed_plans: 4
   percent: 0
 ---
 
@@ -49,6 +49,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 26-plugin-scaffold P02 | 2min | 1 tasks | 6 files |
 | Phase 26-plugin-scaffold P01 | 4min | 2 tasks | 10 files |
 | Phase 26-plugin-scaffold P03 | 8min | 2 tasks | 28 files |
+| Phase 27-play-skill P01 | 4min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,9 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 26-plugin-scaffold]: Watson filenames preserved (watson-init.md etc.) — content rebrand sufficient; file renames deferred to avoid cross-reference breakage
 - [Phase 26-plugin-scaffold]: watsonMode renamed to quietMode in all agents — cleaner abstraction, drops Watson coupling from agent parameter interface
 - [Phase 26-plugin-scaffold]: CSO stub SKILL.md pattern: frontmatter-first with name + Use-when description, minimal body pointing to current implementation
+- [Phase 27-play-skill]: /play does not dispatch /think or /design — suggests them after session activation; core SKILL.md handles routing
+- [Phase 27-play-skill]: resume.md uses suggest-not-dispatch pattern: replaces @skills/ dispatches with user-facing suggestions to run /think and /design
+- [Phase 27-play-skill]: @references/ scope established: all sub-file references within a skill use relative @references/ paths, not cross-skill @skills/ paths
 
 ### Pending Todos
 
@@ -81,6 +85,6 @@ Carried forward from v1.4:
 
 ## Session Continuity
 
-Last session: 2026-04-14T04:14:32.371Z
-Stopped at: Completed 26-plugin-scaffold/26-03-PLAN.md
+Last session: 2026-04-14T04:53:21.668Z
+Stopped at: Completed 27-play-skill/27-01-PLAN.md
 Resume: `/gsd:plan-phase 26` to plan the Plugin Scaffold phase

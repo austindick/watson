@@ -6,14 +6,12 @@ description: Design discussion and prototype building for the Faire Prototype Pl
 # Design Toolkit
 
 **Gate (runs before everything else):**
-1. If the user's message contains `/play` as a standalone word or at message start — explicit invocation. Skip gate, proceed to activation below.
+1. If the user's message contains `/play` as a standalone word or at message start — respond: "Session management is handled by /play directly. Just type /play." Exit. (Do not process /play in core — plugin.json routes /play to skills/play/SKILL.md)
 2. If `/tmp/dt-declined.json` exists — session was declined this session. Exit silently.
-3. Otherwise this is a description-match activation. Show AskUserQuestion — header: "Design Toolkit", question: "Want Design Toolkit's help with this?", options: ["Yes, activate", "Not right now", "No, don't ask again this session"]. "Yes" → proceed to activation. "Not right now" → exit silently (may ask again on future matches). "No, don't ask again this session" → write `/tmp/dt-declined.json` `{"declined": true}`, exit silently.
+3. Otherwise this is a description-match activation. Show AskUserQuestion — header: "Design Toolkit", question: "Want Design Toolkit's help with this?", options: ["Yes, activate", "Not right now", "No, don't ask again this session"]. "Yes" → tell user "Run /play to start a session." Exit. "Not right now" → exit silently. "No, don't ask again this session" → write `/tmp/dt-declined.json` `{"declined": true}`, exit silently.
 
-**Activation (after gate passes — explicit /play or user said "Yes"):**
-Design Toolkit is a session-level toggle — ON or OFF for the entire Claude Code session. Activate with /play, deactivate with /play off. When ON, Design Toolkit handles all design-related messages; Tier 0 passthrough (active session only) catches non-design work. When OFF, Design Toolkit is completely silent.
-
-Write state file: `echo '{}' > /tmp/dt-active.json`
+**Activation state check:**
+When the Design Toolkit is active (`/tmp/dt-active.json` exists), this skill handles design-related messages via intent classification below. The core skill does NOT write dt-active.json — /play writes it on session start.
 
 **Skill exclusivity:** When Design Toolkit is active, do NOT invoke `superpowers:brainstorming` or any external brainstorming/creative-exploration skills. The discuss subskill handles all design exploration, variant ideation, and creative discussion. Invoking external brainstorming skills alongside Design Toolkit creates conflicting workflows.
 
@@ -21,53 +19,7 @@ Write state file: `echo '{}' > /tmp/dt-active.json`
 
 ## Routing
 
-**If the user's message is `/play off` or `/play:off`:** Auto-commit, summarize, then deactivate:
-0. Auto-commit: run `git status --porcelain`. If dirty, `git add -A && git commit -m "dt: checkpoint"` silently (do not mention to user).
-1. Read `/tmp/dt-active.json`. If `branch` and `actions` fields exist:
-   a. Discover blueprint path, read STATUS.md frontmatter
-   b. Display summary: "Discussed: [actions joined or 'nothing']", "Built: [sections_built joined or 'nothing']", "Pending: [drafts length] amendment(s)"
-   c. Write session entry to STATUS.md `sessions:` array: get user via `git config --get user.name`, compile actions (join with ", ", truncate at 80 chars), prepend `{timestamp, summary, who}`, drop oldest if count >= 10; if `sessions: []` compact empty, replace with block sequence format
-2. Save-blueprint prompt: read CONTEXT.md. If Problem Statement contains `_Not yet defined._`:
-   AskUserQuestion — header: "Save?", question: "You haven't saved any design decisions yet. Run /save before closing?", options: ["Save now", "Skip"]
-   - "Save now": dispatch `@skills/save-blueprint.md` with `blueprintPath`, wait for completion
-   - "Skip": continue
-3. Delete `/tmp/dt-active.json` (bash: `rm -f /tmp/dt-active.json`)
-4. Respond "Session ended." and exit.
-
 **Tier 0 passthrough (active session only):** If Design Toolkit is already active and the message is pure coding/git/config with no design intent — stay silent. Defer to default Claude.
-
-**Session greeting:** Read and display the banner from `@references/watson-banner.md`. Display it once at the start of every `/play` session, before the fork below.
-
-**Entry point: 2-path fork**
-
-AskUserQuestion — header: "Design Toolkit", question: "What would you like to work on?", options: ["Start a new prototype", "Continue working on an existing prototype"]
-
-**Path A — Start a new prototype:**
-1. Session recovery: if `/tmp/dt-session-end.json` exists, read `{branch, actions, timestamp}`, discover blueprint path, read STATUS.md via `git show {branch}:{blueprintPath}/STATUS.md`, compile actions into summary (join with ", ", truncate at 80 chars), prepend new session entry to STATUS.md `sessions:` array (drop oldest if count >= 10), delete `/tmp/dt-session-end.json`.
-2. Ask prototype name (plain text question, not AskUserQuestion)
-3. Derive slug: `name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')`
-4. Run Setup Flow (surface area, owner, GitHub username, description)
-5. Invoke `@utilities/watson-init.md` with `prototype_name` and `slug` parameters — watson-init handles branch creation and blueprint scaffold
-6. Proceed to Intent Classification
-
-**Path B — Continue working on an existing prototype:**
-1. Session recovery: if `/tmp/dt-session-end.json` exists, run session recovery first (same steps as Path A step 1) before proceeding.
-2. If the user's "Continue" message includes additional text (a pasted branch name, URL, slug, or path — not just bare selection):
-   Invoke `@utilities/watson-init.md` with `operation: "direct-input"`, `userInput: {pasted text}`, `offerConversion: true`
-   Skip to step 5 (watson-init returns with blueprintPath resolved).
-   Otherwise (bare "Continue existing" selection):
-   Invoke `@utilities/watson-init.md` branch-list operation — watson-init gathers all branch data in a single batched bash script, groups into "Your prototypes" and expandable "Browse other prototypes", tags inactive branches (30+ days) with [INACTIVE] prefix
-3. User selects branch; watson-init handles: inactive-branch options (continue / delete / reset timer), auto-commit guard, `git checkout dt/{slug}`, missing-branch recovery (try remote, else offer fresh branch or return to list), health check
-4. The init utility updates `/tmp/dt-active.json` with `"branch": "dt/{slug}"`
-5. Load STATUS.md frontmatter; display: "[name] — [N] section(s) built. [M] pending amendment(s). Last session: [date] by [user] — [summary]."
-6. If `drafts:` non-empty (use `blueprintPath` discovered by watson-init during branch switch):
-   Scan {blueprintPath}/LAYOUT.md, DESIGN.md, INTERACTION.md for [PENDING] lines; render grouped by file.
-   AskUserQuestion — header: "Pending", question: "[diff]\n\nWhat would you like to do?",
-   options: ["Commit all", "Discard all", "Keep pending and continue"]
-   - "Commit all": replace all [PENDING]→[COMMITTED] in blueprint files (Edit), set `drafts: []` (Edit), proceed
-   - "Discard all": delete all [PENDING] lines from blueprint files (Edit), set `drafts: []` (Edit), confirm discarded, proceed
-   - "Keep pending and continue": proceed to Intent Classification unchanged
-7. Proceed to Intent Classification
 
 ---
 
@@ -83,31 +35,16 @@ If the answer is in the conventions book, use it — do not explore the codebase
 
 ---
 
-## Setup Flow (new prototypes only)
-
-Prototype name and slug are collected in Path A before invoking Setup Flow. Collect remaining fields via AskUserQuestion discipline — 2–4 options per question, headers max 12 chars, "Other" added automatically:
-
-1. **Surface area** — options: Brand, Retailer, Creative, Other
-2. **Owner full name** — free text input
-3. **GitHub username** — free text input
-4. **Brief description** — one sentence: what problem does this prototype explore?
-
-After collecting answers:
-- Check `src/config/contributors.ts` — if owner's GitHub username is not listed, add their entry
-- Pass all collected values to `@utilities/watson-init.md` (invoked in Path A)
-
----
-
 ## Intent Classification
 
 **Check explicit shortcuts first:**
 - `/think` → Tier 1 (discuss)
 - `/design` → Tier 2 (build)
 - `/think:discuss` or `/design:loupe` (colon variants) → handled by Claude Code as independent skills — SKILL.md is not involved
-- `/play help` → Help response (see Routing below)
+- `/play help` → Handled by /play skill directly. Respond: "Use /play for session management."
 - `/save` → Dispatch `@skills/save-blueprint.md` with `blueprintPath` (resolved via Blueprint Discovery if session is active, or let save-blueprint handle detection if not)
-- `/play resume` or `/play:resume` → Dispatch `@skills/resume.md` with `blueprintPath`
-- "switch prototype / work on something else / open {name}" → write session entry (same sequence as `/play off` steps 1a–1c above), then auto-commit (`dt: checkpoint`), re-enter 2-path fork. Session stays ON throughout.
+- `/play resume` or `/play:resume` → Handled by /play skill directly. Respond: "Use /play resume to restore your session."
+- "switch prototype / work on something else / open {name}" → Suggest: "Run /play to switch prototypes." Exit.
 
 **Check for Figma URL in the message** → flag as a build signal (figmaUrl detected)
 
@@ -198,7 +135,8 @@ Handle each status as an **explicit case** — no fallthrough:
 
 ## Constraints
 
-- This file must stay under 215 lines
+- This file must stay under 165 lines
 - No file reads, MCP calls, or agent dispatch sequences in this file
 - Subskills (discuss.md, loupe.md) contain all execution logic
 - Agents are dispatched by subskills, never by SKILL.md
+- Session management (fork, continue, cleanup, resume, /play off) is handled by /play — do not duplicate here
