@@ -159,7 +159,10 @@ Plans:
   2. All 12 agents (8 Figma pipeline + 4 source agents) run under the `/design` skill context with no references to Watson or Loupe
   3. LAYOUT.md, DESIGN.md, and INTERACTION.md are written per section and consolidated to the blueprint directory
   4. When a PRD exists from a `/think` session, `/design` reads and incorporates it; when absent, it proceeds without error
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 29-01-PLAN.md — Port loupe.md pipeline to standalone /design SKILL.md
+- [ ] 29-02-PLAN.md — Update core SKILL.md routing to dispatch /design skill
 
 ### Phase 30: /design Hardening
 **Goal**: The `/design` pipeline produces pixel-accurate, token-compliant output with reliable convergence — page-level layout is handled correctly, the reviewer checks token mapping not just names, and the builder enforces token resolution for novel compositions
@@ -208,8 +211,8 @@ Plans:
 | 22-25. Multi-Mode Loupe | v1.4 | 9/9 | Complete | 2026-04-13 |
 | 26. Plugin Scaffold | 3/3 | Complete    | 2026-04-14 | - |
 | 27. /play Skill | 2/2 | Complete    | 2026-04-14 | - |
-| 28. /think Skill | 2/2 | Complete   | 2026-04-14 | - |
-| 29. /design Extraction | v1.5 | 0/TBD | Not started | - |
+| 28. /think Skill | 2/2 | Complete    | 2026-04-14 | - |
+| 29. /design Extraction | v1.5 | 0/2 | Not started | - |
 | 30. /design Hardening | v1.5 | 0/TBD | Not started | - |
 | 31. /save Skill | v1.5 | 0/TBD | Not started | - |
 | 32. Integration Testing | v1.5 | 0/TBD | Not started | - |
