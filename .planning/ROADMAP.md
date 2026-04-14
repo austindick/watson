@@ -96,7 +96,7 @@ Full details: `milestones/v1.4-ROADMAP.md`
 
 - [x] **Phase 26: Plugin Scaffold** - Establish Design Toolkit plugin manifest, shared library, Librarian, blueprint contract, and rebrand (completed 2026-04-14)
 - [x] **Phase 27: /play Skill** - Extract session management as standalone `/play` skill with branch/blueprint lifecycle (completed 2026-04-14)
-- [ ] **Phase 28: /think Skill** - Extract design thinking as standalone `/think` skill with file refactor
+- [x] **Phase 28: /think Skill** - Extract design thinking as standalone `/think` skill with file refactor (completed 2026-04-14)
 - [ ] **Phase 29: /design Extraction** - Port all 12 agents and basic pipeline as standalone `/design` skill
 - [ ] **Phase 30: /design Hardening** - Add page-container, reviewer tightening, token compliance, convergent loop, section rebuild, and verification gate
 - [ ] **Phase 31: /save Skill** - Build checkpoint utility skill for session state preservation
@@ -208,7 +208,7 @@ Plans:
 | 22-25. Multi-Mode Loupe | v1.4 | 9/9 | Complete | 2026-04-13 |
 | 26. Plugin Scaffold | 3/3 | Complete    | 2026-04-14 | - |
 | 27. /play Skill | 2/2 | Complete    | 2026-04-14 | - |
-| 28. /think Skill | 1/2 | In Progress|  | - |
+| 28. /think Skill | 2/2 | Complete   | 2026-04-14 | - |
 | 29. /design Extraction | v1.5 | 0/TBD | Not started | - |
 | 30. /design Hardening | v1.5 | 0/TBD | Not started | - |
 | 31. /save Skill | v1.5 | 0/TBD | Not started | - |
