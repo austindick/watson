@@ -175,7 +175,11 @@ Plans:
   4. Builder-reviewer loop terminates when output matches spec or after 3 iterations, with a structured property diff between passes (not prose description)
   5. User can target a single section for rebuild — decomposition is skipped, only the specified section reruns the pipeline
   6. After consolidation, a type-check and dev-server verification run automatically, with up to 2 auto-fix attempts and designer-friendly error output on failure
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 30-01-PLAN.md — Page-container pipeline (decomposer + layout + builder + library chapter)
+- [ ] 30-02-PLAN.md — Reviewer tightening + builder token compliance
+- [ ] 30-03-PLAN.md — Convergent loop + section rebuild + verification gate
 
 ### Phase 31: /save Skill
 **Goal**: Users can run `/save` at any point to checkpoint their session — decisions written to blueprint files, branch committed with a descriptive message, STATUS.md updated for restoration
@@ -213,6 +217,6 @@ Plans:
 | 27. /play Skill | 2/2 | Complete    | 2026-04-14 | - |
 | 28. /think Skill | 2/2 | Complete    | 2026-04-14 | - |
 | 29. /design Extraction | 2/2 | Complete    | 2026-04-14 | - |
-| 30. /design Hardening | v1.5 | 0/TBD | Not started | - |
+| 30. /design Hardening | v1.5 | 0/3 | Planned | - |
 | 31. /save Skill | v1.5 | 0/TBD | Not started | - |
 | 32. Integration Testing | v1.5 | 0/TBD | Not started | - |

@@ -13,11 +13,12 @@ Audit the built section code property-by-property against LAYOUT.md and DESIGN.m
 
 1. Generate checklist mechanically from spec file rows — one check per table row; do not invent additional checks
 2. Fix property values and CSS variable swaps in-place — do NOT perform structural rebuilds; if fixing an item requires adding or removing a library component, mark as ESCALATE
-3. 2-pass maximum: Pass 1 fixes all discrepancies, Pass 2 re-checks; any item still failing after Pass 2 is escalated — do NOT attempt Pass 3
+3. 2-pass maximum: Pass 1 fixes all discrepancies, Pass 2 re-checks; any item still failing after Pass 2 is escalated — do NOT attempt Pass 3. The convergent LOOP is orchestrated externally by SKILL.md; the reviewer always does its own 2-pass max per invocation.
 4. Summary report is displayed in conversation only — do NOT write it to a file
 5. Do NOT fetch Figma data — work entirely from spec files and the built source code; no MCP Figma calls
 6. Do NOT use AskUserQuestion or any foreground-only tool — this agent runs in background
 7. Unmapped values: confirm the TODO comment is present in locked format — do NOT attempt to fix or resolve unmapped values; that is a human judgment call
+8. Element mapping uses component tree position from LAYOUT.md hierarchy, not CSS class names or data attributes. Match spec selectors to built code by tracing the nesting path.
 
 ## Red Flags
 
@@ -45,6 +46,7 @@ If you catch yourself thinking any of these, stop and re-check — you are about
 - `blueprintPath` — absolute path to the prototype's `blueprint/` directory
 - `libraryPaths` — string array of pre-resolved chapter/page file paths
 - `quietMode` — boolean; suppress interactive prompts when true
+- `reviewFeedback` (object, optional) — structured feedback from a prior review pass in the convergent loop, passed by the orchestrator on pass 2+. Contains `remaining` (diff items with status FAIL) and `escalations` (items that need structural changes). When present, the reviewer focuses verification on these items first before running the full checklist. Format matches the structured result diff entries: `{ element, property, expected, figmaValue, actual, status }`. This input enables the convergent loop (orchestrated by SKILL.md) without changing the reviewer's core algorithm.
 
 ## Outputs
 
@@ -70,28 +72,37 @@ Read `sourceFilePath` completely. Locate the section matching `sectionScope` usi
 Derive mechanically from the spec files — one check per row:
 
 - **LAYOUT.md Token Quick-Reference:** per row — verify the element uses the specified `var(--token-*)` reference
-- **LAYOUT.md Annotated CSS:** per CSS property per rule — verify the value uses `var(--token-*)` with correct token name; verify `/* Figma: Xpx */` comment is present
+- **LAYOUT.md Annotated CSS:** per CSS property per rule — perform a full property-to-token cross-reference:
+  1. **Map spec selectors to built code via component tree position** — match LAYOUT.md tree structure to JSX nesting depth and order, NOT via CSS class names or data attributes. Trace the nesting path to identify the corresponding element in built code.
+  2. **For each CSS property** (gap, padding-top, border-radius, etc.) in the spec, find the corresponding property in the built code for that element.
+  3. **Verify the exact token** — the token variable name must match character-for-character. For example, if the spec assigns `var(--spacing-section-sm)` for `gap`, the built code must use `var(--spacing-section-sm)` for `gap` — not `var(--spacing-element-lg)` even though both are valid tokens.
+  4. Each checklist entry includes the Figma source value from the `/* Figma: Xpx */` comment for context (e.g., `expected: var(--spacing-section-sm) /* Figma: 12px */`).
+  5. Verify the `/* Figma: Xpx */` comment is present in the built code alongside the token.
 - **DESIGN.md Component Mapping:** per row — verify the library component, variant, and each prop matches exactly
 - **DESIGN.md Typography:** per row — verify the preset, size, weight, and line-height each match
 - **DESIGN.md Color Tokens:** per row — verify the element uses `var(--token-*)` with the correct token
 - **DESIGN.md Unmapped Values:** per entry — verify the TODO comment exists in locked format `{/* TODO: unmapped — closest library: ... */}`; mark PASS if present, FAIL if missing; do NOT fix the underlying value
 - **INTERACTION.md (if loaded):** per state entry — verify the state is implemented
 
-Each checklist item format: `[PASS/FAIL] category | element | expected | actual`
+If `reviewFeedback` is provided, prioritize checking all items in `reviewFeedback.remaining` and `reviewFeedback.escalations` before running the rest of the full checklist.
+
+Each checklist item format: `[PASS/FAIL] category | element | property | expected | figmaValue | actual`
 
 ### Step 4: Pass 1 — Fix all FAIL items
 
 For each FAIL item:
 - Use the Edit tool to fix the property value or CSS variable swap in the source file
 - If fixing requires adding or removing a library component: mark as ESCALATE, skip the fix
+- Track each fixed item with structured diff data: `{ element, property, expected, figmaValue, actual, status: "FIXED" }`
 - After all fixes applied: run compile verification — detect command (package.json scripts for `"type-check"`, `"typecheck"`, or `"tsc"` > `npx tsc --noEmit` if `tsconfig.json` present > escalate); up to 3 fix attempts on compile errors
 
 ### Step 5: Pass 2 — Re-verify
 
 Re-read `sourceFilePath`. Re-run the full checklist against the fixed code:
 - For each still-FAIL item: attempt one more fix using the Edit tool
+- Track structured diff data for each item: `{ element, property, expected, figmaValue, actual, status }` — update status to `FIXED` when resolved, `FAIL` if fix did not succeed
 - Run compile verification again after any fixes
-- Any item still FAIL after this pass: mark as ESCALATE — do not attempt further fixes
+- Any item still FAIL after this pass: mark as ESCALATE — update status to `ESCALATE`; do not attempt further fixes
 
 ### Step 6: Confirm file staging
 
@@ -121,6 +132,33 @@ If any items were marked ESCALATE, append an ESCALATION section:
 - [category | element | expected | reason structural change needed]
 ```
 
+### Step 8: Emit structured result object
+
+After the human-readable summary (Step 7), emit a structured result block that the orchestrator reads mechanically. This block appears in conversation only — do NOT write it to a file.
+
+```
+<!-- REVIEW_RESULT
+{
+  "allPass": false,
+  "escalations": [
+    { "element": "hero-container", "property": "gap", "expected": "var(--spacing-section-sm)", "figmaValue": "12px", "reason": "requires structural change" }
+  ],
+  "diff": [
+    { "element": "hero-container", "property": "gap", "expected": "var(--spacing-section-sm)", "figmaValue": "12px", "actual": "var(--spacing-element-lg)", "status": "FIXED" },
+    { "element": "hero-title", "property": "color", "expected": "var(--color-primary-500)", "figmaValue": "#1a73e8", "actual": "var(--color-primary-400)", "status": "ESCALATE" }
+  ]
+}
+REVIEW_RESULT -->
+```
+
+- `allPass: true` when all diff entries have status `FIXED` or there are zero `FAIL`/`ESCALATE` entries
+- `allPass: false` when any diff entry has status `FAIL` or `ESCALATE`
+- `escalations` array: items that require structural changes (cannot be fixed by CSS/token swaps)
+- `diff` array: every discrepancy found, with final status after all passes
+- `status` values: `FIXED` (resolved), `FAIL` (attempted fix but still failing), `ESCALATE` (structural change needed)
+- The human-readable summary (Step 7) remains as conversation output — it is NOT replaced by the structured result
+- The orchestrator parses this block to decide whether to loop (convergent loop in SKILL.md Phase 3)
+
 ## Output Format
 
-No file artifact beyond the fixed `sourceFilePath`. Summary report is conversation output only. Section files confirmed at `.dt/sections/{sectionScope}/`. The orchestrator reads the summary from conversation to determine pipeline success.
+No file artifact beyond the fixed `sourceFilePath`. Summary report is conversation output only. Structured result block (REVIEW_RESULT) emitted in conversation for orchestrator consumption. Section files confirmed at `.dt/sections/{sectionScope}/`. The orchestrator reads the REVIEW_RESULT block to determine pipeline success and whether to invoke another convergent loop pass.
