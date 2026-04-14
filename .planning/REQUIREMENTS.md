@@ -9,9 +9,9 @@ Requirements for the Design Toolkit milestone. Decompose Watson into standalone 
 
 ### Plugin Infrastructure
 
-- [ ] **INFRA-01**: Plugin manifest (plugin.json) for "Design Toolkit" with all skills registered as commands
-- [ ] **INFRA-02**: Shared library directory at plugin level with design-system, playground-conventions, and codebase-map books
-- [ ] **INFRA-03**: Librarian agent as shared plugin utility accessible by all skills
+- [x] **INFRA-01**: Plugin manifest (plugin.json) for "Design Toolkit" with all skills registered as commands
+- [x] **INFRA-02**: Shared library directory at plugin level with design-system, playground-conventions, and codebase-map books
+- [x] **INFRA-03**: Librarian agent as shared plugin utility accessible by all skills
 - [x] **INFRA-04**: Blueprint templates with explicit lifecycle rules — required frontmatter fields, section lifecycle markers (overwrite vs append-only), amendment protocol spec — replacing current example files as the authoritative contract between skills
 - [ ] **INFRA-05**: Watson branding removed from all user-facing surfaces (folder names, branch prefixes, status files, session markers, output messages)
 - [ ] **INFRA-06**: Each skill has CSO-optimized frontmatter (name, "Use when..." description, proper triggers)
@@ -91,9 +91,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | Phase 26 | Pending |
-| INFRA-02 | Phase 26 | Pending |
-| INFRA-03 | Phase 26 | Pending |
+| INFRA-01 | Phase 26 | Complete |
+| INFRA-02 | Phase 26 | Complete |
+| INFRA-03 | Phase 26 | Complete |
 | INFRA-04 | Phase 26 | Complete |
 | INFRA-05 | Phase 26 | Pending |
 | INFRA-06 | Phase 26 | Pending |
