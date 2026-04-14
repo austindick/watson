@@ -39,8 +39,8 @@ If the answer is in the conventions book, use it — do not explore the codebase
 
 **Check explicit shortcuts first:**
 - `/think` → Respond: "Design thinking is handled by /think directly. Just type /think." Exit. (Do not process /think in core — plugin.json routes /think to skills/think/SKILL.md)
-- `/design` → Tier 2 (build)
-- `/think:discuss` or `/design:loupe` (colon variants) → handled by Claude Code as independent skills — SKILL.md is not involved
+- `/design` → Respond: "Building is handled by /design directly. Just type /design." Exit. (Do not process /design in core — plugin.json routes /design to skills/design/SKILL.md)
+- `/think:discuss` or `/design:loupe` (colon variants) → these are legacy colon-variant skills handled by Claude Code; the standalone /think and /design skills are the canonical entry points
 - `/play help` → Handled by /play skill directly. Respond: "Use /play for session management."
 - `/save` → Dispatch `@skills/save-blueprint.md` with `blueprintPath` (resolved via Blueprint Discovery if session is active, or let save-blueprint handle detection if not)
 - `/play resume` or `/play:resume` → Handled by /play skill directly. Respond: "Use /play resume to restore your session."
@@ -81,13 +81,13 @@ Dispatch `@skills/think/SKILL.md` with:
 
 **Tier 2 (build):**
 If `blueprint/CONTEXT.md` is template-only (first Tier 2 invocation with no prior discuss), write a minimal CONTEXT.md inline with the user's problem statement before dispatching.
-Before dispatching loupe: if STATUS.md `drafts:` is non-empty AND `/tmp/dt-active.json` does not contain `"pendingWarningShown": true`:
+Before dispatching /design: if STATUS.md `drafts:` is non-empty AND `/tmp/dt-active.json` does not contain `"pendingWarningShown": true`:
   AskUserQuestion — header: "Pending Changes", question: "[M] pending amendment(s) won't be included in the build.", options: ["Commit and build", "Build without pending"]
-  - "Commit and build": replace all `[PENDING]` with `[COMMITTED]` in blueprint files, clear STATUS.md `drafts: []`, then dispatch loupe.
-  - "Build without pending": add `"pendingWarningShown": true` to /tmp/dt-active.json (Edit tool), then dispatch loupe as-is.
-Dispatch `@skills/loupe.md` with:
+  - "Commit and build": replace all `[PENDING]` with `[COMMITTED]` in blueprint files, clear STATUS.md `drafts: []`, then dispatch /design.
+  - "Build without pending": add `"pendingWarningShown": true` to /tmp/dt-active.json (Edit tool), then dispatch /design as-is.
+Dispatch `@skills/design/SKILL.md` with:
 - `blueprintPath`, `sections`, `hasFullFrame`, `fullFrameUrl`, `crossSectionFlows`
-- `mode`: 'figma' (Figma URL detected) | 'prod-clone' (experience reference detected) | null (let loupe resolve)
+- `mode`: 'figma' (Figma URL detected) | 'prod-clone' (experience reference detected) | null (let design resolve)
 - `experienceName`: extracted from message if mode='prod-clone', otherwise null
 
 **Tier 3 (ask):**
@@ -109,8 +109,8 @@ After `@skills/think/SKILL.md` returns, read the return status JSON:
 
 Handle each status as an **explicit case** — no fallthrough:
 
-- **`ready_for_build`:** Say "Building now." Dispatch `@skills/loupe.md` with `blueprintPath`, `sections[]`, `hasFullFrame`, `fullFrameUrl`, `crossSectionFlows` from the return status.
-- **`ready_for_hybrid_build`:** Say "I'll pull [surfaceName] as the base and build your additions on top." Dispatch `@skills/loupe.md` with `blueprintPath`, `mode: 'prod-clone'`, `surfaceName`, `sections[]` from the return status, `hasFullFrame: false`, `fullFrameUrl: null`, `crossSectionFlows: null`.
+- **`ready_for_build`:** Say "Building now." Dispatch `@skills/design/SKILL.md` with `blueprintPath`, `sections[]`, `hasFullFrame`, `fullFrameUrl`, `crossSectionFlows` from the return status.
+- **`ready_for_hybrid_build`:** Say "I'll pull [surfaceName] as the base and build your additions on top." Dispatch `@skills/design/SKILL.md` with `blueprintPath`, `mode: 'prod-clone'`, `surfaceName`, `sections[]` from the return status, `hasFullFrame: false`, `fullFrameUrl: null`, `crossSectionFlows: null`.
 - **`discussion_only`:** Say "Decisions saved. When ready to build, say /design." Exit.
 - **`cancelled`:** Acknowledge gracefully. Exit.
 
@@ -126,10 +126,10 @@ Handle each status as an **explicit case** — no fallthrough:
 |---|---|
 | "This is a simple design request, I'll just answer it inline" | If Design Toolkit is active, design questions go through /think — even simple ones. Answering inline bypasses blueprint persistence and the discuss→build contract. |
 | "The user clearly wants to build, I'll skip to Tier 2" | Check the classification table. Multiple unknowns or template-only CONTEXT.md = Tier 1 regardless of how eager the user sounds. Only Tier 2 when CONTEXT.md is populated AND scope is clear AND bounded. |
-| "I'll just write a quick CONTEXT.md and dispatch loupe" | The minimal CONTEXT.md path exists only for explicit Tier 2 with no prior /think and clear scope. If there are open design questions, route to /think — a thin CONTEXT.md with gaps produces a bad build. |
+| "I'll just write a quick CONTEXT.md and dispatch /design" | The minimal CONTEXT.md path exists only for explicit Tier 2 with no prior /think and clear scope. If there are open design questions, route to /think — a thin CONTEXT.md with gaps produces a bad build. |
 | "This isn't really a design question" | If Design Toolkit is active and the user is on a `dt/*` branch with a `blueprint/` directory, it's a design context. Route to /think or Tier 0 passthrough as appropriate. |
 | "I'll handle this brainstorming/exploration myself" | Skill exclusivity: the /think skill handles all design exploration. Do not invoke superpowers:brainstorming or do ad-hoc exploration inline. |
-| "The pending amendments don't matter for this build" | Check STATUS.md `drafts:`. If non-empty, show the pending warning before dispatching loupe. The user must explicitly choose "build without pending." |
+| "The pending amendments don't matter for this build" | Check STATUS.md `drafts:`. If non-empty, show the pending warning before dispatching /design. The user must explicitly choose "build without pending." |
 
 ---
 
@@ -137,6 +137,5 @@ Handle each status as an **explicit case** — no fallthrough:
 
 - This file must stay under 165 lines
 - No file reads, MCP calls, or agent dispatch sequences in this file
-- Skills (/think, /design) and subskills (loupe.md) contain all execution logic
-- Agents are dispatched by subskills, never by SKILL.md
+- Skills (/play, /think, /design, /save) contain all execution logic — agents are dispatched by skills, never by core SKILL.md
 - Session management (fork, continue, cleanup, resume, /play off) is handled by /play — do not duplicate here
