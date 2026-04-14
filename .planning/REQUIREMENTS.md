@@ -27,12 +27,12 @@ Requirements for the Design Toolkit milestone. Decompose Watson into standalone 
 
 ### /think — Design Thinking
 
-- [ ] **THINK-01**: User can run `/think` as standalone skill independent of `/design` or `/play`
-- [ ] **THINK-02**: Design thinking flow reads library books for grounded component/pattern recommendations
-- [ ] **THINK-03**: Complexity-scaled depth — skips discussion for simple requests, deep exploration for complex ones
-- [ ] **THINK-04**: Design decisions written back to the PRD (the living context document), amendments tracked as [PENDING]/[COMMITTED]
-- [ ] **THINK-05**: File structure refactored: SKILL.md (~100 lines) + reference files for questioning flow, blueprint writing, and mid-build behavior
-- [ ] **THINK-06**: Natural handoff suggestion to `/design` when discussion reaches build-readiness (suggestion, not gate)
+- [x] **THINK-01**: User can run `/think` as standalone skill independent of `/design` or `/play`
+- [x] **THINK-02**: Design thinking flow reads library books for grounded component/pattern recommendations
+- [x] **THINK-03**: Complexity-scaled depth — skips discussion for simple requests, deep exploration for complex ones
+- [x] **THINK-04**: Design decisions written back to the PRD (the living context document), amendments tracked as [PENDING]/[COMMITTED]
+- [x] **THINK-05**: File structure refactored: SKILL.md (~100 lines) + reference files for questioning flow, blueprint writing, and mid-build behavior
+- [x] **THINK-06**: Natural handoff suggestion to `/design` when discussion reaches build-readiness (suggestion, not gate)
 
 ### /design — Build Pipeline
 
@@ -103,12 +103,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAY-04 | Phase 27 | Complete |
 | PLAY-05 | Phase 27 | Complete |
 | PLAY-06 | Phase 27 | Complete |
-| THINK-01 | Phase 28 | Pending |
-| THINK-02 | Phase 28 | Pending |
-| THINK-03 | Phase 28 | Pending |
-| THINK-04 | Phase 28 | Pending |
-| THINK-05 | Phase 28 | Pending |
-| THINK-06 | Phase 28 | Pending |
+| THINK-01 | Phase 28 | Complete |
+| THINK-02 | Phase 28 | Complete |
+| THINK-03 | Phase 28 | Complete |
+| THINK-04 | Phase 28 | Complete |
+| THINK-05 | Phase 28 | Complete |
+| THINK-06 | Phase 28 | Complete |
 | DSGN-01 | Phase 29 | Pending |
 | DSGN-02 | Phase 29 | Pending |
 | DSGN-03 | Phase 29 | Pending |
