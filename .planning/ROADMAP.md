@@ -200,7 +200,7 @@ Plans:
 | 13-15. Plugin Deployment | v1.2 | 5/5 | Complete | 2026-04-07 |
 | 16-21. User Experience & Commands | v1.3 | 11/11 | Complete | 2026-04-10 |
 | 22-25. Multi-Mode Loupe | v1.4 | 9/9 | Complete | 2026-04-13 |
-| 26. Plugin Scaffold | v1.5 | 0/3 | Not started | - |
+| 26. Plugin Scaffold | 1/3 | In Progress|  | - |
 | 27. /play Skill | v1.5 | 0/TBD | Not started | - |
 | 28. /think Skill | v1.5 | 0/TBD | Not started | - |
 | 29. /design Extraction | v1.5 | 0/TBD | Not started | - |

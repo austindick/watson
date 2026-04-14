@@ -1,72 +1,72 @@
-# Requirements: Watson v1.4 Multi-Mode Loupe
+# Requirements: Design Toolkit
 
-**Defined:** 2026-04-09
+**Defined:** 2026-04-13
 **Core Value:** Every prototype decision is grounded in real context and traceable from idea through prototype to production spec.
 
-## v1.4 Requirements
+## v1.5 Requirements
 
-Requirements for multi-mode design reference input. Each maps to roadmap phases.
+Requirements for the Design Toolkit milestone. Decompose Watson into standalone skills while hardening the build pipeline.
 
-### Surface Resolver
+### Plugin Infrastructure
 
-- [x] **RSLV-01**: Surface resolver uses codebase-map book to locate source files for a user-specified experience
-- [x] **RSLV-02**: Surface resolver reads the main component file and identifies sections/regions of the page
-- [x] **RSLV-03**: Surface resolver produces a section list with file paths per section (analogous to decomposer's section list from Figma)
-- [x] **RSLV-04**: Surface resolver verifies file paths from codebase-map exist before including them
+- [ ] **INFRA-01**: Plugin manifest (plugin.json) for "Design Toolkit" with all skills registered as commands
+- [ ] **INFRA-02**: Shared library directory at plugin level with design-system, playground-conventions, and codebase-map books
+- [ ] **INFRA-03**: Librarian agent as shared plugin utility accessible by all skills
+- [x] **INFRA-04**: Blueprint templates with explicit lifecycle rules — required frontmatter fields, section lifecycle markers (overwrite vs append-only), amendment protocol spec — replacing current example files as the authoritative contract between skills
+- [ ] **INFRA-05**: Watson branding removed from all user-facing surfaces (folder names, branch prefixes, status files, session markers, output messages)
+- [ ] **INFRA-06**: Each skill has CSO-optimized frontmatter (name, "Use when..." description, proper triggers)
 
-### Source Layout Agent
+### /play — Session Management
 
-- [x] **SLAY-01**: Source layout agent reads TSX files for a section and produces LAYOUT.md conforming to existing artifact schema
-- [x] **SLAY-02**: Source layout agent annotates static-analysis-derived values with confidence indicators
+- [ ] **PLAY-01**: User can run `/play` to start a guided fork choosing new prototype or continue existing
+- [ ] **PLAY-02**: New prototype flow creates branch with user confirmation and scaffolds empty blueprint directory
+- [ ] **PLAY-03**: Continue flow lists active branches and restores session from blueprint + status files
+- [ ] **PLAY-04**: Inactive branch cleanup with user confirmation before deletion
+- [ ] **PLAY-05**: Flexible continue accepts branch name, Playground URL, or directory path
+- [ ] **PLAY-06**: STATUS.md created/updated with session state on every lifecycle event
 
-### Source Design Agent
+### /think — Design Thinking
 
-- [x] **SDSG-01**: Source design agent reads TSX files for a section and produces DESIGN.md conforming to existing artifact schema (Slate tokens, CSS variables, spacing)
-- [x] **SDSG-02**: Source design agent annotates static-analysis-derived values with confidence indicators
+- [ ] **THINK-01**: User can run `/think` as standalone skill independent of `/design` or `/play`
+- [ ] **THINK-02**: Design thinking flow reads library books for grounded component/pattern recommendations
+- [ ] **THINK-03**: Complexity-scaled depth — skips discussion for simple requests, deep exploration for complex ones
+- [ ] **THINK-04**: Design decisions written back to the PRD (the living context document), amendments tracked as [PENDING]/[COMMITTED]
+- [ ] **THINK-05**: File structure refactored: SKILL.md (~100 lines) + reference files for questioning flow, blueprint writing, and mid-build behavior
+- [ ] **THINK-06**: Natural handoff suggestion to `/design` when discussion reaches build-readiness (suggestion, not gate)
 
-### Source Interaction Agent
+### /design — Build Pipeline
 
-- [x] **SINT-01**: Source interaction agent reads TSX files for a section and produces INTERACTION.md conforming to existing artifact schema
-- [x] **SINT-02**: Source interaction agent outputs componentList[] of detected Slate components per section
-- [x] **SINT-03**: Source interaction agent annotates static-analysis-derived values with confidence indicators
+- [ ] **DSGN-01**: User can run `/design` as standalone skill independent of `/think` or `/play`
+- [ ] **DSGN-02**: 3-mode entry: Figma frame URL, existing prod experience reference, or text description
+- [ ] **DSGN-03**: All 12 agents ported to standalone context (8 Figma pipeline + 4 source agents)
+- [ ] **DSGN-04**: Decomposer emits frame as first section with `type: page-container` for page-level layout properties
+- [ ] **DSGN-05**: Layout agent handles `page-container` type — extracts container-only properties (background, padding, alignment, inter-section spacing)
+- [ ] **DSGN-06**: Builder handles `page-container` type — creates wrapper structure with insertion region, not standalone component
+- [ ] **DSGN-07**: Reviewer cross-references each CSS property against the specific token assigned in LAYOUT.md annotated CSS (not just token name validity)
+- [ ] **DSGN-08**: Builder resolves all styling through token system for novel compositions, not just direct copies
+- [ ] **DSGN-09**: Builder→reviewer uses convergent loop: iterate until output matches spec or max 3 iterations, with structured diff (not prose) between passes
+- [ ] **DSGN-10**: User can rebuild specific section(s) without re-running full pipeline — skips decomposition, targets only specified sections
+- [ ] **DSGN-11**: Reads PRD from `/think` if present, works without it
+- [ ] **DSGN-12**: Blueprint files (LAYOUT.md, DESIGN.md, INTERACTION.md) written per section and consolidated
+- [ ] **DSGN-13**: After consolidation, run full-prototype type-check and dev server verification before declaring completion — auto-fix up to 2 attempts, designer-friendly error reporting
 
-### Codebase Navigation
+### /save — Checkpoint Utility
 
-- [x] **CBNV-01**: Codebase-map library book generated by Librarian from faire/frontend monorepo
-- [x] **CBNV-02**: Codebase-map book scoped to product area entry points with per-entry last_verified dates
-- [x] **CBNV-03**: Named experience menu presents known surfaces from codebase-map for user selection
+- [ ] **SAVE-01**: User can run `/save` at any point during a session to checkpoint current state
+- [ ] **SAVE-02**: Writes current conversation context and decisions to relevant blueprint files
+- [ ] **SAVE-03**: Commits branch with descriptive message summarizing session progress
+- [ ] **SAVE-04**: Updates STATUS.md with snapshot sufficient for `/play` to restore session
 
-### Pipeline Generalization
+## v1.6 Requirements
 
-- [x] **PIPE-01**: Loupe Phase -1 presents multi-mode entry prompt (Figma frame / existing experience / describe it)
-- [x] **PIPE-02**: Section contract extended with referenceType field; defaults to "figma" when absent (backward compatibility)
-- [x] **PIPE-03**: Loupe Phase 2 dispatches 3 source agents in parallel for prod-clone sections
-- [x] **PIPE-04**: Existing Figma pipeline passes regression test after referenceType extension
-- [x] **PIPE-05**: Mixed-mode sections supported — different sections in a single build can have different referenceTypes
-- [x] **PIPE-06**: Source agents accept optional screenshotPath parameter and gracefully handle null
+Deferred to next milestone. Tracked but not in current roadmap.
 
-### Discussion-Only Build
+### /spec — SDD Handoff
 
-- [x] **DISC-01**: User can enter Loupe in discussion-only mode without prior discuss session or external reference
-- [x] **DISC-02**: Discussion-only mode produces Slate-grounded output via library books (same quality as Figma-based builds)
-- [x] **DISC-03**: Cross-agent intent marker distinguishes discuss-generated specs from externally-referenced specs
-- [x] **DISC-04**: Builder handles intent-marked specs appropriately (acknowledges lower certainty vs Figma/code-derived)
-
-## Future Requirements
-
-Deferred to future release. Tracked but not in current roadmap.
-
-### Pipeline Enhancement
-
-- **PIPE-F1**: Tier 2 mode inference from message content (auto-detect reference type without explicit prompt)
-
-### Screenshot Enhancement
-
-- **SCRN-F1**: Automated screenshot capture for prod surfaces (blocked on SSO/auth)
-
-### Caching
-
-- **CACH-F1**: Cached surfaces library book (pre-built templates of common experiences)
+- **SPEC-01**: User can run `/spec` to generate FRD and DRD from blueprint files
+- **SPEC-02**: FRD (frd.md) captures functional requirements from CONTEXT.md and INTERACTION.md
+- **SPEC-03**: DRD (drd.md) captures design requirements from LAYOUT.md and DESIGN.md
+- **SPEC-04**: Output files formatted for Faire's Spec-Driven Development framework
 
 ## Out of Scope
 
@@ -74,12 +74,16 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Feature | Reason |
 |---------|--------|
-| Automated screenshot capture | SSO/auth complexity; deferred to future enhancement |
-| Cached surfaces library book | Maintenance tax; premature optimization before core clone works |
-| Full monorepo traversal | Product area entry points sufficient for v1.4 |
-| Modifications to Figma agents (decomposer/layout/design/interaction) | Proven pipeline stays untouched |
-| Modifications to builder/reviewer/consolidator | Already schema-agnostic; zero changes needed |
-| Shared agent files for Figma + source modes | Research shows focused context windows > DRY; shared artifact schemas prevent contract drift |
+| Watson master orchestrator | Paused — standalone skills preserve value without orchestration complexity |
+| `/spec` skill | Deferred to v1.6 — blueprint structure informs but doesn't block |
+| Context window awareness hooks | Depends on recovery commands being stable first; consider for v1.6 |
+| Aesthetic direction in `/think` | Polish — not blocking any workflows |
+| Continuation/handoff format | Polish — can be added incrementally after skills ship |
+| Automated screenshot capture | SSO/auth complexity — deferred indefinitely |
+| Visual verification (screenshot comparison) | v2.0 |
+| Design system abstraction beyond Slate | v2.0 |
+| Motion/animation vocabulary | Depends on Slate animation support |
+| Model profile optimization | Pipeline too short to benefit meaningfully |
 
 ## Traceability
 
@@ -87,36 +91,47 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CBNV-01 | Phase 22 | Complete |
-| CBNV-02 | Phase 22 | Complete |
-| CBNV-03 | Phase 22 | Complete |
-| RSLV-01 | Phase 23 | Complete |
-| RSLV-02 | Phase 23 | Complete |
-| RSLV-03 | Phase 23 | Complete |
-| RSLV-04 | Phase 23 | Complete |
-| SLAY-01 | Phase 23 | Complete |
-| SLAY-02 | Phase 23 | Complete |
-| SDSG-01 | Phase 23 | Complete |
-| SDSG-02 | Phase 23 | Complete |
-| SINT-01 | Phase 23 | Complete |
-| SINT-02 | Phase 23 | Complete |
-| SINT-03 | Phase 23 | Complete |
-| PIPE-01 | Phase 24 | Complete |
-| PIPE-02 | Phase 24 | Complete |
-| PIPE-03 | Phase 24 | Complete |
-| PIPE-04 | Phase 24 | Complete |
-| PIPE-05 | Phase 24 | Complete |
-| PIPE-06 | Phase 24 | Complete |
-| DISC-01 | Phase 24 | Complete |
-| DISC-02 | Phase 24 | Complete |
-| DISC-03 | Phase 24 | Complete |
-| DISC-04 | Phase 24 | Complete |
+| INFRA-01 | Phase 26 | Pending |
+| INFRA-02 | Phase 26 | Pending |
+| INFRA-03 | Phase 26 | Pending |
+| INFRA-04 | Phase 26 | Complete |
+| INFRA-05 | Phase 26 | Pending |
+| INFRA-06 | Phase 26 | Pending |
+| PLAY-01 | Phase 27 | Pending |
+| PLAY-02 | Phase 27 | Pending |
+| PLAY-03 | Phase 27 | Pending |
+| PLAY-04 | Phase 27 | Pending |
+| PLAY-05 | Phase 27 | Pending |
+| PLAY-06 | Phase 27 | Pending |
+| THINK-01 | Phase 28 | Pending |
+| THINK-02 | Phase 28 | Pending |
+| THINK-03 | Phase 28 | Pending |
+| THINK-04 | Phase 28 | Pending |
+| THINK-05 | Phase 28 | Pending |
+| THINK-06 | Phase 28 | Pending |
+| DSGN-01 | Phase 29 | Pending |
+| DSGN-02 | Phase 29 | Pending |
+| DSGN-03 | Phase 29 | Pending |
+| DSGN-04 | Phase 30 | Pending |
+| DSGN-05 | Phase 30 | Pending |
+| DSGN-06 | Phase 30 | Pending |
+| DSGN-07 | Phase 30 | Pending |
+| DSGN-08 | Phase 30 | Pending |
+| DSGN-09 | Phase 30 | Pending |
+| DSGN-10 | Phase 30 | Pending |
+| DSGN-11 | Phase 29 | Pending |
+| DSGN-12 | Phase 29 | Pending |
+| DSGN-13 | Phase 30 | Pending |
+| SAVE-01 | Phase 31 | Pending |
+| SAVE-02 | Phase 31 | Pending |
+| SAVE-03 | Phase 31 | Pending |
+| SAVE-04 | Phase 31 | Pending |
 
 **Coverage:**
-- v1.4 requirements: 22 total
-- Mapped to phases: 22
-- Unmapped: 0
+- v1.5 requirements: 35 total
+- Mapped to phases: 35
+- Unmapped: 0 ✓
 
 ---
-*Requirements defined: 2026-04-09*
-*Last updated: 2026-04-09 after roadmap creation*
+*Requirements defined: 2026-04-13*
+*Last updated: 2026-04-13 — traceability filled during roadmap creation*

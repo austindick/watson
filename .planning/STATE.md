@@ -2,15 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Design Toolkit
-status: active
-stopped_at: defining requirements
-last_updated: "2026-04-13"
-last_activity: 2026-04-13 — Milestone v1.5 started
+status: planning
+stopped_at: Completed 26-plugin-scaffold/26-02-PLAN.md
+last_updated: "2026-04-14T04:02:14.651Z"
+last_activity: 2026-04-13 — Roadmap created, phases 26-32 defined
 progress:
-  total_phases: 0
+  total_phases: 7
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 3
+  completed_plans: 1
+  percent: 0
 ---
 
 # Project State
@@ -20,39 +21,58 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-13)
 
 **Core value:** Every prototype decision is grounded in real context and traceable from idea through prototype to production spec.
-**Current focus:** v1.5 Design Toolkit — defining requirements
+**Current focus:** v1.5 Design Toolkit — Phase 26: Plugin Scaffold
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 26 of 32 (Plugin Scaffold)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-04-13 — Milestone v1.5 started
+Status: Ready to plan
+Last activity: 2026-04-13 — Roadmap created, phases 26-32 defined
+
+Progress: [░░░░░░░░░░] 0%
+
+## Performance Metrics
+
+**Velocity:**
+- Total plans completed: 0 (v1.5)
+- Average duration: —
+- Total execution time: —
+
+**By Phase:**
+
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| - | - | - | - |
+
+*Updated after each plan completion*
+| Phase 26-plugin-scaffold P02 | 2min | 1 tasks | 6 files |
 
 ## Accumulated Context
 
 ### Decisions
 
-- Watson master orchestrator paused — standalone skills preserve architecture (blueprint + library) without orchestration complexity
-- Loupe renamed to `/design`, discuss renamed to `/think`, session management extracted as `/play`
-- "Design Toolkit" plugin replaces Watson plugin — shared library at plugin level
-- `/save` as utility skill, `/spec` deferred to v1.6
-- Pipeline hardening (page-container, reviewer tightening, token compliance) included in extraction
+- Extraction work (PLAY, THINK, DSGN-01-03) is mechanical porting — no redesign
+- DSGN hardening (phases 30) involves NEW behaviors: page-container type, convergent loop, token enforcement, verification gate
+- INFRA-04 blueprint templates define the contract between skills — must land before skill extraction
+- /play, /think, /save can proceed in parallel after Phase 26; /design extraction (29) before hardening (30)
+- Watson master orchestrator paused — standalone skills preserve architecture without orchestration complexity
+- [Phase 26-plugin-scaffold]: Blueprint files are contract specifications, not examples — existing *-EXAMPLE.md files remain as illustrative companions but are no longer authoritative
+- [Phase 26-plugin-scaffold]: Design Decisions is append-only in CONTEXT.md; STATUS.md sessions is prepend-only with max 10; all other blueprint sections use overwrite semantics
 
 ### Pending Todos
 
 Carried forward from v1.4:
-- Enforce Slate token resolution for novel component riffs (blocked on Slate import resolution)
+- Slate import resolution from Playground still pending (`@faire/slate/components/button` doesn't resolve)
 - Blueprint files empty after Loupe build (fix shipped — needs verification with next build)
 - Builder imports FauxDS instead of real Slate (fix shipped — Slate availability from Playground TBD)
-- Agent-styled badges (low priority)
 
 ### Blockers/Concerns
 
-- Slate import resolution from Playground: `@faire/slate/components/button` doesn't resolve — Austin checking with eng who set this up.
+- Slate import resolution from Playground: `@faire/slate/components/button` doesn't resolve — Austin checking with eng who set this up. May affect DSGN-08 (token compliance for novel compositions).
 
 ## Session Continuity
 
-Last session: 2026-04-13
-Stopped at: Defining requirements for v1.5
-Resume: Continue requirements definition
+Last session: 2026-04-14T04:02:14.649Z
+Stopped at: Completed 26-plugin-scaffold/26-02-PLAN.md
+Resume: `/gsd:plan-phase 26` to plan the Plugin Scaffold phase
