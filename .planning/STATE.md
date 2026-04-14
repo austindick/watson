@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Design Toolkit
 status: planning
-stopped_at: Completed 30-02-PLAN.md
-last_updated: "2026-04-14T15:04:48.737Z"
+stopped_at: Completed 30-01-PLAN.md
+last_updated: "2026-04-14T15:06:05.671Z"
 last_activity: 2026-04-13 — Roadmap created, phases 26-32 defined
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 12
-  completed_plans: 10
+  completed_plans: 11
   percent: 0
 ---
 
@@ -56,6 +56,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 29-design-extraction P01 | 2 | 1 tasks | 1 files |
 | Phase 29-design-extraction P02 | 2min | 2 tasks | 1 files |
 | Phase 30-design-hardening P02 | 3min | 2 tasks | 2 files |
+| Phase 30-design-hardening P01 | 4min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -92,6 +93,10 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 30-design-hardening]: REVIEW_RESULT block uses HTML comment format for machine-parseable structured result without breaking conversation rendering
 - [Phase 30-design-hardening]: Reviewer 2-pass max per invocation preserved; convergent loop orchestrated externally by SKILL.md Plan 03 — agents unchanged
 - [Phase 30-design-hardening]: Builder token derivation for novel compositions: 3-tier lookup — spec token first, library book category second, raw value with TODO as last resort
+- [Phase 30-design-hardening]: page-container entry always first and always silent — never shown in approval prompts in both tagged and heuristic paths
+- [Phase 30-design-hardening]: portal template values authoritative for outer shell; Figma-derived LAYOUT.md values override only inner layout (Figma wins)
+- [Phase 30-design-hardening]: data-section attribute stub pattern chosen for child section placeholders — comment preceding + div with data-section attribute gives two targeting options
+- [Phase 30-design-hardening]: Write tool exception scoped precisely to page-container mode; Constraint 4 (Edit-only) preserved for all normal section builds
 
 ### Pending Todos
 
@@ -106,6 +111,6 @@ Carried forward from v1.4:
 
 ## Session Continuity
 
-Last session: 2026-04-14T15:04:48.734Z
-Stopped at: Completed 30-02-PLAN.md
+Last session: 2026-04-14T15:06:05.669Z
+Stopped at: Completed 30-01-PLAN.md
 Resume: `/gsd:plan-phase 26` to plan the Plugin Scaffold phase
