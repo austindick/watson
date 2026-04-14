@@ -42,7 +42,7 @@ If the answer is in the conventions book, use it — do not explore the codebase
 - `/design` → Respond: "Building is handled by /design directly. Just type /design." Exit. (Do not process /design in core — plugin.json routes /design to skills/design/SKILL.md)
 - `/think:discuss` or `/design:loupe` (colon variants) → these are legacy colon-variant skills handled by Claude Code; the standalone /think and /design skills are the canonical entry points
 - `/play help` → Handled by /play skill directly. Respond: "Use /play for session management."
-- `/save` → Dispatch `@skills/save-blueprint.md` with `blueprintPath` (resolved via Blueprint Discovery if session is active, or let save-blueprint handle detection if not)
+- `/save` → Respond: "Checkpointing is handled by /save directly. Just type /save." Exit. (Do not process /save in core -- plugin.json routes /save to skills/save/SKILL.md)
 - `/play resume` or `/play:resume` → Handled by /play skill directly. Respond: "Use /play resume to restore your session."
 - "switch prototype / work on something else / open {name}" → Suggest: "Run /play to switch prototypes." Exit.
 
@@ -113,8 +113,6 @@ Handle each status as an **explicit case** — no fallthrough:
 - **`ready_for_hybrid_build`:** Say "I'll pull [surfaceName] as the base and build your additions on top." Dispatch `@skills/design/SKILL.md` with `blueprintPath`, `mode: 'prod-clone'`, `surfaceName`, `sections[]` from the return status, `hasFullFrame: false`, `fullFrameUrl: null`, `crossSectionFlows: null`.
 - **`discussion_only`:** Say "Decisions saved. When ready to build, say /design." Exit.
 - **`cancelled`:** Acknowledge gracefully. Exit.
-
-**Note:** When /think is dispatched by save-blueprint, it returns to save-blueprint — not this chain.
 
 **Error handling:** Silent retry once on first failure. On second failure: non-technical explanation with actionable suggestion.
 
