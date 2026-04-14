@@ -7,7 +7,8 @@
 - ✅ **Watson 1.1 Ambient Mode & Iteration** — Phases 6-12 (shipped 2026-04-03)
 - ✅ **Watson 1.2 Plugin Deployment** — Phases 13-15 (shipped 2026-04-07)
 - ✅ **Watson 1.3 User Experience & Commands** — Phases 16-21 (shipped 2026-04-10)
-- 🚧 **Watson 1.4 Multi-Mode Loupe** — Phases 22-25 (in progress)
+- ✅ **Watson 1.4 Multi-Mode Loupe** — Phases 22-25 (shipped 2026-04-13)
+- 🚧 **v1.5 Design Toolkit** — Phases 26-32 (in progress)
 
 ## Phases
 
@@ -77,79 +78,117 @@ Full details: `milestones/v1.3-ROADMAP.md`
 
 </details>
 
-### Watson 1.4 Multi-Mode Loupe (In Progress)
+<details>
+<summary>✅ Watson 1.4 Multi-Mode Loupe (Phases 22-25) — SHIPPED 2026-04-13</summary>
 
-**Milestone Goal:** Generalize the Loupe pipeline to accept any design reference — prod codebase, Figma frame, or discussion-based intent — so designers can clone existing experiences and PMs/engineers can prototype from ideas alone.
+- [x] Phase 22: Codebase-Map Library Book (1/1 plan) — completed 2026-04-10
+- [x] Phase 23: Source Agents (3/3 plans) — completed 2026-04-10
+- [x] Phase 24: Pipeline Generalization & Discussion-Only (3/3 plans) — completed 2026-04-11
+- [x] Phase 25: Integration Testing (2/2 plans) — completed 2026-04-13
 
-- [x] **Phase 22: Codebase-Map Library Book** — Librarian generates monorepo navigation reference for faire/frontend (completed 2026-04-10)
-- [x] **Phase 23: Source Agents** — Surface resolver + 3 parallel source agents produce normalized pipeline artifacts from TSX (completed 2026-04-10)
-- [x] **Phase 24: Pipeline Generalization & Discussion-Only** — Loupe orchestrator supports multi-mode entry, prod-clone dispatch, and discussion-only path (completed 2026-04-11)
-- [x] **Phase 25: Integration Testing** — All 3 modes validated end-to-end; Figma regression confirmed (completed 2026-04-13)
+Full details: `milestones/v1.4-ROADMAP.md`
+
+</details>
+
+### v1.5 Design Toolkit (In Progress)
+
+**Milestone Goal:** Decompose Watson into independent, standalone skills (`/play`, `/think`, `/design`, `/save`) packaged as a "Design Toolkit" plugin. Preserves the blueprint and library systems while removing the orchestration layer and hardening the build pipeline.
+
+- [ ] **Phase 26: Plugin Scaffold** - Establish Design Toolkit plugin manifest, shared library, Librarian, blueprint contract, and rebrand
+- [ ] **Phase 27: /play Skill** - Extract session management as standalone `/play` skill with branch/blueprint lifecycle
+- [ ] **Phase 28: /think Skill** - Extract design thinking as standalone `/think` skill with file refactor
+- [ ] **Phase 29: /design Extraction** - Port all 12 agents and basic pipeline as standalone `/design` skill
+- [ ] **Phase 30: /design Hardening** - Add page-container, reviewer tightening, token compliance, convergent loop, section rebuild, and verification gate
+- [ ] **Phase 31: /save Skill** - Build checkpoint utility skill for session state preservation
+- [ ] **Phase 32: Integration Testing** - Validate all 4 skills work standalone and together via blueprint contract
 
 ## Phase Details
 
-### Phase 22: Codebase-Map Library Book
-**Goal**: The Librarian can generate a codebase-map book from faire/frontend that source agents can use to navigate the monorepo
-**Depends on**: Phase 21 (v1.3 complete)
-**Requirements**: CBNV-01, CBNV-02, CBNV-03
+### Phase 26: Plugin Scaffold
+**Goal**: Design Toolkit plugin exists as a clean foundation — manifest registered, shared library in place, Librarian accessible, blueprint contract authoritative, and Watson branding gone
+**Depends on**: Nothing (first phase of v1.5)
+**Requirements**: INFRA-01, INFRA-02, INFRA-03, INFRA-04, INFRA-05, INFRA-06
 **Success Criteria** (what must be TRUE):
-  1. Running Librarian in generate mode produces a codebase-map book scoped to product area entry points
-  2. Each entry in the codebase-map book includes a last_verified date
-  3. A user can invoke the named experience menu and select a known surface by name
-**Plans:** 1/1 plans complete
-
+  1. Running `/play`, `/think`, `/design`, or `/save` resolves to a registered Design Toolkit command (not a Watson command)
+  2. Library books (design-system, playground-conventions, codebase-map) are at plugin level and readable by any skill
+  3. Librarian agent is accessible as a shared utility — any skill can invoke it without duplicating its file
+  4. Blueprint template files define explicit lifecycle rules (overwrite vs append-only, required frontmatter, amendment protocol) rather than being informal examples
+  5. No Watson-branded strings appear in any user-facing output, folder names, branch prefixes, or status files
+**Plans**: 3 plans
 Plans:
-- [ ] 22-01-PLAN.md — Codebase-map scanning reference, Librarian update, seed book, and LIBRARY.md entry
+- [ ] 26-01-PLAN.md — Plugin manifest + library promotion + shared Librarian
+- [ ] 26-02-PLAN.md — Blueprint contract schemas with lifecycle rules
+- [ ] 26-03-PLAN.md — Watson branding removal + skill SKILL.md stubs
 
-### Phase 23: Source Agents
-**Goal**: A surface resolver and 3 parallel source agents can read TSX files from faire/frontend and produce LAYOUT.md, DESIGN.md, and INTERACTION.md artifacts that conform to the existing pipeline schema
-**Depends on**: Phase 22
-**Requirements**: RSLV-01, RSLV-02, RSLV-03, RSLV-04, SLAY-01, SLAY-02, SDSG-01, SDSG-02, SINT-01, SINT-02, SINT-03
+### Phase 27: /play Skill
+**Goal**: Users can manage prototype sessions entirely through `/play` — forking new branches, continuing existing work, and maintaining STATUS.md — independent of any other skill
+**Depends on**: Phase 26
+**Requirements**: PLAY-01, PLAY-02, PLAY-03, PLAY-04, PLAY-05, PLAY-06
 **Success Criteria** (what must be TRUE):
-  1. Surface resolver reads the codebase-map book and produces a section list with verified file paths for a named experience
-  2. Source layout agent reads TSX files and produces a LAYOUT.md that a human can verify matches the existing schema
-  3. Source design agent reads TSX files and produces a DESIGN.md with Slate tokens and CSS variables, matching the existing schema
-  4. Source interaction agent reads TSX files and produces an INTERACTION.md with a componentList[] of detected Slate components
-  5. All three source agents annotate uncertain values with confidence indicators (e.g., `/* from code analysis — verify visually */`)
-**Plans:** 3/3 plans complete
+  1. User can run `/play` to start a guided fork that asks new vs. continue, with no other skill or context required
+  2. New prototype flow creates a branch (with user confirmation) and scaffolds an empty blueprint directory
+  3. Continue flow lists active branches and restores session context from blueprint + STATUS.md files
+  4. User can pass a branch name, Playground URL, or directory path to continue without navigating a menu
+  5. STATUS.md is created or updated at every lifecycle event (new, continue, cleanup, save)
+**Plans**: TBD
 
-Plans:
-- [ ] 23-01-PLAN.md — Surface resolver agent (foreground, codebase-map lookup + section decomposition)
-- [ ] 23-02-PLAN.md — Source layout + source design agents (background, TSX to LAYOUT.md + DESIGN.md)
-- [ ] 23-03-PLAN.md — Source interaction agent + agent-contract.md registry extension
-
-### Phase 24: Pipeline Generalization & Discussion-Only
-**Goal**: The Loupe orchestrator presents a multi-mode entry prompt, routes prod-clone sections to source agents in parallel, and supports a discussion-only build path without external reference
-**Depends on**: Phase 23
-**Requirements**: PIPE-01, PIPE-02, PIPE-03, PIPE-04, PIPE-05, PIPE-06, DISC-01, DISC-02, DISC-03, DISC-04
+### Phase 28: /think Skill
+**Goal**: Users can run `/think` as a standalone design thinking partner grounded in library books, with decisions persisted to the PRD, independently of `/play` or `/design`
+**Depends on**: Phase 26
+**Requirements**: THINK-01, THINK-02, THINK-03, THINK-04, THINK-05, THINK-06
 **Success Criteria** (what must be TRUE):
-  1. When a user invokes /watson:loupe, they are prompted to choose: Figma frame, existing experience, or describe it — before any pipeline work begins
-  2. A prod-clone build dispatches source-layout, source-design, and source-interaction agents in parallel per section (same parallelism as the Figma path)
-  3. A discussion-only build produces Slate-grounded output via library books without any Figma URL or prod surface as input
-  4. Builder output for discussion-only mode visibly acknowledges intent-level certainty vs reference-derived certainty
-  5. A build where different sections have different referenceTypes completes without error
-  6. Source agents gracefully handle a null screenshotPath with no pipeline failure
-**Plans:** 3/3 plans complete
+  1. User can invoke `/think` with no prior session — it works without an active branch or blueprint
+  2. Recommendations reference library books (design-system, playground-conventions) — not generic advice
+  3. Simple requests skip deep exploration; complex requests get multi-step design thinking
+  4. All decisions are written back to the PRD (the living context document) with [PENDING]/[COMMITTED] amendment tracking
+  5. SKILL.md is under 100 lines, with questioning flow, blueprint writing, and mid-build behavior in separate reference files
+**Plans**: TBD
 
-Plans:
-- [ ] 24-01-PLAN.md — loupe.md multi-mode entry (Phase -1), conditional codebase-map (Phase 0), surface-resolver routing (Phase 1), prod-clone parallel dispatch (Phase 2)
-- [ ] 24-02-PLAN.md — discuss.md describeOnly mode, adaptive depth, codebase-map hybrid detection, ready_for_hybrid_build return status
-- [ ] 24-03-PLAN.md — SKILL.md Tier 2 experience references + hybrid chain, artifact Reference: headers, builder/consolidator behavioral notes
-
-### Phase 25: Integration Testing
-**Goal**: All three Loupe input modes (Figma, prod-clone, discussion-only) produce correct pipeline output end-to-end; no regressions in the Figma path
-**Depends on**: Phase 24
-**Requirements**: (validates RSLV-01-04, SLAY-01-02, SDSG-01-02, SINT-01-03, CBNV-01-03, PIPE-01-06, DISC-01-04 end-to-end)
+### Phase 29: /design Extraction
+**Goal**: Users can run `/design` as a standalone build pipeline — all 12 agents ported, 3-mode entry working, blueprint files written — independent of Watson or Loupe
+**Depends on**: Phase 26
+**Requirements**: DSGN-01, DSGN-02, DSGN-03, DSGN-11, DSGN-12
 **Success Criteria** (what must be TRUE):
-  1. An existing Figma build completes with identical output before and after the referenceType extension is applied
-  2. A prod-clone build for a known faire/frontend surface produces compilable prototype code with Slate components
-  3. A discussion-only build from a text description alone produces compilable prototype code grounded in Slate library books
-  4. Mixed-mode sections (one Figma, one prod-clone) in a single build complete without error or routing failure
-**Plans:** 2/2 plans complete
+  1. User can invoke `/design` with no prior Watson session — it works with a Figma URL, prod reference, or text description alone
+  2. All 12 agents (8 Figma pipeline + 4 source agents) run under the `/design` skill context with no references to Watson or Loupe
+  3. LAYOUT.md, DESIGN.md, and INTERACTION.md are written per section and consolidated to the blueprint directory
+  4. When a PRD exists from a `/think` session, `/design` reads and incorporates it; when absent, it proceeds without error
+**Plans**: TBD
 
-Plans:
-- [ ] 25-01-PLAN.md — Figma regression test + prod-clone build validation (Scenarios A + B)
-- [ ] 25-02-PLAN.md — Discussion-only build + mixed-mode validation (Scenarios C + D)
+### Phase 30: /design Hardening
+**Goal**: The `/design` pipeline produces pixel-accurate, token-compliant output with reliable convergence — page-level layout is handled correctly, the reviewer checks token mapping not just names, and the builder enforces token resolution for novel compositions
+**Depends on**: Phase 29
+**Requirements**: DSGN-04, DSGN-05, DSGN-06, DSGN-07, DSGN-08, DSGN-09, DSGN-10, DSGN-13
+**Success Criteria** (what must be TRUE):
+  1. Decomposer emits a `page-container` section as the first section; layout agent extracts only container-level properties for it; builder wraps child sections in an insertion-region structure
+  2. Reviewer output cites the specific token value from LAYOUT.md annotated CSS when flagging a property mismatch — not just the token name
+  3. Builder resolves all CSS properties through the token system for novel compositions (no raw hex or magic numbers) even when no direct Figma match exists
+  4. Builder-reviewer loop terminates when output matches spec or after 3 iterations, with a structured property diff between passes (not prose description)
+  5. User can target a single section for rebuild — decomposition is skipped, only the specified section reruns the pipeline
+  6. After consolidation, a type-check and dev-server verification run automatically, with up to 2 auto-fix attempts and designer-friendly error output on failure
+**Plans**: TBD
+
+### Phase 31: /save Skill
+**Goal**: Users can run `/save` at any point to checkpoint their session — decisions written to blueprint files, branch committed with a descriptive message, STATUS.md updated for restoration
+**Depends on**: Phase 26
+**Requirements**: SAVE-01, SAVE-02, SAVE-03, SAVE-04
+**Success Criteria** (what must be TRUE):
+  1. User can run `/save` at any point during a session and receive confirmation that state was captured
+  2. Current conversation context and decisions are written to relevant blueprint files (PRD, LAYOUT.md, DESIGN.md, INTERACTION.md as applicable)
+  3. A git commit is created on the current branch with a message summarizing session progress
+  4. STATUS.md is updated with a snapshot sufficient for `/play continue` to fully restore the session
+**Plans**: TBD
+
+### Phase 32: Integration Testing
+**Goal**: All four skills work together via the shared blueprint contract — a user can run `/play` → `/think` → `/design` → `/save` as a continuous workflow, and each skill also works in isolation
+**Depends on**: Phase 27, Phase 28, Phase 29, Phase 30, Phase 31
+**Requirements**: None (validation phase)
+**Success Criteria** (what must be TRUE):
+  1. Full workflow runs end-to-end: `/play` forks branch → `/think` enriches PRD with design decisions → `/design` reads PRD and builds → `/save` commits with status snapshot
+  2. Each skill works independently — `/design` with only a Figma URL, `/think` with no existing session, `/save` without a prior `/play` session
+  3. Blueprint files written by one skill are correctly read and extended by subsequent skills — no field conflicts, no overwrite of append-only sections
+  4. No Watson or Loupe branding appears anywhere in any skill's output during the full workflow
+**Plans**: TBD
 
 ## Progress
 
@@ -160,7 +199,11 @@ Plans:
 | 6-12. Ambient Mode & Iteration | v1.1 | 11/11 | Complete | 2026-04-03 |
 | 13-15. Plugin Deployment | v1.2 | 5/5 | Complete | 2026-04-07 |
 | 16-21. User Experience & Commands | v1.3 | 11/11 | Complete | 2026-04-10 |
-| 22. Codebase-Map Library Book | 1/1 | Complete    | 2026-04-10 | - |
-| 23. Source Agents | 3/3 | Complete    | 2026-04-10 | - |
-| 24. Pipeline Generalization & Discussion-Only | 3/3 | Complete    | 2026-04-11 | - |
-| 25. Integration Testing | 2/2 | Complete    | 2026-04-13 | - |
+| 22-25. Multi-Mode Loupe | v1.4 | 9/9 | Complete | 2026-04-13 |
+| 26. Plugin Scaffold | v1.5 | 0/3 | Not started | - |
+| 27. /play Skill | v1.5 | 0/TBD | Not started | - |
+| 28. /think Skill | v1.5 | 0/TBD | Not started | - |
+| 29. /design Extraction | v1.5 | 0/TBD | Not started | - |
+| 30. /design Hardening | v1.5 | 0/TBD | Not started | - |
+| 31. /save Skill | v1.5 | 0/TBD | Not started | - |
+| 32. Integration Testing | v1.5 | 0/TBD | Not started | - |

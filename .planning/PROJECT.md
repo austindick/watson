@@ -48,28 +48,36 @@ Every prototype decision — layout, interaction, component choice, copy, design
 - ✓ Standalone `/watson:discuss` and `/watson:loupe` callable independently — Watson 1.3
 - ✓ `/watson:off` with session summary and save-blueprint prompt — Watson 1.3
 - ✓ Flexible continue path accepting branch, URL, or directory — Watson 1.3
+- ✓ Multi-mode Loupe: 3-mode entry (Figma, prod-clone, discussion-only) with conditional agent dispatch — Watson 1.4
+- ✓ Codebase-map library book: Librarian-generated monorepo navigation from faire/frontend — Watson 1.4
+- ✓ 4 new source agents: surface-resolver + source-layout + source-design + source-interaction — Watson 1.4
+- ✓ Discussion-only build path: Slate-grounded output from intent alone via library books — Watson 1.4
+- ✓ Reference: intent markers for cross-agent provenance tracking — Watson 1.4
+- ✓ All 4 integration scenarios (Figma regression, prod-clone, discuss-only, mixed-mode) validated — Watson 1.4
 
 ### Active
 
-- [ ] Multi-mode Loupe: source reader agent, pipeline generalization, discussion-only build path — Watson 1.4
-- [ ] Codebase-map library book for monorepo navigation — Watson 1.4
-- [ ] Discuss refactor: split discuss.md into manageable files — Watson 1.5
+- [ ] Extract Loupe as standalone `/design` skill with pipeline hardening
+- [ ] Extract discuss as standalone `/think` skill with file refactor
+- [ ] Extract session management as standalone `/play` skill
+- [ ] Create `/save` utility skill for session checkpointing
+- [ ] Shared library system and blueprint contract at plugin level
+- [ ] Remove Watson branding from all user-facing surfaces
 
 ### Out of Scope
 
-- Automated screenshot acquisition for prod cloning (SSO/auth complexity) — Watson 1.4+
-- Cached surfaces library book (maintenance tax, premature optimization) — Watson 2.0
-- Visual verification/feedback loop (screenshot comparison) — Watson 2.0
-- Abstracted design system support beyond Slate — Watson 2.0
-- `prep-sdd-specs` subskill (prd.md + frd.md polishing for SDD handoff) — Watson 1.5
-- /sdd directory with prd.md and frd.md generation — Watson 1.5
-- /resources directory (mock data, feedback, archive) — Watson 1.5
-- `write` subskill (copywriting/content design) — Watson 1.6
-- `deduce` subskill (non-technical debugging, Sherlock-themed) — Watson 1.6
-- `research` subskill (open-ended outward research) — Watson 1.6
-- Additional library books (design principles, business context, users, content guidelines, research, SDD overview) — Watson 1.6+
-- Pipeline speed optimization (profiling, pre-warming, lazy loading) — Watson 1.7
-- External tooling (scripts, CLIs) — Watson is purely Claude Code skill files
+- Automated screenshot acquisition for prod cloning (SSO/auth complexity) — v2.0
+- Cached surfaces library book (maintenance tax, premature optimization) — v2.0
+- Visual verification/feedback loop (screenshot comparison) — v2.0
+- Abstracted design system support beyond Slate — v2.0
+- `/spec` skill (FRD + DRD generation for SDD handoff) — v1.6
+- `write` skill (copywriting/content design) — future
+- `deduce` skill (non-technical debugging) — future
+- `research` skill (open-ended outward research) — future
+- Additional library books (design principles, business context, users, content guidelines, research, SDD overview) — future
+- Pipeline speed optimization (profiling, pre-warming, lazy loading) — future
+- External tooling (scripts, CLIs) — Design Toolkit is purely Claude Code skill files
+- Watson master orchestrator restoration — paused, may revisit after standalone skills are hardened
 
 ## Context
 
@@ -144,25 +152,36 @@ Designers and PMs may do Understand/Explore work outside Watson (Notion PRDs, Fi
 | watson:status as independent skill | Own frontmatter + plugin.json entry; no Watson activation by design (STAT-02) | ✓ Good — v1.3 |
 | Standalone preambles for discuss/loupe | Phase -1 bootstraps without full session; presence/absence of blueprintPath signals mode | ✓ Good — v1.3 |
 | Direct-input mode in watson-init | Phase 0C handles branch/URL/directory; SKILL.md Path B routes flexible input | ✓ Good — v1.3 |
+| 3 parallel source agents (not single source-reader) | Each agent gets focused context window; matches Figma pipeline parallelism | ✓ Good — v1.4 |
+| referenceType defaults to "figma" when absent | Backward compatibility — existing Figma pipeline untouched by extension | ✓ Good — v1.4 |
+| Conditional Librarian dispatch for codebase-map | outputBookPath routes to codebase-map-scanning.md; existing source-scanning.md unchanged | ✓ Good — v1.4 |
+| Reference: intent markers in artifacts | Second line of artifact files signals provenance; builder adjusts certainty behavior | ✓ Good — v1.4 |
+| Hybrid detection with confirmatory prompt | Discuss detects codebase-map opportunity; user confirms before mode switch (not automatic) | ✓ Good — v1.4 |
 
-## Current Milestone: v1.4 Multi-Mode Loupe (Clone from Prod)
+## Last Completed Milestone: v1.4 Multi-Mode Loupe (Shipped 2026-04-13)
 
-**Goal:** Generalize the Loupe pipeline to accept any design reference — prod codebase, Figma frame, or discussion-based intent — so designers can clone existing experiences and PMs/engineers can prototype from ideas alone.
+Loupe now accepts any design reference — Figma frame, prod codebase, or discussion-based intent. 4 new source agents read faire/frontend TSX and produce normalized pipeline artifacts. Discussion-only mode builds Slate-grounded prototypes from intent alone.
+
+## Current Milestone: v1.5 Design Toolkit
+
+**Goal:** Decompose Watson into independent, standalone skills (`/play`, `/think`, `/design`, `/save`) packaged as a "Design Toolkit" plugin — preserving the blueprint and library systems while removing the orchestration layer.
 
 **Target features:**
-- Source reader agent: reads prod code from faire/frontend monorepo, outputs normalized reference for existing pipeline agents
-- Codebase-map library book: Librarian-generated navigation reference for the monorepo (same pattern as design-system book)
-- Pipeline generalization: decomposer/layout/design/interaction agents accept normalized input from any source, not Figma-specific
-- Multi-mode entry: Loupe asks user for reference type (Figma frame, existing experience, or describe it)
-- Discussion-only build path: build from discuss-captured context alone, fully Slate-grounded via library books ("I'm feeling lucky" mode)
-- Optional user-provided screenshot: supplement for prod cloning, not required
+- `/design` — standalone pixel-perfect build pipeline with hardened agents (page-container, reviewer tightening, token compliance)
+- `/think` — standalone design thinking skill, refactored into manageable files
+- `/play` — session management (fork/continue, branch setup, blueprint scaffolding)
+- `/save` — checkpoint utility (write context to blueprints, commit, preserve state)
+- Shared library system with Librarian at plugin level
+- Shared blueprint contract across all skills
+- Watson branding removed from all user-facing surfaces
 
 ## Current State
 
-Watson 1.3 shipped 2026-04-10. Watson is a distributable Claude Code plugin with opt-in activation, discrete commands (`/watson:save-blueprint`, `/watson:status`, `/watson:resume`, `/watson:discuss`, `/watson:loupe`, `/watson:off`), and flexible session entry points. Users work freestyle and invoke Watson capabilities when they need them.
+Watson 1.4 shipped 2026-04-13. All Watson capabilities proven and validated across 5 milestones. Beginning decomposition into standalone skills packaged as "Design Toolkit" plugin.
 
 **Tech stack:** Claude Code plugin (Markdown agent/skill specs), Figma MCP, Slate design system
 **Plugin repo:** `austindick/watson` | **Marketplace:** `austindick/austins-stuff`
+**LOC:** ~10,197 lines Markdown across all skill/agent/reference/library files
 
 ## Milestone Map
 
@@ -173,11 +192,9 @@ Watson 1.3 shipped 2026-04-10. Watson is a distributable Claude Code plugin with
 | **Watson 1.2** | Plugin Deployment | Plugin manifest, portable paths, marketplace distribution, one-command install |
 | Watson 1.3 | User Experience & Commands | Opt-in activation, save-blueprint, status/resume, standalone commands, startup reorder |
 | Watson 1.4 | Multi-Mode Loupe | Source reader agent, pipeline generalization, multi-mode entry, discussion-only path, codebase-map book |
-| Watson 1.5 | Discuss Refactor | Split discuss.md into manageable files |
-| Watson 1.6 | Core Workflows | understand, explore subskills |
-| Watson 1.7 | SDD Integration | prep-sdd-specs, blueprint-to-SDD pipeline |
-| Watson 1.8 | Extended Capabilities | write, deduce, research subskills; additional library books |
-| Watson 2.0 | Advanced | Visual verification, design system abstraction |
+| **v1.5** | **Design Toolkit** | Decompose Watson → standalone skills (/play, /think, /design, /save), pipeline hardening, shared library + blueprint systems |
+| v1.6 | `/spec` Skill | Blueprint → FRD + DRD for SDD handoff |
+| v2.0 | Advanced | Visual verification, design system abstraction |
 
 ---
-*Last updated: 2026-04-09 after v1.4 milestone start*
+*Last updated: 2026-04-13 after v1.4 milestone*

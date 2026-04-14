@@ -1,16 +1,15 @@
 {
-  "name": "watson",
-  "description": "Design discussion and prototype building for the Faire Prototype Playground",
+  "name": "design-toolkit",
+  "description": "Design thinking, prototyping, and session management for the Faire Prototype Playground",
   "author": {
     "name": "Austin Dick",
     "url": "https://github.com/austindick"
   },
   "repository": "https://github.com/austindick/watson",
   "commands": [
-    "./skills/core/skills/status.md",
-    "./skills/core/skills/resume.md",
-    "./skills/core/skills/discuss.md",
-    "./skills/core/skills/loupe.md",
-    "./skills/core/skills/save-blueprint.md"
+    "./skills/play/SKILL.md",
+    "./skills/think/SKILL.md",
+    "./skills/design/SKILL.md",
+    "./skills/save/SKILL.md"
   ]
 }
