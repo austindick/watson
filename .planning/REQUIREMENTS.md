@@ -52,10 +52,10 @@ Requirements for the Design Toolkit milestone. Decompose Watson into standalone 
 
 ### /save — Checkpoint Utility
 
-- [ ] **SAVE-01**: User can run `/save` at any point during a session to checkpoint current state
-- [ ] **SAVE-02**: Writes current conversation context and decisions to relevant blueprint files
-- [ ] **SAVE-03**: Commits branch with descriptive message summarizing session progress
-- [ ] **SAVE-04**: Updates STATUS.md with snapshot sufficient for `/play` to restore session
+- [x] **SAVE-01**: User can run `/save` at any point during a session to checkpoint current state
+- [x] **SAVE-02**: Writes current conversation context and decisions to relevant blueprint files
+- [x] **SAVE-03**: Commits branch with descriptive message summarizing session progress
+- [x] **SAVE-04**: Updates STATUS.md with snapshot sufficient for `/play` to restore session
 
 ## v1.6 Requirements
 
@@ -122,10 +122,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DSGN-11 | Phase 29 | Complete |
 | DSGN-12 | Phase 29 | Complete |
 | DSGN-13 | Phase 30 | Complete |
-| SAVE-01 | Phase 31 | Pending |
-| SAVE-02 | Phase 31 | Pending |
-| SAVE-03 | Phase 31 | Pending |
-| SAVE-04 | Phase 31 | Pending |
+| SAVE-01 | Phase 31 | Complete |
+| SAVE-02 | Phase 31 | Complete |
+| SAVE-03 | Phase 31 | Complete |
+| SAVE-04 | Phase 31 | Complete |
 
 **Coverage:**
 - v1.5 requirements: 35 total
