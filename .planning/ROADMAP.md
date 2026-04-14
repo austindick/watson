@@ -94,7 +94,7 @@ Full details: `milestones/v1.4-ROADMAP.md`
 
 **Milestone Goal:** Decompose Watson into independent, standalone skills (`/play`, `/think`, `/design`, `/save`) packaged as a "Design Toolkit" plugin. Preserves the blueprint and library systems while removing the orchestration layer and hardening the build pipeline.
 
-- [ ] **Phase 26: Plugin Scaffold** - Establish Design Toolkit plugin manifest, shared library, Librarian, blueprint contract, and rebrand
+- [x] **Phase 26: Plugin Scaffold** - Establish Design Toolkit plugin manifest, shared library, Librarian, blueprint contract, and rebrand (completed 2026-04-14)
 - [ ] **Phase 27: /play Skill** - Extract session management as standalone `/play` skill with branch/blueprint lifecycle
 - [ ] **Phase 28: /think Skill** - Extract design thinking as standalone `/think` skill with file refactor
 - [ ] **Phase 29: /design Extraction** - Port all 12 agents and basic pipeline as standalone `/design` skill
@@ -200,7 +200,7 @@ Plans:
 | 13-15. Plugin Deployment | v1.2 | 5/5 | Complete | 2026-04-07 |
 | 16-21. User Experience & Commands | v1.3 | 11/11 | Complete | 2026-04-10 |
 | 22-25. Multi-Mode Loupe | v1.4 | 9/9 | Complete | 2026-04-13 |
-| 26. Plugin Scaffold | 2/3 | In Progress|  | - |
+| 26. Plugin Scaffold | 3/3 | Complete   | 2026-04-14 | - |
 | 27. /play Skill | v1.5 | 0/TBD | Not started | - |
 | 28. /think Skill | v1.5 | 0/TBD | Not started | - |
 | 29. /design Extraction | v1.5 | 0/TBD | Not started | - |
