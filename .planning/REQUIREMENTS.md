@@ -42,8 +42,8 @@ Requirements for the Design Toolkit milestone. Decompose Watson into standalone 
 - [ ] **DSGN-04**: Decomposer emits frame as first section with `type: page-container` for page-level layout properties
 - [ ] **DSGN-05**: Layout agent handles `page-container` type — extracts container-only properties (background, padding, alignment, inter-section spacing)
 - [ ] **DSGN-06**: Builder handles `page-container` type — creates wrapper structure with insertion region, not standalone component
-- [ ] **DSGN-07**: Reviewer cross-references each CSS property against the specific token assigned in LAYOUT.md annotated CSS (not just token name validity)
-- [ ] **DSGN-08**: Builder resolves all styling through token system for novel compositions, not just direct copies
+- [x] **DSGN-07**: Reviewer cross-references each CSS property against the specific token assigned in LAYOUT.md annotated CSS (not just token name validity)
+- [x] **DSGN-08**: Builder resolves all styling through token system for novel compositions, not just direct copies
 - [ ] **DSGN-09**: Builder→reviewer uses convergent loop: iterate until output matches spec or max 3 iterations, with structured diff (not prose) between passes
 - [ ] **DSGN-10**: User can rebuild specific section(s) without re-running full pipeline — skips decomposition, targets only specified sections
 - [x] **DSGN-11**: Reads PRD from `/think` if present, works without it
@@ -115,8 +115,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DSGN-04 | Phase 30 | Pending |
 | DSGN-05 | Phase 30 | Pending |
 | DSGN-06 | Phase 30 | Pending |
-| DSGN-07 | Phase 30 | Pending |
-| DSGN-08 | Phase 30 | Pending |
+| DSGN-07 | Phase 30 | Complete |
+| DSGN-08 | Phase 30 | Complete |
 | DSGN-09 | Phase 30 | Pending |
 | DSGN-10 | Phase 30 | Pending |
 | DSGN-11 | Phase 29 | Complete |

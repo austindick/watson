@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Design Toolkit
 status: planning
-stopped_at: Phase 30 context gathered
-last_updated: "2026-04-14T14:49:37.381Z"
+stopped_at: Completed 30-02-PLAN.md
+last_updated: "2026-04-14T15:04:48.737Z"
 last_activity: 2026-04-13 — Roadmap created, phases 26-32 defined
 progress:
   total_phases: 7
   completed_phases: 4
-  total_plans: 9
-  completed_plans: 9
+  total_plans: 12
+  completed_plans: 10
   percent: 0
 ---
 
@@ -55,6 +55,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 28-think-skill P02 | 4min | 2 tasks | 1 files |
 | Phase 29-design-extraction P01 | 2 | 1 tasks | 1 files |
 | Phase 29-design-extraction P02 | 2min | 2 tasks | 1 files |
+| Phase 30-design-hardening P02 | 3min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,9 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 29-design-extraction]: PRD read is Phase 0a (before library resolution), not a gate — missing CONTEXT.md is a normal standalone invocation, not an error
 - [Phase 29-design-extraction]: Core SKILL.md Constraints updated: standalone skills list (/play, /think, /design, /save) replaces subskill framing — agents dispatched by skills, never by core SKILL.md
 - [Phase 29-design-extraction]: Colon variants updated to mark /design:loupe as legacy with canonical standalone skill entry points
+- [Phase 30-design-hardening]: REVIEW_RESULT block uses HTML comment format for machine-parseable structured result without breaking conversation rendering
+- [Phase 30-design-hardening]: Reviewer 2-pass max per invocation preserved; convergent loop orchestrated externally by SKILL.md Plan 03 — agents unchanged
+- [Phase 30-design-hardening]: Builder token derivation for novel compositions: 3-tier lookup — spec token first, library book category second, raw value with TODO as last resort
 
 ### Pending Todos
 
@@ -102,6 +106,6 @@ Carried forward from v1.4:
 
 ## Session Continuity
 
-Last session: 2026-04-14T14:49:37.379Z
-Stopped at: Phase 30 context gathered
+Last session: 2026-04-14T15:04:48.734Z
+Stopped at: Completed 30-02-PLAN.md
 Resume: `/gsd:plan-phase 26` to plan the Plugin Scaffold phase
