@@ -99,7 +99,7 @@ Full details: `milestones/v1.4-ROADMAP.md`
 - [x] **Phase 28: /think Skill** - Extract design thinking as standalone `/think` skill with file refactor (completed 2026-04-14)
 - [x] **Phase 29: /design Extraction** - Port all 12 agents and basic pipeline as standalone `/design` skill (completed 2026-04-14)
 - [x] **Phase 30: /design Hardening** - Add page-container, reviewer tightening, token compliance, convergent loop, section rebuild, and verification gate (completed 2026-04-14)
-- [ ] **Phase 31: /save Skill** - Build checkpoint utility skill for session state preservation
+- [x] **Phase 31: /save Skill** - Build checkpoint utility skill for session state preservation (completed 2026-04-14)
 - [ ] **Phase 32: Integration Testing** - Validate all 4 skills work standalone and together via blueprint contract
 
 ## Phase Details
@@ -221,5 +221,5 @@ Plans:
 | 28. /think Skill | 2/2 | Complete    | 2026-04-14 | - |
 | 29. /design Extraction | 2/2 | Complete    | 2026-04-14 | - |
 | 30. /design Hardening | 3/3 | Complete    | 2026-04-14 | - |
-| 31. /save Skill | 1/2 | In Progress|  | - |
+| 31. /save Skill | 2/2 | Complete   | 2026-04-14 | - |
 | 32. Integration Testing | v1.5 | 0/TBD | Not started | - |

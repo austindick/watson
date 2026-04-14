@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Design Toolkit
 status: planning
-stopped_at: Completed 31-01-PLAN.md
-last_updated: "2026-04-14T15:30:26.670Z"
+stopped_at: Completed 31-02-PLAN.md
+last_updated: "2026-04-14T15:33:09.852Z"
 last_activity: 2026-04-13 — Roadmap created, phases 26-32 defined
 progress:
   total_phases: 7
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 14
-  completed_plans: 13
+  completed_plans: 14
   percent: 0
 ---
 
@@ -59,6 +59,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 30-design-hardening P01 | 4min | 2 tasks | 8 files |
 | Phase 30-design-hardening P03 | 3min | 2 tasks | 1 files |
 | Phase 31-save-skill P01 | 6min | 1 tasks | 1 files |
+| Phase 31-save-skill P02 | 2min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -105,6 +106,8 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase 31-save-skill]: /save does not create sessions or blueprints — if no blueprint found, user directed to run /play first (simpler than save-blueprint Phase 0B)
 - [Phase 31-save-skill]: Phase 0 Amendment Commit runs before extraction — ensures [PENDING] amendments committed before new content written
 - [Phase 31-save-skill]: Library path uses plugin root (library/LIBRARY.md) not skills/core/library/ — consistent with Phase 26 plugin architecture
+- [Phase 31-save-skill]: /save redirect uses 'Checkpointing is handled by /save directly. Just type /save.' — exact phrasing matches /play, /think, /design redirect pattern
+- [Phase 31-save-skill]: save-blueprint dispatch-by-think note removed entirely from core — suggest-not-dispatch makes it obsolete
 
 ### Pending Todos
 
@@ -119,6 +122,6 @@ Carried forward from v1.4:
 
 ## Session Continuity
 
-Last session: 2026-04-14T15:30:26.667Z
-Stopped at: Completed 31-01-PLAN.md
+Last session: 2026-04-14T15:33:09.849Z
+Stopped at: Completed 31-02-PLAN.md
 Resume: `/gsd:plan-phase 26` to plan the Plugin Scaffold phase
